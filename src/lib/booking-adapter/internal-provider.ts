@@ -1,5 +1,62 @@
 import { getDatabase, saveDatabase, Booking } from "../db";
 import { BookingProvider, BookingFilterOptions, CreateBookingDTO } from "./types";
+import { getPgPool } from "../supabase-db";
+
+/**
+ * Maps a Supabase `bookings` SQL row → the app's Booking interface.
+ * This is how Zoho/Zapier bookings (stored in the relational table) become
+ * visible in the admin dashboard.
+ */
+function sqlRowToBooking(row: Record<string, any>): Booking {
+  return {
+    id: row.id,
+    clientName: row.client_name || "Unknown",
+    clientEmail: row.client_email || "",
+    clientPhone: row.client_phone || "",
+    serviceId: row.service_id || "serv_1",
+    serviceName: row.service_name || "Consultation",
+    appointmentDate: row.appointment_date
+      ? new Date(row.appointment_date).toISOString().split("T")[0]
+      : "",
+    appointmentTime: row.appointment_time || "",
+    durationMinutes: row.duration_minutes || 50,
+    format: (row.meeting_format as "online" | "in-person") || "online",
+    bookingStatus: (row.status as Booking["bookingStatus"]) || "confirmed",
+    paymentStatus: (row.payment_status as Booking["paymentStatus"]) || "paid",
+    price: row.price || undefined,
+    meetingLink: row.meeting_link || undefined,
+    clientMessage: row.client_notes || "",
+    internalNotes: row.internal_notes || undefined,
+    history: [
+      {
+        timestamp: row.created_at || new Date().toISOString(),
+        action: `Booking synced from Zoho Bookings (Ref: ${row.zoho_booking_id || row.id})`,
+      },
+    ],
+    provider: "zoho",
+    createdAt: row.created_at || new Date().toISOString(),
+    updatedAt: row.updated_at || new Date().toISOString(),
+    deletedAt: row.deleted_at || null,
+  };
+}
+
+/**
+ * Fetches all bookings from the relational `bookings` SQL table in Supabase.
+ * These are written when Zoho/Zapier posts to /api/integrations/zoho/bookings.
+ */
+async function fetchSqlBookings(): Promise<Booking[]> {
+  try {
+    const pool = getPgPool();
+    const res = await pool.query(
+      `SELECT * FROM bookings WHERE deleted_at IS NULL ORDER BY appointment_date DESC, appointment_time DESC`
+    );
+    return res.rows.map(sqlRowToBooking);
+  } catch (err) {
+    // Non-fatal — fall back to JSONB source only
+    console.warn("[InternalProvider] Could not fetch relational bookings table:", err);
+    return [];
+  }
+}
 
 export class InternalBookingProvider implements BookingProvider {
   name: "internal" = "internal";
@@ -11,7 +68,20 @@ export class InternalBookingProvider implements BookingProvider {
     totalPages: number;
   }> {
     const db = await getDatabase();
-    let results = db.bookings.filter((b) => !b.deletedAt);
+    const jsonbBookings = db.bookings.filter((b) => !b.deletedAt);
+
+    // Pull bookings that came from Zoho/Zapier via the relational SQL table
+    const sqlBookings = await fetchSqlBookings();
+
+    // Merge: SQL bookings take precedence over JSONB for the same ID
+    const merged = new Map<string, Booking>();
+    for (const b of jsonbBookings) merged.set(b.id, b);
+    for (const b of sqlBookings) {
+      // Only add SQL booking if not already present in JSONB (avoid double-counting)
+      if (!merged.has(b.id)) merged.set(b.id, b);
+    }
+
+    let results = Array.from(merged.values());
 
     // Filter by status
     if (options.status && options.status !== "all") {
@@ -42,7 +112,7 @@ export class InternalBookingProvider implements BookingProvider {
       );
     }
 
-    // Sort by date and time descending
+    // Sort by date and time descending (newest first)
     results.sort((a, b) => {
       const dateA = `${a.appointmentDate} ${a.appointmentTime}`;
       const dateB = `${b.appointmentDate} ${b.appointmentTime}`;
@@ -63,10 +133,25 @@ export class InternalBookingProvider implements BookingProvider {
     };
   }
 
+
   async getBooking(id: string): Promise<Booking | null> {
     const db = await getDatabase();
     const found = db.bookings.find((b) => b.id === id && !b.deletedAt);
-    return found || null;
+    if (found) return found;
+
+    // Fall back to SQL table for Zoho bookings not synced to JSONB
+    try {
+      const pool = getPgPool();
+      const res = await pool.query(
+        `SELECT * FROM bookings WHERE id = $1 AND deleted_at IS NULL LIMIT 1`,
+        [id]
+      );
+      if (res.rows.length > 0) return sqlRowToBooking(res.rows[0]);
+    } catch {
+      // Ignore — return null
+    }
+    return null;
+
   }
 
   async createBooking(dto: CreateBookingDTO): Promise<Booking> {
