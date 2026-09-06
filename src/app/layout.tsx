@@ -1,0 +1,74 @@
+import type { Metadata, Viewport } from "next";
+import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
+import "./globals.css";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+export const metadata: Metadata = {
+  title: "Aswathy Jeyarajasekar | Counselling Psychologist",
+  description:
+    "An empathetic, collaborative space to explore your thoughts, emotions, experiences, and the parts of life that may feel difficult to navigate alone.",
+  keywords: [
+    "Counselling Psychologist",
+    "Psychology",
+    "Therapy",
+    "Mental Health",
+    "Person-centered counselling",
+    "Anxiety support",
+    "Student counselling",
+    "Aswathy Jeyarajasekar",
+  ],
+  authors: [{ name: "Aswathy Jeyarajasekar" }],
+  openGraph: {
+    title: "Aswathy Jeyarajasekar | Counselling Psychologist",
+    description: "A space to understand yourself, at your own pace.",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en"
+      className={`${playfair.variable} ${plusJakarta.variable} scroll-smooth`}
+    >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin=""
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        />
+      </head>
+      <body className="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+        {children}
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,95 @@
+"use client";
+
+import React, { useEffect } from "react";
+import { X } from "lucide-react";
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | string;
+}
+
+export default function Modal({
+  isOpen,
+  onClose,
+  title,
+  subtitle,
+  children,
+  footer,
+  maxWidth = "lg",
+}: ModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const maxWidthPreset: Record<string, string> = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    "2xl": "max-w-2xl",
+  };
+
+  const maxWidthClass = maxWidthPreset[maxWidth] || maxWidth;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-primary/40 backdrop-blur-xs transition-opacity animate-fadeIn"
+        onClick={onClose}
+      />
+
+      {/* Modal Container */}
+      <div
+        className={`relative w-full ${maxWidthClass} bg-surface rounded-3xl shadow-2xl border border-parchment-border flex flex-col z-10 max-h-[90vh] overflow-hidden animate-scaleUp`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="p-6 border-b border-surface-container bg-surface-container-low flex items-center justify-between shrink-0">
+          <div>
+            <h3 className="font-headline-sm text-lg text-primary font-semibold">
+              {title}
+            </h3>
+            {subtitle && (
+              <p className="font-body-sm text-xs text-on-surface-variant mt-0.5">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-surface hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+            aria-label="Close modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Body */}
+        <div className="p-6 overflow-y-auto flex-1 custom-scrollbar space-y-5">
+          {children}
+        </div>
+
+        {/* Optional Footer */}
+        {footer && (
+          <div className="p-5 border-t border-surface-container bg-surface-container-low shrink-0 flex items-center justify-end gap-3">
+            {footer}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
