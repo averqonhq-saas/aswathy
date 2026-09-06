@@ -49,7 +49,7 @@ export default function AboutSection() {
             <img
               alt="Aswathy Jeyarajasekar, Counselling Psychologist"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1VrKYtC6wFZwMm3mExXB0D-xxjweHgaQZjIpeekedwPMihZFy_ml-b1JWY1WzpbuEAkSmV6v_fu12v6UzJUtxj0Uly8kblTQkgpy1IlV42GSyuyIQ-l10VgyF-U6jcdDzU8BW0k7mOQEGaFhePXQGSDb-WpFUJ0t0ss0YVWJ8TetQyktsFdHUcvglDPcR-ompS-UPNECXJX6FdpCXHMbS2MpfXVFeM8SmFBlo4TWB3Eve1S4vzFd8RVPtF0"
+              src="/aswathy-photo.jpg"
             />
           </div>
 

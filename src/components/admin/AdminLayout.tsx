@@ -137,9 +137,8 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
 
       {/* Persistent Left Sidebar */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-surface border-r border-parchment-border/80 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-surface border-r border-parchment-border/80 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:translate-x-0 ${mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+          }`}
       >
         {/* Sidebar Brand Header */}
         <div className="p-5 border-b border-surface-container bg-surface flex items-center justify-between">
@@ -187,30 +186,27 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all group ${
-                        isActive
+                      className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all group ${isActive
                           ? "bg-forest-green text-white font-semibold shadow-xs"
                           : "text-on-surface-variant hover:text-primary hover:bg-surface-container"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <Icon
-                          className={`w-4 h-4 transition-colors ${
-                            isActive
+                          className={`w-4 h-4 transition-colors ${isActive
                               ? "text-[#F4D242]"
                               : "text-on-surface-variant group-hover:text-forest-green"
-                          }`}
+                            }`}
                         />
                         <span>{item.label}</span>
                       </div>
 
                       {item.badge !== undefined && (
                         <span
-                          className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                            isActive
+                          className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${isActive
                               ? "bg-[#F4D242] text-[#1A3828]"
                               : "bg-[#FEF7E0] text-[#B78103]"
-                          }`}
+                            }`}
                         >
                           {item.badge}
                         </span>
@@ -232,7 +228,7 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+                src="/aswathy-photo.jpg"
                 alt="Aswathy"
                 className="w-8 h-8 rounded-full object-cover border border-parchment-border"
               />

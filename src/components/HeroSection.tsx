@@ -91,8 +91,8 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              alt="A tranquil, sunlit therapy consulting sanctuary with soft linen draped over a cozy cream armchair, warm oak wooden floor, leafy olive tree sapling in terracotta pot, sheer warm curtains with glowing morning light spilling into the quiet room."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+              alt="Aswathy Jeyarajasekar, Counselling Psychologist"
+              src="/aswathy-photo.jpg"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-tertiary/40 via-transparent to-transparent"></div>
             <div className="absolute bottom-space-lg left-space-lg right-space-lg p-space-md rounded-2xl bg-surface/90 backdrop-blur-md shadow-md">

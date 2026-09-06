@@ -206,8 +206,8 @@ export default function BookASessionPage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       className="w-full h-[380px] lg:h-[440px] object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                      alt="A tranquil, sunlit therapeutic room with an oatmeal linen armchair, an olive tree in a terracotta pot, a low timber side table holding a ceramic mug and eucalyptus sprig, with sheer linen curtains filtering soft morning golden light against warm ivory walls."
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+                       alt="Aswathy Jeyarajasekar, Counselling Psychologist"
+                      src="/aswathy-photo.jpg"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/10 to-transparent"></div>
                     <div className="absolute bottom-space-lg left-space-lg right-space-lg text-surface p-space-md rounded-xl backdrop-blur-md bg-surface/20">
