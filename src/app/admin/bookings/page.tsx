@@ -15,13 +15,15 @@ import {
   Edit3,
   Check,
   Download,
+  Trash2,
 } from "lucide-react";
 import DataTable, { Column } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Drawer from "@/components/admin/Drawer";
 import Modal from "@/components/admin/Modal";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { Booking } from "@/lib/db";
+import type { Booking } from "@/lib/types";
 
 export default function BookingsManagementPage() {
   const { success, error, info } = useToast();
@@ -50,6 +52,53 @@ export default function BookingsManagementPage() {
   const [rescheduleDate, setRescheduleDate] = useState("");
   const [rescheduleTime, setRescheduleTime] = useState("");
   const [rescheduleLoading, setRescheduleLoading] = useState(false);
+
+  // Delete Booking confirmation states
+  const [deletingBooking, setDeletingBooking] = useState<Booking | null>(null);
+  const [clearAllConfirmOpen, setClearAllConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteBooking = async (id: string) => {
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/bookings/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok) {
+        success("Booking removed successfully.");
+        if (selectedBooking?.id === id) {
+          setSelectedBooking(null);
+        }
+        setDeletingBooking(null);
+        fetchBookings();
+      } else {
+        error(data.error || "Failed to delete booking.");
+      }
+    } catch {
+      error("Network error deleting booking.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleClearAllBookings = async () => {
+    setIsDeleting(true);
+    try {
+      const res = await fetch("/api/admin/bookings", { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok) {
+        success("All booking records cleared.");
+        setSelectedBooking(null);
+        setClearAllConfirmOpen(false);
+        fetchBookings();
+      } else {
+        error(data.error || "Failed to clear bookings.");
+      }
+    } catch {
+      error("Network error clearing bookings.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // SSR hydration guard
   const [mounted, setMounted] = useState(false);
@@ -239,15 +288,9 @@ export default function BookingsManagementPage() {
     },
     {
       header: "Source",
-      accessor: (b) => (
-        <span
-          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${
-            b.provider === "zoho"
-              ? "bg-[#FFF3E0] text-[#E65100] border border-[#FFE0B2]"
-              : "bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9]"
-          }`}
-        >
-          {b.provider === "zoho" ? "Zoho Sync" : "Website"}
+      accessor: () => (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-[#E8F5E9] text-[#2E7D32] border border-[#C8E6C9]">
+          Website
         </span>
       ),
     },
@@ -279,6 +322,13 @@ export default function BookingsManagementPage() {
               <Check className="w-4 h-4" />
             </button>
           )}
+          <button
+            onClick={() => setDeletingBooking(b)}
+            className="p-1.5 rounded-lg border border-surface-container hover:bg-[#FCE8E6] hover:border-[#FAD2CF] text-on-surface-variant hover:text-[#C5221F] transition-colors cursor-pointer"
+            title="Delete Booking"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
         </div>
       ),
     },
@@ -318,6 +368,17 @@ export default function BookingsManagementPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          {total > 0 && (
+            <button
+              onClick={() => setClearAllConfirmOpen(true)}
+              disabled={isDeleting}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#FAD2CF] bg-[#FCE8E6] hover:bg-[#FAD2CF] text-xs font-medium text-[#C5221F] transition-colors cursor-pointer disabled:opacity-50"
+              title="Clear all booking records"
+            >
+              <Trash2 className="w-3.5 h-3.5 text-[#C5221F]" />
+              <span>Clear All</span>
+            </button>
+          )}
           <button
             onClick={() => fetchBookings()}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-parchment-border bg-surface hover:bg-surface-container text-xs text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
@@ -461,6 +522,15 @@ export default function BookingsManagementPage() {
                     Cancel
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={() => setDeletingBooking(selectedBooking)}
+                  disabled={isUpdatingStatus || isDeleting}
+                  className="px-3.5 py-1.5 rounded-full border border-[#FAD2CF] bg-[#FCE8E6] text-[#C5221F] hover:bg-[#FAD2CF] font-medium text-xs transition-colors cursor-pointer flex items-center gap-1"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete</span>
+                </button>
               </div>
 
               <button
@@ -549,14 +619,8 @@ export default function BookingsManagementPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">Booking Channel:</span>
-                  <span
-                    className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold ${
-                      selectedBooking.provider === "zoho"
-                        ? "bg-[#FFF3E0] text-[#E65100]"
-                        : "bg-[#E8F5E9] text-[#2E7D32]"
-                    }`}
-                  >
-                    {selectedBooking.provider === "zoho" ? "Zoho Bookings Sync" : "Website Direct Intake"}
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-[#E8F5E9] text-[#2E7D32]">
+                    Website Direct Intake
                   </span>
                 </div>
               </div>
@@ -690,6 +754,32 @@ export default function BookingsManagementPage() {
           </div>
         </form>
       </Modal>
+
+      {/* Confirm Delete Single Booking */}
+      <ConfirmDialog
+        isOpen={!!deletingBooking}
+        onClose={() => setDeletingBooking(null)}
+        onConfirm={() => {
+          if (deletingBooking) handleDeleteBooking(deletingBooking.id);
+        }}
+        title="Delete Consultation Booking"
+        message={`Are you sure you want to delete the booking for ${deletingBooking?.clientName} (${deletingBooking?.id})? This action cannot be undone.`}
+        confirmText="Delete Booking"
+        isDestructive={true}
+        isLoading={isDeleting}
+      />
+
+      {/* Confirm Clear All Bookings */}
+      <ConfirmDialog
+        isOpen={clearAllConfirmOpen}
+        onClose={() => setClearAllConfirmOpen(false)}
+        onConfirm={handleClearAllBookings}
+        title="Clear All Bookings"
+        message="Are you sure you want to remove all bookings from your practice database? This will remove all records permanently."
+        confirmText="Clear All Records"
+        isDestructive={true}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

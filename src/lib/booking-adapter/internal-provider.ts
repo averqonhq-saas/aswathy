@@ -4,8 +4,7 @@ import { getPgPool } from "../supabase-db";
 
 /**
  * Maps a Supabase `bookings` SQL row → the app's Booking interface.
- * This is how Zoho/Zapier bookings (stored in the relational table) become
- * visible in the admin dashboard.
+ * This reads bookings stored in the relational SQL table.
  */
 function sqlRowToBooking(row: Record<string, any>): Booking {
   return {
@@ -30,10 +29,10 @@ function sqlRowToBooking(row: Record<string, any>): Booking {
     history: [
       {
         timestamp: row.created_at || new Date().toISOString(),
-        action: `Booking synced from Zoho Bookings (Ref: ${row.zoho_booking_id || row.id})`,
+        action: `Booking synced from database (Ref: ${row.id})`,
       },
     ],
-    provider: "zoho",
+    provider: "internal",
     createdAt: row.created_at || new Date().toISOString(),
     updatedAt: row.updated_at || new Date().toISOString(),
     deletedAt: row.deleted_at || null,
@@ -42,7 +41,6 @@ function sqlRowToBooking(row: Record<string, any>): Booking {
 
 /**
  * Fetches all bookings from the relational `bookings` SQL table in Supabase.
- * These are written when Zoho/Zapier posts to /api/integrations/zoho/bookings.
  */
 async function fetchSqlBookings(): Promise<Booking[]> {
   try {
@@ -70,7 +68,7 @@ export class InternalBookingProvider implements BookingProvider {
     const db = await getDatabase();
     const jsonbBookings = db.bookings.filter((b) => !b.deletedAt);
 
-    // Pull bookings that came from Zoho/Zapier via the relational SQL table
+    // Pull bookings from the relational SQL table
     const sqlBookings = await fetchSqlBookings();
 
     // Merge: SQL bookings take precedence over JSONB for the same ID
@@ -139,7 +137,7 @@ export class InternalBookingProvider implements BookingProvider {
     const found = db.bookings.find((b) => b.id === id && !b.deletedAt);
     if (found) return found;
 
-    // Fall back to SQL table for Zoho bookings not synced to JSONB
+    // Fall back to SQL table for bookings not synced to JSONB
     try {
       const pool = getPgPool();
       const res = await pool.query(

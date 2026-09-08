@@ -21,7 +21,7 @@ export interface BookingFilterOptions {
 }
 
 export interface BookingProvider {
-  name: "internal" | "zoho";
+  name: "internal";
   listBookings(options?: BookingFilterOptions): Promise<{
     bookings: Booking[];
     total: number;

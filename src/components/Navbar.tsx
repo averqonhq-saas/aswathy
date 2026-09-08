@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, ArrowRight, User } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 
 interface NavbarProps {
   onOpenBooking?: (service?: string) => void;
@@ -24,6 +24,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
         "journey",
         "expectations",
         "faq",
+        "enquiry",
       ];
       const scrollPosition = window.scrollY + 200;
 
@@ -49,6 +50,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
     { label: "Services", href: "/#services", id: "services" },
     { label: "My Approach", href: "/#my-approach", id: "my-approach" },
     { label: "What to Expect", href: "/#expectations", id: "expectations" },
+    { label: "Enquiry", href: "/#enquiry", id: "enquiry" },
   ];
 
   return (
@@ -113,16 +115,6 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
               </span>
               <span className="ml-space-xxs text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
                 →
-              </span>
-            </Link>
-
-            <Link
-              href="/#about"
-              title="About Aswathy"
-              className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 hover:bg-primary-container transition-colors"
-            >
-              <span className="material-symbols-outlined text-on-primary text-[18px]">
-                person
               </span>
             </Link>
 

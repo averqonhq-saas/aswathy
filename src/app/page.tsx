@@ -10,6 +10,7 @@ import MyJourneySection from "@/components/MyJourneySection";
 import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FaqSection from "@/components/FaqSection";
+import EnquirySection from "@/components/EnquirySection";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
 
@@ -47,7 +48,10 @@ export default function Home() {
           {/* Common Inquiries: FAQ Section */}
           <FaqSection />
 
-          {/* Section 9: Immersive Booking Banner CTA */}
+          {/* Section 9: Direct Consultation Enquiry Form */}
+          <EnquirySection />
+
+          {/* Section 10: Immersive Booking Banner CTA */}
           <CtaSection />
         </div>
       </main>

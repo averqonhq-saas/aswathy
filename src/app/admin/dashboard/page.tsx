@@ -22,7 +22,7 @@ import StatCard from "@/components/admin/StatCard";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Drawer from "@/components/admin/Drawer";
 import { useToast } from "@/components/admin/Toast";
-import { Booking, Enquiry } from "@/lib/db";
+import type { Booking, Enquiry } from "@/lib/types";
 
 export default function AdminDashboardPage() {
   const { success, error } = useToast();

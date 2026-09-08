@@ -20,17 +20,27 @@ import {
   DollarSign,
   Tag,
   FileText,
+  FolderPlus,
 } from "lucide-react";
 import Drawer from "@/components/admin/Drawer";
+import Modal from "@/components/admin/Modal";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { Service, ServiceCategory } from "@/lib/db";
+import type { Service, ServiceCategory } from "@/lib/types";
 
 export default function AdminServicesPage() {
   const { success, error } = useToast();
   const [services, setServices] = useState<Service[]>([]);
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Category modal & management state
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryDescription, setNewCategoryDescription] = useState("");
+  const [isSavingCategory, setIsSavingCategory] = useState(false);
+  const [deletingCategory, setDeletingCategory] = useState<ServiceCategory | null>(null);
+  const [isDeletingCategory, setIsDeletingCategory] = useState(false);
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,6 +70,60 @@ export default function AdminServicesPage() {
   // Delete confirm dialog state
   const [deletingService, setDeletingService] = useState<Service | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Create new category
+  const handleCreateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategoryName.trim()) {
+      error("Please enter a category name.");
+      return;
+    }
+    setIsSavingCategory(true);
+    try {
+      const res = await fetch("/api/admin/services/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newCategoryName.trim(),
+          description: newCategoryDescription.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create category");
+      success(`Category "${newCategoryName.trim()}" created successfully.`);
+      setNewCategoryName("");
+      setNewCategoryDescription("");
+      if (data.category) {
+        setCategories((prev) => [...prev, data.category]);
+        setFormData((prev) => ({ ...prev, categoryId: data.category.id }));
+      }
+      loadServices();
+    } catch (err: any) {
+      error(err.message || "Failed to create category");
+    } finally {
+      setIsSavingCategory(false);
+    }
+  };
+
+  // Delete category
+  const handleDeleteCategory = async () => {
+    if (!deletingCategory) return;
+    setIsDeletingCategory(true);
+    try {
+      const res = await fetch(`/api/admin/services/categories?id=${deletingCategory.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to delete category");
+      success(`Category "${deletingCategory.name}" removed.`);
+      setDeletingCategory(null);
+      loadServices();
+    } catch (err: any) {
+      error(err.message || "Failed to delete category");
+    } finally {
+      setIsDeletingCategory(false);
+    }
+  };
 
   // Load services and categories
   const loadServices = async () => {
@@ -279,8 +343,16 @@ export default function AdminServicesPage() {
           </button>
 
           <button
+            onClick={() => setIsCategoryModalOpen(true)}
+            className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-[#1A3828]/20 bg-white/70 hover:bg-white text-[#1A3828] transition-all flex items-center gap-2 shadow-xs cursor-pointer"
+          >
+            <Tag className="w-3.5 h-3.5 text-[#1A3828]" />
+            <span>Manage Categories</span>
+          </button>
+
+          <button
             onClick={handleAddNew}
-            className="px-4 py-2 text-xs font-semibold rounded-xl bg-[#1A3828] text-white hover:bg-[#142C1F] transition-all flex items-center gap-2 shadow-sm"
+            className="px-4 py-2 text-xs font-semibold rounded-xl bg-[#1A3828] text-white hover:bg-[#142C1F] transition-all flex items-center gap-2 shadow-sm cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Service</span>
@@ -566,9 +638,19 @@ export default function AdminServicesPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                Category *
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-semibold text-[#1A3828]">
+                  Category *
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsCategoryModalOpen(true)}
+                  className="text-[11px] font-semibold text-[#1A3828] hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>New Category</span>
+                </button>
+              </div>
               <select
                 value={formData.categoryId}
                 onChange={(e) =>
@@ -707,6 +789,119 @@ export default function AdminServicesPage() {
         isDestructive={true}
         onConfirm={handleDeleteService}
         onClose={() => setDeletingService(null)}
+      />
+
+      {/* MANAGE CATEGORIES MODAL */}
+      <Modal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        title="Manage Service Categories"
+        subtitle="Create, categorize, and organize your clinical therapy domains."
+        maxWidth="lg"
+      >
+        <div className="p-6 space-y-6">
+          {/* Add New Category Form */}
+          <form
+            onSubmit={handleCreateCategory}
+            className="bg-[#FCF9F2] p-4 rounded-2xl border border-[#1A3828]/15 space-y-3"
+          >
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#1A3828] flex items-center gap-2">
+              <FolderPlus className="w-4 h-4 text-[#1A3828]" />
+              <span>Add New Category</span>
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-medium text-[#1A3828] mb-1">
+                  Category Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Trauma & Resilience"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-medium text-[#1A3828] mb-1">
+                  Description (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Evidence-based somatic recovery"
+                  value={newCategoryDescription}
+                  onChange={(e) => setNewCategoryDescription(e.target.value)}
+                  className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end pt-1">
+              <button
+                type="submit"
+                disabled={isSavingCategory || !newCategoryName.trim()}
+                className="px-4 py-2 text-xs font-semibold rounded-xl bg-[#1A3828] text-white hover:bg-[#142C1F] transition-all flex items-center gap-2 disabled:opacity-50 cursor-pointer shadow-xs"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>{isSavingCategory ? "Adding..." : "Add Category"}</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Existing Categories List */}
+          <div>
+            <h4 className="text-xs font-semibold text-[#1A3828] mb-3">
+              Existing Categories ({categories.length})
+            </h4>
+            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+              {categories.map((cat) => {
+                const serviceCount = services.filter((s) => s.categoryId === cat.id).length;
+                return (
+                  <div
+                    key={cat.id}
+                    className="p-3.5 rounded-xl border border-[#1A3828]/10 bg-white flex items-center justify-between gap-3 hover:border-[#1A3828]/20 transition-all"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-[#1A3828] truncate">
+                          {cat.name}
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#1A3828]/10 text-[#1A3828] font-medium">
+                          {serviceCount} {serviceCount === 1 ? "service" : "services"}
+                        </span>
+                      </div>
+                      {cat.description && (
+                        <p className="text-[11px] text-[#7B7368] mt-0.5 line-clamp-1">
+                          {cat.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setDeletingCategory(cat)}
+                      className="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors shrink-0 cursor-pointer"
+                      title="Delete Category"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* CONFIRM DELETE CATEGORY DIALOG */}
+      <ConfirmDialog
+        isOpen={Boolean(deletingCategory)}
+        title="Delete Category"
+        message={`Are you sure you want to delete the category "${deletingCategory?.name}"? You can only delete categories that currently have no associated services.`}
+        confirmText="Delete Category"
+        isDestructive={true}
+        onConfirm={handleDeleteCategory}
+        onClose={() => setDeletingCategory(null)}
       />
     </div>
   );

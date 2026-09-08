@@ -6,282 +6,12 @@ import { loadDatabaseFromSupabase, saveDatabaseToSupabase } from "./supabase-db"
 const DATA_DIR = path.join(process.cwd(), "data");
 const DB_FILE = path.join(DATA_DIR, "database.json");
 
-// ==========================================
-// DATA MODELS & INTERFACES
-// ==========================================
+// Export all data models & interfaces from pure client-safe types
+export * from "./types";
+import type { DatabaseSchema } from "./types";
+import { DEFAULT_SESSION_FORMATS, DEFAULT_BOOKING_FORM_CONFIG } from "./booking-config";
 
-export interface AdminUser {
-  id: string;
-  name: string;
-  email: string;
-  passwordHash: string;
-  role: "superadmin" | "practitioner";
-  profileImage: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
-export interface ServiceCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Service {
-  id: string;
-  name: string;
-  categoryId: string;
-  categoryName: string;
-  shortDescription: string;
-  fullDescription: string;
-  durationMinutes: number;
-  price: number;
-  image: string;
-  status: "active" | "disabled";
-  order: number;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string | null;
-}
-
-export interface BookingHistoryItem {
-  timestamp: string;
-  action: string;
-  note?: string;
-}
-
-export interface Booking {
-  id: string;
-  clientName: string;
-  clientEmail: string;
-  clientPhone: string;
-  serviceId: string;
-  serviceName: string;
-  appointmentDate: string; // YYYY-MM-DD
-  date?: string; // alias for appointmentDate
-  appointmentTime: string; // e.g. "11:30 AM"
-  time?: string; // alias for appointmentTime
-  durationMinutes: number;
-  format: "online" | "in-person";
-  modality?: "online" | "in-person"; // alias for format
-  bookingStatus: "pending" | "confirmed" | "completed" | "cancelled";
-  status?: "pending" | "confirmed" | "completed" | "cancelled"; // alias for bookingStatus
-  paymentStatus: "pending" | "paid" | "refunded";
-  price?: number;
-  meetingLink?: string;
-  clientMessage?: string;
-  clientNotes?: string; // alias for clientMessage
-  internalNotes?: string;
-  history: BookingHistoryItem[];
-  provider: "internal" | "zoho";
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string | null;
-}
-
-export interface AvailabilityRule {
-  id: string;
-  dayOfWeek:
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday"
-    | number;
-  isWorking: boolean;
-  isActive?: boolean; // alias for isWorking
-  startTime: string; // "09:00"
-  endTime: string; // "18:00"
-  breakStart?: string; // "13:00"
-  breakEnd?: string; // "14:00"
-  sessionDuration?: number; // 50
-  bufferTime?: number; // 15
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface BlockedSlot {
-  id: string;
-  title: string;
-  type: "slot" | "full_day" | "holiday";
-  date: string; // YYYY-MM-DD
-  startTime?: string;
-  endTime?: string;
-  reason?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Enquiry {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  status: "new" | "contacted" | "follow_up" | "resolved";
-  internalNotes?: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string | null;
-}
-
-export interface ClientFeedback {
-  id: string;
-  clientDisplayName: string;
-  feedback: string;
-  rating: number; // 1 to 5
-  date: string;
-  isAnonymous: boolean;
-  status: "pending" | "approved" | "hidden";
-  publicVisibility: boolean;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string | null;
-}
-
-export interface WebsiteAboutContent {
-  name: string;
-  title: string;
-  shortIntro: string;
-  fullBio: string;
-  experienceYears: string;
-  qualifications: string[];
-  profileImage: string;
-  updatedAt: string;
-}
-
-export interface JourneyEntry {
-  id: string;
-  year: string;
-  heading: string;
-  description: string;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface SessionStep {
-  id: string;
-  stepNumber: string; // "01", "02"
-  title: string;
-  description: string;
-  isActive: boolean;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ClientType {
-  id: string;
-  title: string;
-  description: string;
-  isActive: boolean;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MediaItem {
-  id: string;
-  filename: string;
-  title: string;
-  url: string;
-  category: "profile" | "service" | "website" | "testimonial";
-  mimeType: string;
-  sizeBytes: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface NotificationItem {
-  id: string;
-  type:
-    | "booking_new"
-    | "booking_cancel"
-    | "booking_cancelled"
-    | "booking_rescheduled"
-    | "enquiry_new"
-    | "feedback_new"
-    | "status_change";
-  title: string;
-  message: string;
-  link: string;
-  isRead: boolean;
-  createdAt: string;
-}
-
-export type Notification = NotificationItem;
-
-export interface PracticeSettings {
-  general: {
-    websiteName: string;
-    practiceName?: string;
-    tagline?: string;
-    email: string;
-    contactEmail?: string;
-    phone: string;
-    contactPhone?: string;
-    clinicAddress: string;
-    instagram: string;
-    linkedin: string;
-    whatsapp: string;
-    currency?: string;
-    timezone?: string;
-  };
-  booking: {
-    provider?: "internal" | "zoho";
-    zohoUrl?: string;
-    defaultSessionDuration: number;
-    bufferTime: number;
-    bufferTimeMinutes?: number;
-    advanceNoticeHours?: number;
-    maxAdvanceDays?: number;
-    cancellationNoticeHours: number;
-    cancellationPolicyHours?: number;
-    confirmationMessage: string;
-    defaultFormat: "online" | "in-person";
-    requireApproval?: boolean;
-    slotDurationMinutes?: number;
-  };
-  account: {
-    adminName: string;
-    email: string;
-    profileImage: string;
-  };
-  notifications: {
-    emailNotifications: boolean;
-    bookingAlerts: boolean;
-    enquiryAlerts: boolean;
-    feedbackAlerts: boolean;
-    emailOnBooking?: boolean;
-    emailOnEnquiry?: boolean;
-    dailySummaryDigest?: boolean;
-  };
-}
-
-export interface DatabaseSchema {
-  admins: AdminUser[];
-  serviceCategories: ServiceCategory[];
-  services: Service[];
-  bookings: Booking[];
-  availability: AvailabilityRule[];
-  blockedSlots: BlockedSlot[];
-  enquiries: Enquiry[];
-  feedback: ClientFeedback[];
-  websiteAbout: WebsiteAboutContent;
-  journeyEntries: JourneyEntry[];
-  sessionSteps: SessionStep[];
-  clientTypes: ClientType[];
-  media: MediaItem[];
-  notifications: NotificationItem[];
-  settings: PracticeSettings;
-}
 
 // ==========================================
 // SEED GENERATOR
@@ -310,7 +40,7 @@ export function createInitialSeedData(): DatabaseSchema {
       {
         id: "admin_aswathy_1",
         name: "Aswathy Jeyarajasekar",
-        email: "aswathy@sanctuary.com",
+        email: "roottherapyonline@gmail.com",
         passwordHash: hashPassword("admin12345"),
         role: "superadmin",
         profileImage:
@@ -805,8 +535,8 @@ export function createInitialSeedData(): DatabaseSchema {
         websiteName: "Aswathy Jeyarajasekar | Counselling Psychologist",
         practiceName: "The Safe Sanctuary | Aswathy Counselling",
         tagline: "Gentle, non-judgmental space for emotional healing",
-        email: "counselling@aswathy.com",
-        contactEmail: "counselling@aswathy.com",
+        email: "roottherapyonline@gmail.com",
+        contactEmail: "roottherapyonline@gmail.com",
         phone: "+91 98765 43210",
         contactPhone: "+91 98765 43210",
         clinicAddress: "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu",
@@ -817,8 +547,6 @@ export function createInitialSeedData(): DatabaseSchema {
         timezone: "Asia/Kolkata (IST)",
       },
       booking: {
-        provider: "zoho",
-        zohoUrl: "https://averqon.zohobookings.in/portal-embed#/averqon",
         defaultSessionDuration: 50,
         bufferTime: 15,
         bufferTimeMinutes: 15,
@@ -832,7 +560,7 @@ export function createInitialSeedData(): DatabaseSchema {
       },
       account: {
         adminName: "Aswathy Jeyarajasekar",
-        email: "aswathy@sanctuary.com",
+        email: "roottherapyonline@gmail.com",
         profileImage:
           "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
       },
@@ -853,7 +581,13 @@ export function createInitialSeedData(): DatabaseSchema {
 // DATABASE ENGINE WITH ATOMIC WRITES
 // ==========================================
 
+
+
 let memoryDb: DatabaseSchema | null = null;
+
+export function resetMemoryDb(): void {
+  memoryDb = null;
+}
 
 async function ensureDataDirectory(): Promise<void> {
   try {
@@ -864,19 +598,31 @@ async function ensureDataDirectory(): Promise<void> {
 }
 
 export async function getDatabase(): Promise<DatabaseSchema> {
-  if (memoryDb) {
-    return memoryDb;
-  }
-
-  // 1. Primary: Attempt to load from Supabase PostgreSQL
+  // 1. Primary: Load fresh state from Supabase PostgreSQL
   try {
     const supabaseData = await loadDatabaseFromSupabase();
     if (supabaseData && supabaseData.admins && supabaseData.admins.length > 0) {
+      if (!supabaseData.sessionFormats || supabaseData.sessionFormats.length === 0) {
+        supabaseData.sessionFormats = DEFAULT_SESSION_FORMATS;
+      }
+      if (!supabaseData.bookingFormConfig) {
+        supabaseData.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+      }
       memoryDb = supabaseData;
       return memoryDb;
     }
   } catch (err) {
     console.error("Supabase load attempt failed, falling back to local file:", err);
+  }
+
+  if (memoryDb) {
+    if (!memoryDb.sessionFormats || memoryDb.sessionFormats.length === 0) {
+      memoryDb.sessionFormats = DEFAULT_SESSION_FORMATS;
+    }
+    if (!memoryDb.bookingFormConfig) {
+      memoryDb.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+    }
+    return memoryDb;
   }
 
   // 2. Fallback: Load from local file or seed
@@ -885,10 +631,18 @@ export async function getDatabase(): Promise<DatabaseSchema> {
   try {
     const content = await fs.readFile(DB_FILE, "utf8");
     memoryDb = JSON.parse(content);
+    if (!memoryDb!.sessionFormats || memoryDb!.sessionFormats.length === 0) {
+      memoryDb!.sessionFormats = DEFAULT_SESSION_FORMATS;
+    }
+    if (!memoryDb!.bookingFormConfig) {
+      memoryDb!.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+    }
     return memoryDb as DatabaseSchema;
   } catch {
     // If file doesn't exist or is invalid, seed clean data
     const initialSeed = createInitialSeedData();
+    initialSeed.sessionFormats = DEFAULT_SESSION_FORMATS;
+    initialSeed.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
     await saveDatabase(initialSeed);
     memoryDb = initialSeed;
     return memoryDb;

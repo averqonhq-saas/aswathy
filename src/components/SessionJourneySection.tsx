@@ -1,33 +1,77 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
+interface StepItem {
+  num: string | number;
+  title: string;
+  desc: string;
+}
+
+const defaultSteps: StepItem[] = [
+  {
+    num: "01",
+    title: "Initial Conversation",
+    desc: "A gentle introduction to meet each other, establish comfort, and understand your needs.",
+  },
+  {
+    num: "02",
+    title: "Understanding Concerns",
+    desc: "Unpacking the life experiences and emotional weights that brought you to seeking support.",
+  },
+  {
+    num: "03",
+    title: "Exploring Patterns",
+    desc: "Identifying relational dynamics, coping tendencies, and underlying emotional habits.",
+  },
+  {
+    num: "04",
+    title: "Identifying Goals",
+    desc: "Co-creating meaningful milestones that resonate with your personal values and identity.",
+  },
+  {
+    num: "05",
+    title: "Working at Your Pace",
+    desc: "Continuous, supportive exploration with flexible cadence matching your everyday life.",
+  },
+];
+
 export default function SessionJourneySection() {
-  const steps = [
-    {
-      num: 1,
-      title: "Initial Conversation",
-      desc: "A gentle introduction to meet each other, establish comfort, and understand your needs.",
-    },
-    {
-      num: 2,
-      title: "Understanding Concerns",
-      desc: "Unpacking the life experiences and emotional weights that brought you to seeking support.",
-    },
-    {
-      num: 3,
-      title: "Exploring Patterns",
-      desc: "Identifying relational dynamics, coping tendencies, and underlying emotional habits.",
-    },
-    {
-      num: 4,
-      title: "Identifying Goals",
-      desc: "Co-creating meaningful milestones that resonate with your personal values and identity.",
-    },
-    {
-      num: 5,
-      title: "Working at Your Pace",
-      desc: "Continuous, supportive exploration with flexible cadence matching your everyday life.",
-    },
-  ];
+  const [steps, setSteps] = useState<StepItem[]>(defaultSteps);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadSteps() {
+      try {
+        const res = await fetch("/api/content", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (
+          isMounted &&
+          data.sessionSteps &&
+          Array.isArray(data.sessionSteps) &&
+          data.sessionSteps.length > 0
+        ) {
+          const activeSteps: StepItem[] = data.sessionSteps
+            .filter((s: any) => s.isActive !== false)
+            .map((s: any, idx: number) => ({
+              num: s.stepNumber || String(idx + 1).padStart(2, "0"),
+              title: s.title,
+              desc: s.description,
+            }));
+          if (activeSteps.length > 0) {
+            setSteps(activeSteps);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load session steps:", err);
+      }
+    }
+    loadSteps();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section
@@ -50,7 +94,7 @@ export default function SessionJourneySection() {
         </div>
 
         {/* Flowing Organic Timeline with Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-space-md pt-space-md relative">
+        <div className={`grid grid-cols-1 md:grid-cols-${Math.min(steps.length, 5)} gap-space-md pt-space-md relative`}>
           {/* Connecting subtle line visible on md screens */}
           <div className="hidden md:block absolute top-12 left-8 right-8 h-0.5 bg-surface-container-highest -z-10"></div>
 

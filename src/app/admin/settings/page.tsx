@@ -24,7 +24,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useToast } from "@/components/admin/Toast";
-import { PracticeSettings } from "@/lib/db";
+import type { PracticeSettings } from "@/lib/types";
 
 type TabType = "general" | "booking" | "notifications" | "security";
 
@@ -47,16 +47,7 @@ export default function AdminSettingsPage() {
   const [showNewPw, setShowNewPw] = useState(false);
   const [isUpdatingPw, setIsUpdatingPw] = useState(false);
 
-  // Zoho sync helper state
-  const [originUrl, setOriginUrl] = useState("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [isTestingZoho, setIsTestingZoho] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setOriginUrl(window.location.origin);
-    }
-  }, []);
 
   const handleCopy = (text: string, key: string) => {
     if (navigator.clipboard) {
@@ -64,40 +55,6 @@ export default function AdminSettingsPage() {
       setCopiedKey(key);
       success("Copied to clipboard!");
       setTimeout(() => setCopiedKey(null), 2000);
-    }
-  };
-
-  const handleTestZohoSync = async () => {
-    setIsTestingZoho(true);
-    try {
-      const sampleDate = new Date();
-      sampleDate.setDate(sampleDate.getDate() + 2);
-      const res = await fetch("/api/integrations/zoho/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          booking_id: `test_${Date.now().toString().slice(-5)}`,
-          customer_name: "Priya Ramanathan (Test)",
-          customer_email: "priya.test@example.com",
-          customer_phone: "+91 98401 23456",
-          service_name: "Emotional Wellbeing Consultation",
-          start_time: `${sampleDate.toISOString().split("T")[0]} 11:30:00`,
-          booking_time: "11:30 AM",
-          duration: "50",
-          notes: "Sample test booking generated from Admin Settings to verify Zoho sync.",
-          status: "confirmed",
-        }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        success("Zoho test booking successfully copied to your Admin Bookings & Supabase!");
-      } else {
-        throw new Error(data.error || "Webhook test failed");
-      }
-    } catch (err: any) {
-      error(err.message || "Failed to trigger Zoho test.");
-    } finally {
-      setIsTestingZoho(false);
     }
   };
 
@@ -428,7 +385,7 @@ export default function AdminSettingsPage() {
                 Appointment Engine & Policies
               </h3>
               <p className="text-xs text-[#7B7368] mt-0.5">
-                Switch between Zoho Bookings and local scheduling, and enforce clinical notice buffers.
+                Configure session duration, buffer times, and clinical scheduling policies.
               </p>
             </div>
             <button
@@ -441,178 +398,24 @@ export default function AdminSettingsPage() {
             </button>
           </div>
 
-          {/* Booking Provider Toggle */}
-          <div className="bg-[#FCF9F2] p-4 rounded-2xl border border-[#1A3828]/15 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#7B7368]">
-              Active Booking Provider
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label
-                className={`p-3.5 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${
-                  settings.booking.provider === "zoho"
-                    ? "bg-white border-[#1A3828] shadow-xs"
-                    : "bg-white/50 border-[#1A3828]/10 hover:bg-white"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="bookingProvider"
-                  value="zoho"
-                  checked={settings.booking.provider === "zoho"}
-                  onChange={() =>
-                    setSettings({
-                      ...settings,
-                      booking: { ...settings.booking, provider: "zoho" },
-                    })
-                  }
-                  className="mt-0.5 text-[#1A3828] focus:ring-[#1A3828]"
-                />
-                <div>
-                  <div className="font-semibold text-xs text-[#1A3828]">Zoho Bookings Embed</div>
-                  <p className="text-[11px] text-[#7B7368] mt-0.5">
-                    Redirects clients to your configured Zoho booking page (`/book-a-session`).
-                  </p>
-                </div>
-              </label>
-
-              <label
-                className={`p-3.5 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${
-                  settings.booking.provider === "internal"
-                    ? "bg-white border-[#1A3828] shadow-xs"
-                    : "bg-white/50 border-[#1A3828]/10 hover:bg-white"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="bookingProvider"
-                  value="internal"
-                  checked={settings.booking.provider === "internal"}
-                  onChange={() =>
-                    setSettings({
-                      ...settings,
-                      booking: { ...settings.booking, provider: "internal" },
-                    })
-                  }
-                  className="mt-0.5 text-[#1A3828] focus:ring-[#1A3828]"
-                />
-                <div>
-                  <div className="font-semibold text-xs text-[#1A3828]">Internal Direct Engine</div>
-                  <p className="text-[11px] text-[#7B7368] mt-0.5">
-                    Direct scheduling using your dashboard database & custom time slots.
-                  </p>
-                </div>
-              </label>
-            </div>
-
-            {settings.booking.provider === "zoho" && (
-              <div className="pt-3 space-y-4 border-t border-[#1A3828]/10">
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Zoho Bookings Portal Embed URL
-                  </label>
-                  <input
-                    type="url"
-                    value={settings.booking.zohoUrl}
-                    onChange={(e) =>
-                      setSettings({
-                        ...settings,
-                        booking: { ...settings.booking, zohoUrl: e.target.value },
-                      })
-                    }
-                    placeholder="https://averqon.zohobookings.in/portal-embed#/averqon"
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-mono text-xs bg-white"
-                  />
-                </div>
-
-                {/* Zoho Webhook Sync Configuration */}
-                <div className="p-4 rounded-xl bg-white border border-[#1A3828]/15 space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <div className="font-semibold text-xs text-[#1A3828] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-secondary" />
-                        <span>Zoho Bookings Automatic Admin Sync</span>
-                      </div>
-                      <p className="text-[11px] text-[#7B7368] mt-0.5">
-                        Copy appointments booked in Zoho into your Admin Bookings and Supabase database.
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleTestZohoSync}
-                      disabled={isTestingZoho}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#E7F3EC] text-[#1B5E20] hover:bg-[#C8E6C9] font-medium text-xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{isTestingZoho ? "Sending..." : "Test Zoho Sync"}</span>
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                    {/* Webhook URL */}
-                    <div>
-                      <span className="text-[11px] font-semibold text-[#1A3828] block mb-1">
-                        1. Webhook / Workflow API URL
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="text"
-                          readOnly
-                          value={`${originUrl}/api/integrations/zoho/bookings`}
-                          className="flex-1 text-[11px] font-mono p-2 rounded-lg bg-[#FCF9F2] border border-[#1A3828]/15 text-[#1A3828]"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(`${originUrl}/api/integrations/zoho/bookings`, "webhook")}
-                          className="p-2 rounded-lg border border-[#1A3828]/20 bg-white hover:bg-surface-container text-[#1A3828] cursor-pointer"
-                          title="Copy Workflow API URL"
-                        >
-                          {copiedKey === "webhook" ? (
-                            <Check className="w-3.5 h-3.5 text-[#1B5E20]" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Redirect URL */}
-                    <div>
-                      <span className="text-[11px] font-semibold text-[#1A3828] block mb-1">
-                        2. Redirect Confirmation URL
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="text"
-                          readOnly
-                          value={`${originUrl}/book-a-session/confirmation`}
-                          className="flex-1 text-[11px] font-mono p-2 rounded-lg bg-[#FCF9F2] border border-[#1A3828]/15 text-[#1A3828]"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(`${originUrl}/book-a-session/confirmation`, "redirect")}
-                          className="p-2 rounded-lg border border-[#1A3828]/20 bg-white hover:bg-surface-container text-[#1A3828] cursor-pointer"
-                          title="Copy Redirect URL"
-                        >
-                          {copiedKey === "redirect" ? (
-                            <Check className="w-3.5 h-3.5 text-[#1B5E20]" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-[#FCF9F2] text-[11px] text-[#7B7368] space-y-1">
-                    <span className="font-semibold text-[#1A3828] block">Setup in Zoho Bookings:</span>
-                    <p>
-                      In your Zoho Bookings account &gt; <strong>Manage Business</strong> &gt; <strong>Integrations</strong> &gt; <strong>Webhooks</strong> &gt; Add Webhook and paste the Webhook URL above. Select <em>Appointment Booked</em>, <em>Rescheduled</em>, and <em>Cancelled</em>.
-                    </p>
-                  </div>
-                </div>
+          {/* Booking Engine description */}
+          <div className="rounded-xl bg-[#F0F7F2] border border-[#1A3828]/10 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Calendar className="w-4 h-4 text-[#1A3828]" />
+                <span className="text-xs font-bold text-[#1A3828] uppercase tracking-wider">Interactive Booking Engine</span>
               </div>
-            )}
+              <p className="text-[11px] text-[#7B7368]">
+                Sessions are booked directly through the website&#39;s native booking form with live consultation formats, slot pickers, and intake fields.
+              </p>
+            </div>
+            <a
+              href="/admin/content/booking-form"
+              className="shrink-0 px-3.5 py-1.5 rounded-lg bg-[#1A3828] text-[#F4D242] text-xs font-semibold hover:bg-[#142C1F] transition-all flex items-center gap-1.5 shadow-xs"
+            >
+              <span>Booking Form Controls</span>
+              <span>→</span>
+            </a>
           </div>
 
           {/* Buffers & Rules */}

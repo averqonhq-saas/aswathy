@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { bookingService } from "@/lib/booking-adapter";
 import { getCurrentAdmin } from "@/lib/auth";
+import { getDatabase, saveDatabase } from "@/lib/db";
+import { getPgPool } from "@/lib/supabase-db";
 
 export async function GET(request: Request) {
   try {
@@ -89,3 +91,35 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await getCurrentAdmin();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const db = await getDatabase();
+    db.bookings = [];
+    db.notifications = db.notifications.filter(
+      (n) => !n.link?.includes("/admin/bookings") && !n.type?.startsWith("booking")
+    );
+    await saveDatabase(db);
+
+    try {
+      const pool = getPgPool();
+      await pool.query("DELETE FROM bookings");
+    } catch (sqlErr) {
+      console.warn("SQL table clear notice:", sqlErr);
+    }
+
+    return NextResponse.json({ success: true, message: "All bookings cleared successfully." });
+  } catch (error) {
+    console.error("Clear all bookings error:", error);
+    return NextResponse.json(
+      { error: "Failed to clear bookings." },
+      { status: 500 }
+    );
+  }
+}
+

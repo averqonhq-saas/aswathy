@@ -18,59 +18,26 @@ function ConfirmationContent() {
     date: string;
     time: string;
   }>({
-    id: searchParams.get("booking_id") || searchParams.get("id") || `ZOHO-${Date.now().toString().slice(-6)}`,
-    clientName: searchParams.get("customer_name") || searchParams.get("name") || searchParams.get("client_name") || "Valued Client",
-    clientEmail: searchParams.get("customer_email") || searchParams.get("email") || searchParams.get("client_email") || "",
-    serviceName: searchParams.get("service_name") || searchParams.get("service") || "Individual Therapy Consultation",
-    date: searchParams.get("date") || searchParams.get("booking_date") || new Date().toISOString().split("T")[0],
-    time: searchParams.get("time") || searchParams.get("booking_time") || "10:00 AM",
+    id: searchParams.get("booking_id") || searchParams.get("id") || `ASW-${Date.now().toString().slice(-6)}`,
+    clientName: searchParams.get("name") || searchParams.get("client_name") || "Valued Client",
+    clientEmail: searchParams.get("email") || searchParams.get("client_email") || "",
+    serviceName: searchParams.get("service") || "Individual Therapy Consultation",
+    date: searchParams.get("date") || new Date().toISOString().split("T")[0],
+    time: searchParams.get("time") || "10:00 AM",
   });
 
+  // Update booking details if URL params change
   useEffect(() => {
     const rawId = searchParams.get("booking_id") || searchParams.get("id");
-    const name = searchParams.get("customer_name") || searchParams.get("name") || searchParams.get("client_name");
-    const email = searchParams.get("customer_email") || searchParams.get("email") || searchParams.get("client_email");
-    const phone = searchParams.get("customer_phone") || searchParams.get("phone");
-    const service = searchParams.get("service_name") || searchParams.get("service");
-    const date = searchParams.get("date") || searchParams.get("booking_date");
-    const time = searchParams.get("time") || searchParams.get("booking_time");
-
-    // If we have at least name or email or booking ID from Zoho redirect, sync to admin backend
-    if (name || email || rawId) {
-      setSyncStatus("syncing");
-      fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          clientName: name || "Zoho Client",
-          clientEmail: email || "zoho_client@booking.com",
-          clientPhone: phone || "+91 (Not Provided)",
-          serviceName: service || "Individual Therapy Consultation",
-          appointmentDate: date || new Date().toISOString().split("T")[0],
-          appointmentTime: time || "10:00 AM",
-          format: "online",
-          provider: "zoho",
-          zohoBookingId: rawId,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.booking) {
-            setBookingDetails({
-              id: data.booking.id,
-              clientName: data.booking.clientName,
-              clientEmail: data.booking.clientEmail,
-              serviceName: data.booking.serviceName,
-              date: data.booking.appointmentDate,
-              time: data.booking.appointmentTime,
-            });
-          }
-          setSyncStatus("synced");
-        })
-        .catch((err) => {
-          console.error("Failed to sync booking to admin:", err);
-          setSyncStatus("idle");
-        });
+    const name = searchParams.get("name") || searchParams.get("client_name");
+    const email = searchParams.get("email") || searchParams.get("client_email");
+    if (rawId || name || email) {
+      setBookingDetails((prev) => ({
+        ...prev,
+        id: rawId || prev.id,
+        clientName: name || prev.clientName,
+        clientEmail: email || prev.clientEmail,
+      }));
     }
   }, [searchParams]);
 
@@ -195,8 +162,8 @@ END:VCALENDAR`;
 
         <p className="font-body-sm text-[11px] text-on-surface-variant/80 mt-6">
           Need to reschedule or have a question? Contact Aswathy directly at{" "}
-          <a href="mailto:aswathy.counselling@gmail.com" className="text-primary underline">
-            aswathy.counselling@gmail.com
+          <a href="mailto:roottherapyonline@gmail.com" className="text-primary underline">
+            roottherapyonline@gmail.com
           </a>
         </p>
       </div>

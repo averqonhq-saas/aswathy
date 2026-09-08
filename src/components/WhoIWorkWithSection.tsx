@@ -1,42 +1,96 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface ClientGroup {
+  id: string;
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+const defaultGroups: ClientGroup[] = [
+  {
+    id: "adolescents",
+    icon: "face",
+    title: "Adolescents",
+    desc: "Navigating identity formation, academic stress, peer dynamics, emotional regulation, and family communication during formative teenage years.",
+  },
+  {
+    id: "young-adults",
+    icon: "explore",
+    title: "Young Adults",
+    desc: "Stepping into independence, career uncertainty, establishing healthy relationships, existential questioning, and managing life transitions.",
+  },
+  {
+    id: "adults",
+    icon: "person",
+    title: "Adults",
+    desc: "Addressing chronic burnout, emotional patterns, grief, life reprioritization, personal boundaries, and long-standing inner narratives.",
+  },
+  {
+    id: "students",
+    icon: "school",
+    title: "Students",
+    desc: "Exam anxiety, perfectionism, balancing demanding coursework, campus adjustments, and finding motivation without chronic overwhelm.",
+  },
+  {
+    id: "professionals",
+    icon: "work_outline",
+    title: "Working Professionals",
+    desc: "Workplace imposter syndrome, work-life balance, high-pressure environments, conflict resolution, and career pivot fatigue.",
+  },
+];
+
+function getIconForTitle(title: string): string {
+  const t = (title || "").toLowerCase();
+  if (t.includes("adolescent") || t.includes("teen")) return "face";
+  if (t.includes("young") || t.includes("youth")) return "explore";
+  if (t.includes("student") || t.includes("academic")) return "school";
+  if (
+    t.includes("professional") ||
+    t.includes("corporate") ||
+    t.includes("work")
+  )
+    return "work_outline";
+  if (t.includes("relationship") || t.includes("couple")) return "favorite";
+  return "person";
+}
 
 export default function WhoIWorkWithSection() {
+  const [groups, setGroups] = useState<ClientGroup[]>(defaultGroups);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
-  const groups = [
-    {
-      id: "adolescents",
-      icon: "face",
-      title: "Adolescents",
-      desc: "Navigating identity formation, academic stress, peer dynamics, emotional regulation, and family communication during formative teenage years.",
-    },
-    {
-      id: "young-adults",
-      icon: "explore",
-      title: "Young Adults",
-      desc: "Stepping into independence, career uncertainty, establishing healthy relationships, existential questioning, and managing life transitions.",
-    },
-    {
-      id: "adults",
-      icon: "person",
-      title: "Adults",
-      desc: "Addressing chronic burnout, emotional patterns, grief, life reprioritization, personal boundaries, and long-standing inner narratives.",
-    },
-    {
-      id: "students",
-      icon: "school",
-      title: "Students",
-      desc: "Exam anxiety, perfectionism, balancing demanding coursework, campus adjustments, and finding motivation without chronic overwhelm.",
-    },
-    {
-      id: "professionals",
-      icon: "work_outline",
-      title: "Working Professionals",
-      desc: "Workplace imposter syndrome, work-life balance, high-pressure environments, conflict resolution, and career pivot fatigue.",
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+    async function loadClientTypes() {
+      try {
+        const res = await fetch("/api/content", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (
+          isMounted &&
+          data.clientTypes &&
+          Array.isArray(data.clientTypes) &&
+          data.clientTypes.length > 0
+        ) {
+          const mapped: ClientGroup[] = data.clientTypes.map((ct: any) => ({
+            id: ct.id,
+            icon: getIconForTitle(ct.title),
+            title: ct.title,
+            desc: ct.description,
+          }));
+          setGroups(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to load client types:", err);
+      }
+    }
+    loadClientTypes();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop">

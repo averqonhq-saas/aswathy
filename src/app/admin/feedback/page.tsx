@@ -20,7 +20,7 @@ import Drawer from "@/components/admin/Drawer";
 import Modal from "@/components/admin/Modal";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { ClientFeedback } from "@/lib/db";
+import type { ClientFeedback } from "@/lib/types";
 
 export default function AdminFeedbackPage() {
   const { success, error } = useToast();

@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import ZohoBooking from "@/components/ZohoBooking";
+import BookingForm from "@/components/BookingForm";
 import {
   Menu,
   X,
   ArrowRight,
+  ShieldCheck,
+  CalendarCheck,
 } from "lucide-react";
 
 export default function BookASessionPage() {
@@ -77,14 +79,6 @@ export default function BookASessionPage() {
               </span>
               <span className="ml-space-xxs text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
                 →
-              </span>
-            </Link>
-            <Link
-              href="/#about"
-              className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 hover:bg-primary-container transition-colors"
-            >
-              <span className="material-symbols-outlined text-on-primary text-[18px]">
-                person
               </span>
             </Link>
 
@@ -224,32 +218,13 @@ export default function BookASessionPage() {
             </div>
           </section>
 
-          {/* SECTION 2: HARMONIZED BOOKINGS INTERFACE */}
+          {/* SECTION 2: INLINE BOOKING FORM */}
           <section
             id="booking-form"
-            className="w-full bg-surface-container-low py-space-3xl lg:py-space-4xl scroll-mt-24"
+            className="w-full bg-surface-container-low py-space-2xl lg:py-space-3xl scroll-mt-24"
           >
             <div className="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop">
-              {/* Section Marker */}
-              <div className="flex items-center justify-between pb-space-lg">
-                <div>
-                  <span className="font-label-caps text-label-caps uppercase text-secondary tracking-widest block">
-                    Live Scheduling Sanctuary
-                  </span>
-                  <h2 className="font-headline-lg text-headline-lg text-primary tracking-tight">
-                    Select your consultation preference
-                  </h2>
-                </div>
-                <div className="hidden sm:flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
-                  <span className="material-symbols-outlined text-[18px] text-secondary">
-                    verified_user
-                  </span>
-                  <span>Encrypted Healthcare Schedule</span>
-                </div>
-              </div>
-
-              {/* Live Zoho Bookings Healthcare Portal Embed */}
-              <ZohoBooking height="720px" />
+              <BookingForm />
             </div>
           </section>
 
@@ -480,9 +455,9 @@ export default function BookASessionPage() {
                   Have an idiosyncratic scheduling need or question?{" "}
                   <a
                     className="text-primary font-medium underline underline-offset-4 decoration-secondary decoration-2 hover:text-secondary transition-colors"
-                    href="mailto:aswathy@sanctuarypsych.com"
+                    href="mailto:roottherapyonline@gmail.com"
                   >
-                    Reach out directly via email
+                    Reach out directly via email (roottherapyonline@gmail.com)
                   </a>
                 </p>
               </div>

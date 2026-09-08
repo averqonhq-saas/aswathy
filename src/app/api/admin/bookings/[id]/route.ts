@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { bookingService } from "@/lib/booking-adapter";
 import { getCurrentAdmin } from "@/lib/auth";
 import { getDatabase, saveDatabase } from "@/lib/db";
+import { getPgPool } from "@/lib/supabase-db";
 
 export async function GET(
   request: Request,
@@ -79,18 +80,33 @@ export async function DELETE(
 
     const { id } = await params;
     const db = await getDatabase();
-    const booking = db.bookings.find((b) => b.id === id);
+    
+    let found = false;
 
-    if (!booking) {
+    // 1. Remove from JSONB collections / db.bookings
+    const bookingIndex = db.bookings.findIndex((b) => b.id === id);
+    if (bookingIndex !== -1) {
+      db.bookings.splice(bookingIndex, 1);
+      await saveDatabase(db);
+      found = true;
+    }
+
+    // 2. Remove from PostgreSQL relational table
+    try {
+      const pool = getPgPool();
+      const res = await pool.query("DELETE FROM bookings WHERE id = $1", [id]);
+      if (res.rowCount && res.rowCount > 0) {
+        found = true;
+      }
+    } catch (sqlErr) {
+      console.warn("SQL table booking delete notice:", sqlErr);
+    }
+
+    if (!found) {
       return NextResponse.json({ error: "Booking not found." }, { status: 404 });
     }
 
-    // Soft delete
-    booking.deletedAt = new Date().toISOString();
-    booking.bookingStatus = "cancelled";
-    await saveDatabase(db);
-
-    return NextResponse.json({ success: true, message: "Booking removed." });
+    return NextResponse.json({ success: true, message: "Booking removed successfully." });
   } catch (error) {
     console.error("Delete booking error:", error);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

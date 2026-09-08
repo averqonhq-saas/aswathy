@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { ClientType } from "@/lib/db";
+import type { ClientType } from "@/lib/types";
 
 export default function AdminContentClientTypesPage() {
   const { success, error } = useToast();

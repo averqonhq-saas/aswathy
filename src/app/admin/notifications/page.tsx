@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { Notification } from "@/lib/db";
+import type { Notification } from "@/lib/types";
 
 export default function AdminNotificationsPage() {
   const { success, error } = useToast();

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import {
   X,
-  Calendar as CalendarIcon,
   Clock,
   Video,
   MapPin,
@@ -15,7 +14,6 @@ import {
   MessageCircle,
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import ZohoBooking from "./ZohoBooking";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -44,7 +42,6 @@ export default function BookingModal({
   onClose,
   initialService,
 }: BookingModalProps) {
-  const [bookingMode, setBookingMode] = useState<"zoho" | "intake">("zoho");
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Form states
@@ -246,55 +243,9 @@ END:VCALENDAR`;
           </button>
         </div>
 
-        {/* Booking Method Switcher */}
-        <div className="px-space-md sm:px-space-xl py-space-xs bg-surface-container-low border-b border-surface-container flex flex-wrap items-center justify-between gap-2">
-          <div className="flex bg-surface-container rounded-xl p-1 gap-1 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => setBookingMode("zoho")}
-              className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-lg text-xs font-label-md font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                bookingMode === "zoho"
-                  ? "bg-warm-umber text-surface shadow-sm"
-                  : "text-on-surface-variant hover:text-primary"
-              }`}
-            >
-              <CalendarIcon className="w-3.5 h-3.5" />
-              <span>Live Zoho Scheduler</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setBookingMode("intake")}
-              className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-lg text-xs font-label-md font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                bookingMode === "intake"
-                  ? "bg-warm-umber text-surface shadow-sm"
-                  : "text-on-surface-variant hover:text-primary"
-              }`}
-            >
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Guided Intake Form</span>
-            </button>
-          </div>
-          <span className="hidden sm:inline-block text-[11px] text-on-surface-variant italic">
-            {bookingMode === "zoho" ? "Real-time calendar booking" : "Step-by-step intake"}
-          </span>
-        </div>
 
-        {bookingMode === "zoho" ? (
-          <div className="p-space-md sm:p-space-lg overflow-y-auto custom-scrollbar flex-1 bg-surface-container-low flex flex-col justify-between">
-            <ZohoBooking height="560px" containerId="modal-inline-container" />
-            <div className="mt-space-md pt-space-sm border-t border-surface-container flex flex-col sm:flex-row items-center justify-between gap-space-sm text-[12px] text-on-surface-variant">
-              <span>Looking to complete intake questions first?</span>
-              <button
-                type="button"
-                onClick={() => setBookingMode("intake")}
-                className="text-primary hover:text-secondary font-medium underline underline-offset-4 cursor-pointer"
-              >
-                Switch to Guided Intake Form →
-              </button>
-            </div>
-          </div>
-        ) : (
-          <>
+        {/* Intake Form Steps */}
+        <>
             {/* Step Indicator Progress Bar */}
             <div className="px-space-xl pt-space-md pb-space-xs bg-surface flex items-center justify-between border-b border-surface-container/60 text-[12px] font-label-md text-on-surface-variant">
               <div
@@ -858,8 +809,7 @@ END:VCALENDAR`;
                 </button>
               </div>
             )}
-          </>
-        )}
+        </>
       </div>
     </div>
   );

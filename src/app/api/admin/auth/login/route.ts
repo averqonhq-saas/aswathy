@@ -15,8 +15,14 @@ export async function POST(request: Request) {
     }
 
     const db = await getDatabase();
+    const cleanEmail = email.toLowerCase().trim();
     const admin = db.admins.find(
-      (a) => a.email.toLowerCase() === email.toLowerCase().trim()
+      (a) =>
+        a.email.toLowerCase() === cleanEmail ||
+        (cleanEmail === "roottherapyonline@gmail.com" &&
+          a.email.toLowerCase() === "aswathy@sanctuary.com") ||
+        (cleanEmail === "aswathy@sanctuary.com" &&
+          a.email.toLowerCase() === "roottherapyonline@gmail.com")
     );
 
     if (!admin) {

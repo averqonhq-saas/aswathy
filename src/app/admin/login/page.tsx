@@ -10,10 +10,13 @@ import Modal from "@/components/admin/Modal";
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/admin/dashboard";
+  const redirectParam = searchParams.get("redirect");
+  const redirect = redirectParam?.startsWith("/admin")
+    ? redirectParam
+    : "/admin/dashboard";
   const { success, error, info } = useToast();
 
-  const [email, setEmail] = useState("aswathy@sanctuary.com");
+  const [email, setEmail] = useState("roottherapyonline@gmail.com");
   const [password, setPassword] = useState("admin12345");
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -114,7 +117,7 @@ function AdminLoginForm() {
           <Sparkles className="w-4 h-4 text-forest-green shrink-0 mt-0.5" />
           <div className="flex-1 text-[11px] leading-relaxed">
             <span className="font-semibold text-primary block">Default Login Credentials:</span>
-            <span>Email: <strong className="text-forest-green">aswathy@sanctuary.com</strong></span>
+            <span>Email: <strong className="text-forest-green">roottherapyonline@gmail.com</strong></span>
             <br />
             <span>Password: <strong className="text-forest-green">admin12345</strong></span>
           </div>
@@ -140,7 +143,7 @@ function AdminLoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="aswathy@sanctuary.com"
+                placeholder="roottherapyonline@gmail.com"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container-low border border-surface-container-high text-xs text-primary focus:outline-none focus:border-forest-green focus:bg-surface transition-all"
               />
             </div>
@@ -258,7 +261,7 @@ function AdminLoginForm() {
               required
               value={forgotEmail}
               onChange={(e) => setForgotEmail(e.target.value)}
-              placeholder="aswathy@sanctuary.com"
+              placeholder="roottherapyonline@gmail.com"
               className="w-full px-3.5 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs text-primary focus:outline-none focus:border-forest-green focus:bg-surface"
             />
           </div>

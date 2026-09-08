@@ -36,6 +36,14 @@ export default function Footer({ onOpenBooking }: FooterProps) {
               <span className="font-body-sm text-body-sm text-on-tertiary-container">
                 Specialized in Anxiety, Relational Dynamics, and Somatic Grounding
               </span>
+              <div className="pt-space-xs">
+                <a
+                  href="mailto:roottherapyonline@gmail.com"
+                  className="inline-flex items-center gap-1.5 text-[13px] text-secondary-fixed hover:text-surface-bright transition-colors duration-200"
+                >
+                  <span>✉ roottherapyonline@gmail.com</span>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -69,6 +77,15 @@ export default function Footer({ onOpenBooking }: FooterProps) {
                   href="#my-approach"
                 >
                   <span>My Approach &amp; Philosophy</span>
+                  <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
+                    →
+                  </span>
+                </a>
+                <a
+                  className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-[14px]"
+                  href="/#enquiry"
+                >
+                  <span>Send an Enquiry</span>
                   <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
                     →
                   </span>

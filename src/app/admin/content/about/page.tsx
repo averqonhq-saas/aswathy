@@ -15,7 +15,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useToast } from "@/components/admin/Toast";
-import { WebsiteAboutContent } from "@/lib/db";
+import type { WebsiteAboutContent } from "@/lib/types";
 
 export default function AdminContentAboutPage() {
   const { success, error } = useToast();

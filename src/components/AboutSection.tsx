@@ -1,6 +1,31 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import type { WebsiteAboutContent } from "@/lib/types";
+
 export default function AboutSection() {
+  const [about, setAbout] = useState<WebsiteAboutContent | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadAbout() {
+      try {
+        const res = await fetch("/api/content", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (isMounted && data.about) {
+          setAbout(data.about);
+        }
+      } catch (err) {
+        console.error("Failed to load about section content:", err);
+      }
+    }
+    loadAbout();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <section
       id="about"
@@ -22,9 +47,8 @@ export default function AboutSection() {
           </h2>
 
           <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-            Therapy is a sanctuary where vulnerability meets safety. You will
-            never be rushed to explain what you are not yet ready to
-            articulate.
+            {about?.shortIntro ||
+              "Therapy is a sanctuary where vulnerability meets safety. You will never be rushed to explain what you are not yet ready to articulate."}
           </p>
 
           <div className="pt-space-sm">
@@ -33,7 +57,7 @@ export default function AboutSection() {
               href="#journey"
             >
               <span className="underline underline-offset-8 decoration-secondary-fixed-dim decoration-2 group-hover:decoration-primary transition-all duration-200">
-                Meet Aswathy
+                Meet {about?.name ? about.name.split(" ")[0] : "Aswathy"}
               </span>
               <span className="text-secondary transition-transform duration-200 group-hover:translate-x-1">
                 →
@@ -47,9 +71,13 @@ export default function AboutSection() {
           <div className="sm:col-span-6 relative aspect-[3/4] rounded-3xl overflow-hidden shadow-lg bg-surface-container group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              alt="Aswathy Jeyarajasekar, Counselling Psychologist"
+              alt={
+                about?.name
+                  ? `${about.name}, ${about.title || "Counselling Psychologist"}`
+                  : "Aswathy Jeyarajasekar, Counselling Psychologist"
+              }
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              src="/aswathy-photo.jpg"
+              src={about?.profileImage || "/aswathy-photo.jpg"}
             />
           </div>
 
@@ -59,15 +87,17 @@ export default function AboutSection() {
                 Credentials &amp; Core Belief
               </span>
               <p className="font-body-md text-body-md font-medium text-primary">
-                I’m Aswathy Jeyarajasekar, a Counselling Psychologist with a
-                B.Sc. in Psychology and an M.Sc. in Counselling Psychology.
+                {about?.name
+                  ? `I’m ${about.name}, a ${about.title || "Counselling Psychologist"}${
+                      about.qualifications && about.qualifications.length > 0
+                        ? ` with ${about.qualifications.join(" and ")}.`
+                        : "."
+                    }`
+                  : "I’m Aswathy Jeyarajasekar, a Counselling Psychologist with a B.Sc. in Psychology and an M.Sc. in Counselling Psychology."}
               </p>
               <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                I believe therapy is not about telling someone what they should
-                do or how they should feel. Instead, it is a collaborative
-                process of understanding yourself, exploring your experiences,
-                recognising your strengths, and working towards changes that feel
-                meaningful to you.
+                {about?.fullBio ||
+                  "I believe therapy is not about telling someone what they should do or how they should feel. Instead, it is a collaborative process of understanding yourself, exploring your experiences, recognising your strengths, and working towards changes that feel meaningful to you."}
               </p>
             </div>
 
@@ -82,7 +112,7 @@ export default function AboutSection() {
                   Person-Centered Practice
                 </div>
                 <div className="font-body-sm text-body-sm text-on-surface-variant text-[12px]">
-                  Rooted in mutual trust &amp; patience
+                  {about?.experienceYears || "Rooted in mutual trust & patience"}
                 </div>
               </div>
             </div>

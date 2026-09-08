@@ -17,7 +17,7 @@ import {
 import Modal from "@/components/admin/Modal";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { MediaItem } from "@/lib/db";
+import type { MediaItem } from "@/lib/types";
 
 export default function AdminMediaPage() {
   const { success, error } = useToast();

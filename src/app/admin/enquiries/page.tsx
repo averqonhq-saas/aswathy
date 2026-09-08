@@ -22,7 +22,7 @@ import Drawer from "@/components/admin/Drawer";
 import StatusBadge from "@/components/admin/StatusBadge";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { Enquiry } from "@/lib/db";
+import type { Enquiry } from "@/lib/types";
 
 export default function AdminEnquiriesPage() {
   const { success, error } = useToast();

@@ -54,7 +54,7 @@ export async function initSupabaseSchema(): Promise<void> {
 
     CREATE TABLE IF NOT EXISTS bookings (
       id TEXT PRIMARY KEY,
-      zoho_booking_id TEXT UNIQUE,
+      zoho_booking_id TEXT,
       client_name TEXT,
       client_email TEXT,
       client_phone TEXT,
@@ -68,6 +68,7 @@ export async function initSupabaseSchema(): Promise<void> {
       status TEXT,
       payment_status TEXT,
       source TEXT DEFAULT 'zoho',
+      deleted_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
@@ -75,7 +76,11 @@ export async function initSupabaseSchema(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_bookings_zoho_id ON bookings(zoho_booking_id);
     CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(appointment_date);
   `;
-  await pool.query(query);
+  try {
+    await pool.query(query);
+  } catch (err) {
+    console.warn("initSupabaseSchema notice:", err);
+  }
 }
 
 /**
@@ -114,6 +119,7 @@ export async function saveDatabaseToSupabase(data: DatabaseSchema): Promise<void
   try {
     await client.query("BEGIN");
 
+    // 1. Primary: Save all practice_collections (JSONB document store)
     const entries = Object.entries(data);
     for (const [collectionName, collectionData] of entries) {
       await client.query(
@@ -125,65 +131,79 @@ export async function saveDatabaseToSupabase(data: DatabaseSchema): Promise<void
         `,
         [collectionName, JSON.stringify(collectionData)]
       );
-
-      // If updating bookings, also sync to the relational 'bookings' SQL table
-      if (collectionName === "bookings" && Array.isArray(collectionData)) {
-        for (const b of collectionData) {
-          const zohoId = b.provider === "zoho" ? (b.id.startsWith("ZOHO-") ? b.id.replace("ZOHO-", "") : b.id) : null;
-          await client.query(
-            `
-            INSERT INTO bookings (
-              id, zoho_booking_id, client_name, client_email, client_phone,
-              service_name, service_id, appointment_date, appointment_time,
-              timezone, meeting_format, client_notes, status, payment_status,
-              source, created_at, updated_at
-            )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-            ON CONFLICT (id) DO UPDATE SET
-              zoho_booking_id = EXCLUDED.zoho_booking_id,
-              client_name = EXCLUDED.client_name,
-              client_email = EXCLUDED.client_email,
-              client_phone = EXCLUDED.client_phone,
-              service_name = EXCLUDED.service_name,
-              service_id = EXCLUDED.service_id,
-              appointment_date = EXCLUDED.appointment_date,
-              appointment_time = EXCLUDED.appointment_time,
-              client_notes = EXCLUDED.client_notes,
-              status = EXCLUDED.status,
-              payment_status = EXCLUDED.payment_status,
-              source = EXCLUDED.source,
-              updated_at = NOW()
-            `,
-            [
-              b.id,
-              zohoId,
-              b.clientName,
-              b.clientEmail,
-              b.clientPhone,
-              b.serviceName,
-              b.serviceId,
-              b.appointmentDate,
-              b.appointmentTime,
-              "Asia/Kolkata",
-              b.format || "online",
-              b.clientMessage || b.internalNotes || null,
-              b.bookingStatus,
-              b.paymentStatus || "pending",
-              b.provider || "internal",
-              b.createdAt || new Date().toISOString(),
-              b.updatedAt || new Date().toISOString(),
-            ]
-          );
-        }
-      }
     }
 
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");
-    console.error("Failed to save database to Supabase PostgreSQL:", error);
+    console.error("Failed to save practice_collections to Supabase PostgreSQL:", error);
     throw error;
   } finally {
     client.release();
+  }
+
+  // 2. Secondary: Sync bookings to the relational SQL table (isolated, non-blocking)
+  if (Array.isArray(data.bookings)) {
+    for (const b of data.bookings) {
+      try {
+        const zohoId = b.id.startsWith("ZOHO-")
+          ? b.id.replace("ZOHO-", "")
+          : null;
+
+        const rawDate = b.appointmentDate || new Date().toISOString().split("T")[0];
+        const safeDate = rawDate.includes("T")
+          ? rawDate.split("T")[0]
+          : rawDate.includes(" ")
+          ? rawDate.split(" ")[0]
+          : rawDate;
+
+        await pool.query(
+          `
+          INSERT INTO bookings (
+            id, zoho_booking_id, client_name, client_email, client_phone,
+            service_name, service_id, appointment_date, appointment_time,
+            timezone, meeting_format, client_notes, status, payment_status,
+            source, created_at, updated_at
+          )
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+          ON CONFLICT (id) DO UPDATE SET
+            zoho_booking_id = EXCLUDED.zoho_booking_id,
+            client_name = EXCLUDED.client_name,
+            client_email = EXCLUDED.client_email,
+            client_phone = EXCLUDED.client_phone,
+            service_name = EXCLUDED.service_name,
+            service_id = EXCLUDED.service_id,
+            appointment_date = EXCLUDED.appointment_date,
+            appointment_time = EXCLUDED.appointment_time,
+            client_notes = EXCLUDED.client_notes,
+            status = EXCLUDED.status,
+            payment_status = EXCLUDED.payment_status,
+            source = EXCLUDED.source,
+            updated_at = NOW()
+          `,
+          [
+            b.id,
+            zohoId,
+            b.clientName,
+            b.clientEmail,
+            b.clientPhone,
+            b.serviceName,
+            b.serviceId,
+            safeDate,
+            b.appointmentTime || "10:00 AM",
+            "Asia/Kolkata",
+            b.format || "online",
+            b.clientMessage || b.internalNotes || null,
+            b.bookingStatus || "pending",
+            b.paymentStatus || "pending",
+            b.provider || "internal",
+            b.createdAt || new Date().toISOString(),
+            b.updatedAt || new Date().toISOString(),
+          ]
+        );
+      } catch (rowErr) {
+        console.warn(`[Relational Bookings Sync Warning for ${b.id}]:`, rowErr);
+      }
+    }
   }
 }

@@ -26,7 +26,23 @@ export async function GET(
 
       case "session":
         return NextResponse.json({
-          data: [...db.sessionSteps].sort((a, b) => a.order - b.order),
+          data: {
+            steps: [...(db.sessionSteps || [])].sort((a, b) => a.order - b.order),
+            formats: [...(db.sessionFormats || [])].sort((a, b) => a.order - b.order),
+          },
+        });
+
+      case "session-formats":
+        return NextResponse.json({
+          data: [...(db.sessionFormats || [])].sort((a, b) => a.order - b.order),
+        });
+
+      case "booking-form":
+        return NextResponse.json({
+          data: {
+            config: db.bookingFormConfig,
+            formats: [...(db.sessionFormats || [])].sort((a, b) => a.order - b.order),
+          },
         });
 
       case "client-types":
@@ -89,8 +105,27 @@ export async function PUT(
       }
 
       case "session": {
-        if (Array.isArray(body.items)) {
-          db.sessionSteps = body.items.map((item: any, idx: number) => ({
+        if (Array.isArray(body.formats)) {
+          db.sessionFormats = body.formats.map((item: any, idx: number) => ({
+            id: item.id || `fmt_${Date.now()}_${idx}`,
+            title: item.title || "",
+            format: item.format || "online",
+            duration: item.duration || "50 Minutes · Secure Video",
+            tag: item.tag || "Video Consultation",
+            badge: item.badge || "",
+            badgeType: item.badgeType || "popular",
+            description: item.description || "",
+            icon: item.icon || "video",
+            price: typeof item.price === "number" ? item.price : 1800,
+            isActive: item.isActive !== undefined ? item.isActive : true,
+            order: idx + 1,
+            createdAt: item.createdAt || now,
+            updatedAt: now,
+          }));
+        }
+        if (Array.isArray(body.items) || Array.isArray(body.steps)) {
+          const stepList = Array.isArray(body.items) ? body.items : body.steps;
+          db.sessionSteps = stepList.map((item: any, idx: number) => ({
             id: item.id || `step_${Date.now()}_${idx}`,
             stepNumber: item.stepNumber || `0${idx + 1}`.slice(-2),
             title: item.title || "",
@@ -100,9 +135,75 @@ export async function PUT(
             createdAt: item.createdAt || now,
             updatedAt: now,
           }));
+        }
+        await saveDatabase(db);
+        return NextResponse.json({
+          success: true,
+          data: {
+            steps: db.sessionSteps,
+            formats: db.sessionFormats,
+          },
+        });
+      }
+
+      case "session-formats": {
+        if (Array.isArray(body.items) || Array.isArray(body.formats)) {
+          const list = Array.isArray(body.items) ? body.items : body.formats;
+          db.sessionFormats = list.map((item: any, idx: number) => ({
+            id: item.id || `fmt_${Date.now()}_${idx}`,
+            title: item.title || "",
+            format: item.format || "online",
+            duration: item.duration || "50 Minutes · Secure Video",
+            tag: item.tag || "Video Consultation",
+            badge: item.badge || "",
+            badgeType: item.badgeType || "popular",
+            description: item.description || "",
+            icon: item.icon || "video",
+            price: typeof item.price === "number" ? item.price : 1800,
+            isActive: item.isActive !== undefined ? item.isActive : true,
+            order: idx + 1,
+            createdAt: item.createdAt || now,
+            updatedAt: now,
+          }));
           await saveDatabase(db);
         }
-        return NextResponse.json({ success: true, data: db.sessionSteps });
+        return NextResponse.json({ success: true, data: db.sessionFormats });
+      }
+
+      case "booking-form": {
+        if (body.config) {
+          db.bookingFormConfig = {
+            ...(db.bookingFormConfig || {}),
+            ...body.config,
+            updatedAt: now,
+          };
+        }
+        if (Array.isArray(body.formats)) {
+          db.sessionFormats = body.formats.map((item: any, idx: number) => ({
+            id: item.id || `fmt_${Date.now()}_${idx}`,
+            title: item.title || "",
+            format: item.format || "online",
+            duration: item.duration || "50 Minutes · Secure Video",
+            tag: item.tag || "Video Consultation",
+            badge: item.badge || "",
+            badgeType: item.badgeType || "popular",
+            description: item.description || "",
+            icon: item.icon || "video",
+            price: typeof item.price === "number" ? item.price : 1800,
+            isActive: item.isActive !== undefined ? item.isActive : true,
+            order: idx + 1,
+            createdAt: item.createdAt || now,
+            updatedAt: now,
+          }));
+        }
+        await saveDatabase(db);
+        return NextResponse.json({
+          success: true,
+          data: {
+            config: db.bookingFormConfig,
+            formats: db.sessionFormats,
+          },
+        });
       }
 
       case "client-types": {

@@ -26,7 +26,7 @@ import Modal from "@/components/admin/Modal";
 import StatusBadge from "@/components/admin/StatusBadge";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { Booking, BlockedSlot, AvailabilityRule } from "@/lib/db";
+import type { Booking, BlockedSlot, AvailabilityRule } from "@/lib/types";
 
 type CalendarView = "month" | "week" | "day";
 

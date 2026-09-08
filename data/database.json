@@ -1,16 +1,4 @@
 {
-  "admins": [
-    {
-      "id": "admin_aswathy_1",
-      "name": "Aswathy Jeyarajasekar",
-      "role": "superadmin",
-      "email": "aswathy@sanctuary.com",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "passwordHash": "9dc5b1993a171283196e2527c78c8ba7:54c404b541a11dcb4a85f78131f0dfb70dbf58d5cc25243c454dffbb264a9fad186a6b24b6606c802e6f2707c8373a79664b8ca255d9c1095525b9555c76f85f",
-      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
-    }
-  ],
   "services": [
     {
       "id": "svc_emotional_wellbeing",
@@ -88,319 +76,177 @@
       "shortDescription": "Grief, major career shifts, relocation adjustment, and unexpected lifecycle disruptions."
     }
   ],
-  "bookings": [
-    {
-      "id": "ZOHO-TEST-ZAP-001",
-      "clientName": "Test Client from Zapier",
-      "clientEmail": "testclient@zapier.com",
-      "clientPhone": "+91 9876543210",
-      "serviceId": "serv_1",
-      "serviceName": "Individual Online Consultation",
-      "appointmentDate": "2026-09-10",
-      "appointmentTime": "11:00",
-      "durationMinutes": 50,
-      "format": "online",
-      "bookingStatus": "confirmed",
-      "paymentStatus": "paid",
-      "price": 1800,
-      "meetingLink": "Google Meet Telehealth (Link sent via Zoho email)",
-      "clientMessage": "This is a test booking sent via Zapier simulation",
-      "history": [
-        {
-          "timestamp": "2026-09-06T16:46:33.468Z",
-          "action": "Appointment created via Zoho Bookings integration (Ref: TEST-ZAP-001)"
-        }
-      ],
-      "provider": "zoho",
-      "createdAt": "2026-09-06T16:46:33.468Z",
-      "updatedAt": "2026-09-06T16:46:33.468Z"
-    },
-    {
-      "id": "ZOHO-tunnel_test_1",
-      "clientName": "Tunnel Test User",
-      "clientEmail": "tunnel@example.com",
-      "clientPhone": "+91 (Not Provided)",
-      "serviceId": "svc_emotional_wellbeing",
-      "serviceName": "Emotional Wellbeing & Stress Management",
-      "appointmentDate": "2026-09-25",
-      "appointmentTime": "10:00",
-      "durationMinutes": 50,
-      "format": "online",
-      "bookingStatus": "confirmed",
-      "paymentStatus": "paid",
-      "price": 1800,
-      "meetingLink": "Google Meet Telehealth (Link sent via Zoho email)",
-      "clientMessage": "",
-      "history": [
-        {
-          "timestamp": "2026-09-06T14:37:40.747Z",
-          "action": "Appointment created via Zoho Bookings integration (Ref: tunnel_test_1)"
-        }
-      ],
-      "provider": "zoho",
-      "createdAt": "2026-09-06T14:37:40.747Z",
-      "updatedAt": "2026-09-06T14:37:40.747Z"
-    },
-    {
-      "id": "ZOHO-zh_deluge_101",
-      "clientName": "Vikram Seth",
-      "clientEmail": "vikram.seth@example.com",
-      "clientPhone": "+91 98840 99887",
-      "serviceId": "serv_1",
-      "serviceName": "Relationship Dynamics & Pre-Marital Counselling",
-      "appointmentDate": "2026-09-20",
-      "appointmentTime": "14:00",
-      "durationMinutes": 50,
-      "format": "online",
-      "bookingStatus": "cancelled",
-      "paymentStatus": "paid",
-      "price": 1800,
-      "meetingLink": "https://meet.google.com/abc-defg-hij",
-      "clientMessage": "Deluge workflow test booking.",
-      "history": [
-        {
-          "timestamp": "2026-09-06T14:20:14.452Z",
-          "action": "Appointment marked CANCELLED via Zoho event (cancelled)"
-        },
-        {
-          "timestamp": "2026-09-06T14:20:13.990Z",
-          "action": "Rescheduled via Zoho from 2026-09-18 11:00 to 2026-09-20 14:00"
-        },
-        {
-          "timestamp": "2026-09-06T14:20:12.931Z",
-          "action": "Appointment created via Zoho Bookings integration (Ref: zh_deluge_101)"
-        }
-      ],
-      "provider": "zoho",
-      "createdAt": "2026-09-06T14:20:12.931Z",
-      "updatedAt": "2026-09-06T14:20:14.452Z"
-    },
-    {
-      "id": "ZOHO-test27370",
-      "price": 1800,
-      "format": "online",
-      "history": [
-        {
-          "timestamp": "2026-09-06T14:22:36.018Z",
-          "action": "Zoho booking record refreshed (confirmed)"
-        },
-        {
-          "action": "Booking automatically copied from Zoho Bookings (Ref: test_27370)",
-          "timestamp": "2026-09-06T14:07:07.453Z"
-        }
-      ],
-      "provider": "zoho",
-      "createdAt": "2026-09-06T14:07:07.453Z",
-      "serviceId": "serv_1",
-      "updatedAt": "2026-09-06T14:22:36.018Z",
-      "clientName": "Priya Ramanathan (Test)",
-      "clientEmail": "priya.test@example.com",
-      "clientPhone": "+91 98401 23456",
-      "meetingLink": "Google Meet link sent via Zoho email",
-      "serviceName": "Emotional Wellbeing Consultation",
-      "bookingStatus": "confirmed",
-      "clientMessage": "Sample test booking generated from Admin Settings to verify Zoho sync.",
-      "paymentStatus": "paid",
-      "appointmentDate": "2026-09-08",
-      "appointmentTime": "11:30 AM",
-      "durationMinutes": 50
-    },
-    {
-      "id": "ZOHO-zhtest998",
-      "price": 1800,
-      "format": "online",
-      "history": [
-        {
-          "action": "Status updated to COMPLETED",
-          "timestamp": "2026-09-06T14:04:23.126Z"
-        },
-        {
-          "action": "Booking automatically copied from Zoho Bookings (Ref: zh_test_998)",
-          "timestamp": "2026-09-06T14:03:51.022Z"
-        }
-      ],
-      "provider": "zoho",
-      "createdAt": "2026-09-06T14:03:51.022Z",
-      "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-06T14:04:23.126Z",
-      "clientName": "Aditi Nair",
-      "clientEmail": "aditi.nair@example.com",
-      "clientPhone": "+91 99400 11223",
-      "meetingLink": "Google Meet link sent via Zoho email",
-      "serviceName": "Emotional Wellbeing & Stress Management",
-      "bookingStatus": "completed",
-      "clientMessage": "Testing automated Zoho sync to Admin Bookings.",
-      "paymentStatus": "paid",
-      "appointmentDate": "2026-09-12",
-      "appointmentTime": "03:00 PM",
-      "durationMinutes": 50
-    }
-  ],
-  "blockedSlots": [],
-  "enquiries": [],
-  "settings": {
-    "account": {
-      "email": "aswathy@sanctuary.com",
-      "adminName": "Aswathy Jeyarajasekar",
-      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
-    },
-    "booking": {
-      "zohoUrl": "https://averqon.zohobookings.in/portal-embed#/averqon",
-      "provider": "zoho",
-      "bufferTime": 15,
-      "defaultFormat": "online",
-      "maxAdvanceDays": 60,
-      "bufferTimeMinutes": 15,
-      "advanceNoticeHours": 24,
-      "confirmationMessage": "Thank you for reaching out. Your confidential session has been reserved. A confirmation email with telehealth instructions has been dispatched.",
-      "defaultSessionDuration": 50,
-      "cancellationNoticeHours": 24,
-      "cancellationPolicyHours": 24
-    },
-    "general": {
-      "email": "counselling@aswathy.com",
-      "phone": "+91 98765 43210",
-      "tagline": "Gentle, non-judgmental space for emotional healing",
-      "currency": "INR (₹)",
-      "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
-      "timezone": "Asia/Kolkata (IST)",
-      "whatsapp": "https://wa.me/919876543210",
-      "instagram": "https://instagram.com/aswathy.psychology",
-      "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
-      "contactEmail": "counselling@aswathy.com",
-      "contactPhone": "+91 98765 43210",
-      "practiceName": "The Safe Sanctuary | Aswathy Counselling",
-      "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
-    },
-    "notifications": {
-      "bookingAlerts": true,
-      "enquiryAlerts": true,
-      "emailOnBooking": true,
-      "emailOnEnquiry": true,
-      "feedbackAlerts": true,
-      "dailySummaryDigest": false,
-      "emailNotifications": true
-    }
+  "websiteAbout": {
+    "name": "Aswathy Jeyarajasekar",
+    "title": "Counselling Psychologist",
+    "fullBio": "I am a Counselling Psychologist dedicated to creating a non-judgmental, unhurried space for individuals traversing emotional fatigue, relationship distress, and personal growth. With over a year of active private practice under clinical supervision, my work integrates evidence-informed cognitive reflection with somatic grounding and person-centered warmth.",
+    "updatedAt": "2026-09-08T12:27:37.518Z",
+    "shortIntro": "Providing an empathetic, collaborative sanctuary to explore your thoughts, emotions, and life challenges at your own pace.",
+    "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+    "qualifications": [
+      "M.Sc. in Counselling Psychology",
+      "Trained in Person-Centered Therapy (PCT) & Somatic Grounding"
+    ],
+    "experienceYears": "1+ Year in Supervised Private Practice"
   },
-  "clientTypes": [
+  "sessionFormats": [
     {
-      "id": "ct_1",
+      "id": "individual-online",
+      "tag": "Video Consultation",
+      "icon": "video",
+      "badge": "Popular",
       "order": 1,
-      "title": "Adolescents",
+      "price": 1800,
+      "title": "Individual Online Counselling",
+      "format": "online",
+      "duration": "50 Minutes · Secure Video",
       "isActive": true,
+      "badgeType": "popular",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Supporting teens through emotional turbulence, self-identity questions, and social pressures."
+      "updatedAt": "2026-09-08T14:18:00.668Z",
+      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
     },
     {
-      "id": "ct_2",
+      "id": "initial-discovery",
+      "tag": "Exploratory",
+      "icon": "discovery",
+      "badge": "Introductory",
       "order": 2,
-      "title": "Young Adults",
+      "price": 0,
+      "title": "Initial Discovery Call",
+      "format": "online",
+      "duration": "20 Minutes · Introductory",
       "isActive": true,
+      "badgeType": "introductory",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Navigating early career transitions, independence from family, and relationship shifts."
-    },
-    {
-      "id": "ct_3",
-      "order": 3,
-      "title": "Adults",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Unpacking mid-life transitions, chronic worry, personal values, and boundary setting."
-    },
-    {
-      "id": "ct_4",
-      "order": 4,
-      "title": "Students",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Addressing exam pressure, imposter feelings, academic burnout, and future dread."
-    },
-    {
-      "id": "ct_5",
-      "order": 5,
-      "title": "Working Professionals",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Managing corporate stress, work-life balance erosion, and interpersonal conflicts."
+      "updatedAt": "2026-09-08T14:18:00.668Z",
+      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
     }
   ],
-  "notifications": [
+  "bookingFormConfig": {
+    "timezone": "IST (GMT+5:30)",
+    "timeSlots": [
+      {
+        "time": "10:00 AM",
+        "isEvening": false
+      },
+      {
+        "time": "11:30 AM",
+        "isEvening": false
+      },
+      {
+        "time": "02:00 PM",
+        "isEvening": false
+      },
+      {
+        "time": "04:00 PM",
+        "isEvening": false
+      },
+      {
+        "time": "05:30 PM (Evening Slot)",
+        "isEvening": true
+      }
+    ],
+    "updatedAt": "2026-09-08T14:18:00.668Z",
+    "step1Title": "Choose Session Format",
+    "step2Title": "Choose Preferred Date & Time",
+    "step3Title": "Your Confidential Information",
+    "headerBadge": "Live Scheduling Sanctuary",
+    "headerTitle": "Select your consultation preference",
+    "cadenceTitle": "50-Minute Gentle Cadence",
+    "ethicsNotice": "All communications are bound by strict psychological ethics and confidential data protocols.",
+    "securityBadge": "Encrypted Healthcare Schedule",
+    "singleDaySlots": [
+      {
+        "id": "sds_1788877048662_2026-09-13",
+        "date": "2026-09-13",
+        "slots": [
+          {
+            "time": "10:00 AM",
+            "isEvening": false
+          },
+          {
+            "time": "11:00 AM",
+            "isEvening": false
+          },
+          {
+            "time": "12:00 PM",
+            "isEvening": false
+          },
+          {
+            "time": "01:00 PM",
+            "isEvening": false
+          },
+          {
+            "time": "02:00 PM",
+            "isEvening": false
+          },
+          {
+            "time": "03:00 PM",
+            "isEvening": false
+          },
+          {
+            "time": "04:00 PM",
+            "isEvening": false
+          },
+          {
+            "time": "05:00 PM (Evening Slot)",
+            "isEvening": true
+          }
+        ],
+        "toTime": "06:00 PM",
+        "fromTime": "10:00 AM",
+        "slotDurationMinutes": 50
+      }
+    ],
+    "whatsappNumber": "+91 98765 43210",
+    "contactChannels": [
+      "Email Invitation & Encrypted Link",
+      "WhatsApp & Email Notification",
+      "Direct Phone Call"
+    ],
+    "submitButtonText": "Confirm & Request Session",
+    "confirmationTitle": "Your Sanctuary Awaits",
+    "cadenceDescription": "All sessions conclude with 10 minutes of integration buffer to keep conversations unhurried.",
+    "confirmationSubtitle": "Appointment Secured",
+    "instantConfirmationText": "Instant booking confirmation & Google Meet invitation"
+  },
+  "journeyEntries": [
     {
-      "id": "notif_1788713193470",
-      "type": "booking_new",
-      "title": "New Zoho Booking Synced",
-      "message": "Test Client from Zapier booked \"Individual Online Consultation\" for 2026-09-10 at 11:00 via Zoho.",
-      "link": "/admin/bookings",
-      "isRead": false,
-      "createdAt": "2026-09-06T16:46:33.468Z"
+      "id": "jrn_2",
+      "year": "Undergraduate Studies",
+      "order": 1,
+      "heading": "B.Sc. in Psychology Foundations",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:38:03.658Z",
+      "description": "Built a rigorous foundation in human developmental psychology, abnormal psychology, cognitive neuroscience, and research methodologies."
     },
     {
-      "id": "notif_1788705460750",
-      "type": "booking_new",
-      "title": "New Zoho Booking Synced",
-      "message": "Tunnel Test User booked \"Emotional Wellbeing & Stress Management\" for 2026-09-25 at 10:00 via Zoho.",
-      "link": "/admin/bookings",
-      "isRead": false,
-      "createdAt": "2026-09-06T14:37:40.747Z"
+      "id": "jrn_1",
+      "year": "High School (11th Grade)",
+      "order": 2,
+      "heading": "The Spark of Psychological Empathy",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:38:03.658Z",
+      "description": "My interest in psychology began in the 11th grade, sparked by a profound personal experience of receiving compassionate psychological support during a challenging life chapter."
     },
     {
-      "id": "notif_1788704414453",
-      "type": "booking_cancel",
-      "title": "Zoho Appointment Cancelled",
-      "message": "Vikram Seth cancelled their session for 2026-09-20.",
-      "link": "/admin/bookings",
-      "isRead": false,
-      "createdAt": "2026-09-06T14:20:14.452Z"
+      "id": "jrn_3",
+      "year": "Postgraduate Specialization",
+      "order": 3,
+      "heading": "M.Sc. in Counselling Psychology",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:38:03.658Z",
+      "description": "Deepened clinical skills in person-centered modalities, therapeutic rapport, crisis intervention ethics, and supervised counselling practicum."
     },
     {
-      "id": "notif_1788704413991",
-      "type": "booking_rescheduled",
-      "title": "Zoho Appointment Rescheduled",
-      "message": "Vikram Seth rescheduled consultation to 2026-09-20 at 14:00.",
-      "link": "/admin/bookings",
-      "isRead": false,
-      "createdAt": "2026-09-06T14:20:13.990Z"
-    },
-    {
-      "id": "notif_1788704412934",
-      "type": "booking_new",
-      "title": "New Zoho Booking Synced",
-      "message": "Vikram Seth booked \"Relationship Dynamics & Pre-Marital Counselling\" for 2026-09-18 at 11:00 via Zoho.",
-      "link": "/admin/bookings",
-      "isRead": false,
-      "createdAt": "2026-09-06T14:20:12.931Z"
-    },
-    {
-      "id": "notif_1788703627456",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Zoho Booking Synced",
-      "isRead": false,
-      "message": "Priya Ramanathan (Test) booked \"Emotional Wellbeing Consultation\" for 2026-09-08 at 11:30 AM via Zoho.",
-      "createdAt": "2026-09-06T14:07:07.453Z"
-    },
-    {
-      "id": "notif_1788703463126",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Booking COMPLETED",
-      "isRead": false,
-      "message": "Booking ZOHO-zhtest998 (Aditi Nair) marked as completed.",
-      "createdAt": "2026-09-06T14:04:23.126Z"
-    },
-    {
-      "id": "notif_1788703431024",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Zoho Booking Synced",
-      "isRead": false,
-      "message": "Aditi Nair booked \"Emotional Wellbeing & Stress Management\" for 2026-09-12 at 03:00 PM via Zoho.",
-      "createdAt": "2026-09-06T14:03:51.022Z"
+      "id": "jrn_4",
+      "year": "Current Practice",
+      "order": 4,
+      "heading": "Private Practice Sanctuary",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:38:03.658Z",
+      "description": "Established private counselling practice offering online telehealth and in-person sanctuary sessions in Chennai under continued professional peer supervision."
     }
   ],
   "sessionSteps": [
@@ -455,6 +301,137 @@
       "description": "Continuing steady therapeutic accompaniment with regular review of what feels supportive and what needs adjustment."
     }
   ],
+  "admins": [
+    {
+      "id": "admin_aswathy_1",
+      "name": "Aswathy Jeyarajasekar",
+      "role": "superadmin",
+      "email": "roottherapyonline@gmail.com",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "passwordHash": "9dc5b1993a171283196e2527c78c8ba7:54c404b541a11dcb4a85f78131f0dfb70dbf58d5cc25243c454dffbb264a9fad186a6b24b6606c802e6f2707c8373a79664b8ca255d9c1095525b9555c76f85f",
+      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+    }
+  ],
+  "settings": {
+    "account": {
+      "email": "roottherapyonline@gmail.com",
+      "adminName": "Aswathy Jeyarajasekar",
+      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+    },
+    "booking": {
+      "zohoUrl": "https://averqon.zohobookings.in/portal-embed#/averqon",
+      "provider": "zoho",
+      "bufferTime": 15,
+      "defaultFormat": "online",
+      "maxAdvanceDays": 60,
+      "zohoRefreshToken": "1000.21bce53ad70393c6ea84f2f19e11dcab.81086e3d20d0573cd86388eeca63bdd9",
+      "bufferTimeMinutes": 15,
+      "advanceNoticeHours": 24,
+      "confirmationMessage": "Thank you for reaching out. Your confidential session has been reserved. A confirmation email with telehealth instructions has been dispatched.",
+      "slotDurationMinutes": 50,
+      "defaultSessionDuration": 50,
+      "cancellationNoticeHours": 24,
+      "cancellationPolicyHours": 24
+    },
+    "general": {
+      "email": "roottherapyonline@gmail.com",
+      "phone": "+91 98765 43210",
+      "tagline": "Gentle, non-judgmental space for emotional healing",
+      "currency": "INR (₹)",
+      "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
+      "timezone": "Asia/Kolkata (IST)",
+      "whatsapp": "https://wa.me/919876543210",
+      "instagram": "https://instagram.com/aswathy.psychology",
+      "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
+      "contactEmail": "roottherapyonline@gmail.com",
+      "contactPhone": "+91 98765 43210",
+      "practiceName": "The Safe Sanctuary | Aswathy Counselling",
+      "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
+    },
+    "notifications": {
+      "bookingAlerts": true,
+      "enquiryAlerts": true,
+      "emailOnBooking": true,
+      "emailOnEnquiry": true,
+      "feedbackAlerts": true,
+      "dailySummaryDigest": false,
+      "emailNotifications": true
+    }
+  },
+  "blockedSlots": [],
+  "enquiries": [
+    {
+      "id": "enq_1788871456202",
+      "name": "Muneeswaran P",
+      "email": "muneeswaranmd2004@gmail.com",
+      "phone": "08300864083",
+      "status": "new",
+      "message": "hi",
+      "subject": "Emotional Wellbeing & Stress",
+      "createdAt": "2026-09-08T12:44:16.202Z",
+      "deletedAt": "2026-09-08T12:44:39.791Z",
+      "updatedAt": "2026-09-08T12:44:16.202Z",
+      "internalNotes": ""
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif_1788877106296",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran scheduled \"Individual Online Counselling\" for 2026-09-13 at 03:00 PM.",
+      "createdAt": "2026-09-08T14:18:26.294Z"
+    },
+    {
+      "id": "notif_1788874752825",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran scheduled \"Relationship Dynamics\" for 2026-09-09 at 06:30 PM.",
+      "createdAt": "2026-09-08T13:39:12.825Z"
+    },
+    {
+      "id": "notif_1788871456203",
+      "link": "/admin/enquiries",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "isRead": false,
+      "message": "Muneeswaran P: Emotional Wellbeing & Stress",
+      "createdAt": "2026-09-08T12:44:16.202Z"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "ASW-291151",
+      "price": 1800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-08T13:39:12.825Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-08T13:39:12.825Z",
+      "serviceId": "serv_1",
+      "updatedAt": "2026-09-08T13:39:12.825Z",
+      "clientName": "Muneeswaran",
+      "clientEmail": "muneeswaranmd2004@gmail.com",
+      "clientPhone": "+918300864083",
+      "meetingLink": "Google Meet link will be generated prior to appointment",
+      "serviceName": "Relationship Dynamics",
+      "bookingStatus": "pending",
+      "clientMessage": "hi",
+      "paymentStatus": "pending",
+      "appointmentDate": "2026-09-09",
+      "appointmentTime": "06:30 PM",
+      "durationMinutes": 50
+    }
+  ],
   "serviceCategories": [
     {
       "id": "cat_emotional",
@@ -497,16 +474,63 @@
       "description": "Relocation, career transitions, grief, identity shifts."
     }
   ],
+  "clientTypes": [
+    {
+      "id": "ct_1",
+      "order": 1,
+      "title": "Adolescents",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Supporting teens through emotional turbulence, self-identity questions, and social pressures."
+    },
+    {
+      "id": "ct_2",
+      "order": 2,
+      "title": "Young Adults",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Navigating early career transitions, independence from family, and relationship shifts."
+    },
+    {
+      "id": "ct_3",
+      "order": 3,
+      "title": "Adults",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Unpacking mid-life transitions, chronic worry, personal values, and boundary setting."
+    },
+    {
+      "id": "ct_4",
+      "order": 4,
+      "title": "Students",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Addressing exam pressure, imposter feelings, academic burnout, and future dread."
+    },
+    {
+      "id": "ct_5",
+      "order": 5,
+      "title": "Working Professionals",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Managing corporate stress, work-life balance erosion, and interpersonal conflicts."
+    }
+  ],
   "availability": [
     {
       "id": "avail_mon",
-      "endTime": "18:00",
+      "endTime": "21:00",
       "breakEnd": "14:00",
       "createdAt": "2026-09-06T13:18:50.470Z",
       "dayOfWeek": "monday",
       "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "startTime": "18:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "13:00",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -519,7 +543,7 @@
       "dayOfWeek": "tuesday",
       "isWorking": true,
       "startTime": "09:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "13:00",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -532,7 +556,7 @@
       "dayOfWeek": "wednesday",
       "isWorking": true,
       "startTime": "09:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "13:00",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -545,7 +569,7 @@
       "dayOfWeek": "thursday",
       "isWorking": true,
       "startTime": "09:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "13:00",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -558,7 +582,7 @@
       "dayOfWeek": "friday",
       "isWorking": true,
       "startTime": "09:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "13:00",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -571,7 +595,7 @@
       "dayOfWeek": "saturday",
       "isWorking": true,
       "startTime": "10:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "12:30",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -580,11 +604,12 @@
       "id": "avail_sun",
       "endTime": "14:00",
       "breakEnd": "13:00",
+      "isActive": false,
       "createdAt": "2026-09-06T13:18:50.470Z",
       "dayOfWeek": "sunday",
       "isWorking": false,
       "startTime": "10:00",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
       "breakStart": "12:00",
       "bufferTime": 15,
       "sessionDuration": 50
@@ -626,59 +651,6 @@
       "isAnonymous": true,
       "publicVisibility": true,
       "clientDisplayName": "Anonymous Client"
-    }
-  ],
-  "websiteAbout": {
-    "name": "Aswathy Jeyarajasekar",
-    "title": "Counselling Psychologist",
-    "fullBio": "I am a Counselling Psychologist dedicated to creating a non-judgmental, unhurried space for individuals traversing emotional fatigue, relationship distress, and personal growth. With over a year of active private practice under clinical supervision, my work integrates evidence-informed cognitive reflection with somatic grounding and person-centered warmth.",
-    "updatedAt": "2026-09-06T13:18:50.470Z",
-    "shortIntro": "Providing an empathetic, collaborative sanctuary to explore your thoughts, emotions, and life challenges at your own pace.",
-    "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-    "qualifications": [
-      "M.Sc. in Counselling Psychology",
-      "B.Sc. in Psychology",
-      "Trained in Person-Centered Therapy (PCT) & Somatic Grounding",
-      "Clinical Supervision under Licensed Mental Health Practitioner"
-    ],
-    "experienceYears": "1+ Year in Supervised Private Practice"
-  },
-  "journeyEntries": [
-    {
-      "id": "jrn_1",
-      "year": "High School (11th Grade)",
-      "order": 1,
-      "heading": "The Spark of Psychological Empathy",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "My interest in psychology began in the 11th grade, sparked by a profound personal experience of receiving compassionate psychological support during a challenging life chapter."
-    },
-    {
-      "id": "jrn_2",
-      "year": "Undergraduate Studies",
-      "order": 2,
-      "heading": "B.Sc. in Psychology Foundations",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Built a rigorous foundation in human developmental psychology, abnormal psychology, cognitive neuroscience, and research methodologies."
-    },
-    {
-      "id": "jrn_3",
-      "year": "Postgraduate Specialization",
-      "order": 3,
-      "heading": "M.Sc. in Counselling Psychology",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Deepened clinical skills in person-centered modalities, therapeutic rapport, crisis intervention ethics, and supervised counselling practicum."
-    },
-    {
-      "id": "jrn_4",
-      "year": "Current Practice",
-      "order": 4,
-      "heading": "Private Practice Sanctuary",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Established private counselling practice offering online telehealth and in-person sanctuary sessions in Chennai under continued professional peer supervision."
     }
   ],
   "media": [

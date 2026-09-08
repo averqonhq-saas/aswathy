@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
-import { JourneyEntry } from "@/lib/db";
+import type { JourneyEntry } from "@/lib/types";
 
 export default function AdminContentJourneyPage() {
   const { success, error } = useToast();
