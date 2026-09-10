@@ -16,6 +16,9 @@ import {
   Check,
   Download,
   Trash2,
+  CreditCard,
+  RotateCcw,
+  Mail,
 } from "lucide-react";
 import DataTable, { Column } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
@@ -57,6 +60,15 @@ export default function BookingsManagementPage() {
   const [deletingBooking, setDeletingBooking] = useState<Booking | null>(null);
   const [clearAllConfirmOpen, setClearAllConfirmOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Google Calendar Integration Status
+  const [googleStatus, setGoogleStatus] = useState<{
+    configured: boolean;
+    connected: boolean;
+    authUrl: string | null;
+    calendarAccount?: string;
+  } | null>(null);
+  const [isGeneratingMeet, setIsGeneratingMeet] = useState(false);
 
   const handleDeleteBooking = async (id: string) => {
     setIsDeleting(true);
@@ -122,6 +134,22 @@ export default function BookingsManagementPage() {
     loadServices();
   }, []);
 
+  const fetchGoogleStatus = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/google-calendar");
+      if (res.ok) {
+        const data = await res.json();
+        setGoogleStatus(data);
+      }
+    } catch {
+      // Non-fatal
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGoogleStatus();
+  }, [fetchGoogleStatus]);
+
   const fetchBookings = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -183,6 +211,97 @@ export default function BookingsManagementPage() {
     }
   };
 
+  const [isUpdatingPayment, setIsUpdatingPayment] = useState(false);
+  const [isSendingReceipt, setIsSendingReceipt] = useState(false);
+  const [sendPaymentEmail, setSendPaymentEmail] = useState(true);
+
+  const handleUpdatePaymentStatus = async (
+    bookingId: string,
+    paymentStatus: "pending" | "paid" | "refunded",
+    note?: string,
+    sendEmail: boolean = true
+  ) => {
+    setIsUpdatingPayment(true);
+    try {
+      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update_payment_status",
+          paymentStatus,
+          note,
+          sendEmail,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        success(
+          `Payment marked as ${paymentStatus.toUpperCase()}${
+            sendEmail ? " & receipt emailed to client" : ""
+          }!`
+        );
+        setSelectedBooking(data.booking);
+        fetchBookings();
+      } else {
+        error(data.error || "Failed to update payment status.");
+      }
+    } catch {
+      error("Network error updating payment status.");
+    } finally {
+      setIsUpdatingPayment(false);
+    }
+  };
+
+  const handleSendPaymentReceipt = async (bookingId: string) => {
+    setIsSendingReceipt(true);
+    try {
+      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "send_payment_receipt",
+          sendEmail: true,
+          note: "Official payment receipt sent by practitioner",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        success("Payment receipt emailed to client successfully! ✉️");
+        setSelectedBooking(data.booking);
+        fetchBookings();
+      } else {
+        error(data.error || "Failed to send payment receipt.");
+      }
+    } catch {
+      error("Network error sending payment receipt.");
+    } finally {
+      setIsSendingReceipt(false);
+    }
+  };
+
+  const handleGenerateMeet = async (id: string) => {
+    setIsGeneratingMeet(true);
+    try {
+      const res = await fetch(`/api/admin/bookings/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "generate_meet" }),
+      });
+      const data = await res.json();
+      if (res.ok && data.booking) {
+        success("Google Calendar event created & Google Meet link generated!");
+        setSelectedBooking(data.booking);
+        fetchBookings();
+      } else {
+        error(data.error || "Failed to generate Google Meet link. Please connect Google Calendar first.");
+      }
+    } catch {
+      error("Network error generating Google Meet link.");
+    } finally {
+      setIsGeneratingMeet(false);
+    }
+  };
+
   const handleSaveNotes = async () => {
     if (!selectedBooking) return;
     try {
@@ -239,8 +358,11 @@ export default function BookingsManagementPage() {
   const columns: Column<Booking>[] = [
     {
       header: "Booking ID",
+      className: "whitespace-nowrap",
       accessor: (b) => (
-        <span className="font-mono font-bold text-primary text-[11px]">{b.id}</span>
+        <span className="font-sans font-semibold text-[#1A3828] text-xs tracking-wide bg-[#1A3828]/5 px-2 py-0.5 rounded-md border border-[#1A3828]/10 whitespace-nowrap">
+          {b.id}
+        </span>
       ),
     },
     {
@@ -259,11 +381,16 @@ export default function BookingsManagementPage() {
           <div className="font-medium text-primary line-clamp-1 max-w-[200px]">
             {b.serviceName}
           </div>
-          <div className="text-[11px] text-on-surface-variant flex items-center gap-1">
+          <div className="text-[11px] text-on-surface-variant flex items-center gap-1 flex-wrap">
             {b.format === "online" ? (
               <>
                 <Video className="w-3 h-3 text-forest-green" />
                 <span>Online Video</span>
+                {b.meetingLink && b.meetingLink.startsWith("http") && (
+                  <span className="ml-1 px-1.5 py-0.2 rounded text-[9px] bg-emerald-100 text-emerald-800 font-bold">
+                    Meet ✓
+                  </span>
+                )}
               </>
             ) : (
               <>
@@ -277,11 +404,13 @@ export default function BookingsManagementPage() {
     },
     {
       header: "Date & Time",
+      className: "whitespace-nowrap min-w-[130px]",
       accessor: (b) => (
-        <div className="space-y-0.5">
-          <div className="font-medium text-primary">{b.appointmentDate}</div>
-          <div className="text-[11px] text-forest-green font-mono font-semibold">
-            {b.appointmentTime}
+        <div className="space-y-0.5 whitespace-nowrap">
+          <div className="font-medium text-primary text-xs whitespace-nowrap">{b.appointmentDate}</div>
+          <div className="text-xs text-forest-green font-semibold whitespace-nowrap flex items-center gap-1">
+            <Clock className="w-3 h-3 text-forest-green/70" />
+            <span>{b.appointmentTime}</span>
           </div>
         </div>
       ),
@@ -296,7 +425,23 @@ export default function BookingsManagementPage() {
     },
     {
       header: "Payment",
-      accessor: (b) => <StatusBadge status={b.paymentStatus} size="sm" />,
+      className: "min-w-[175px]",
+      accessor: (b) => (
+        <div className="inline-flex items-center gap-2 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+          <StatusBadge status={b.paymentStatus || "pending"} size="sm" />
+          {b.paymentStatus !== "paid" && (
+            <button
+              onClick={() => handleUpdatePaymentStatus(b.id, "paid", "Quick manual settlement")}
+              disabled={isUpdatingPayment}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#E7F3EC] hover:bg-[#C8E6C9] border border-[#A5D6A7] text-[#1B5E20] text-[10px] font-semibold tracking-wide whitespace-nowrap transition-all cursor-pointer shrink-0 shadow-2xs active:scale-95 disabled:opacity-50"
+              title="Click to mark as paid manually (Cash / UPI)"
+            >
+              <Check className="w-3 h-3 text-[#1B5E20]" />
+              <span>Mark Paid</span>
+            </button>
+          )}
+        </div>
+      ),
     },
     {
       header: "Status",
@@ -367,7 +512,30 @@ export default function BookingsManagementPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Google Calendar Connection Status Pill */}
+          {googleStatus?.connected ? (
+            <div
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-xs text-emerald-800 font-medium"
+              title="Google Calendar API connected for roottherapyonline@gmail.com"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <Video className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Calendar &amp; Meet Active</span>
+            </div>
+          ) : (
+            <a
+              href="/api/auth/google/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 hover:bg-amber-100 text-xs text-amber-900 font-medium transition-all shadow-xs"
+              title="Click once to authorize Google Calendar for roottherapyonline@gmail.com"
+            >
+              <Calendar className="w-3.5 h-3.5 text-amber-700" />
+              <span>Connect Google Calendar</span>
+            </a>
+          )}
+
           {total > 0 && (
             <button
               onClick={() => setClearAllConfirmOpen(true)}
@@ -380,7 +548,10 @@ export default function BookingsManagementPage() {
             </button>
           )}
           <button
-            onClick={() => fetchBookings()}
+            onClick={() => {
+              fetchBookings();
+              fetchGoogleStatus();
+            }}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-parchment-border bg-surface hover:bg-surface-container text-xs text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -587,9 +758,118 @@ export default function BookingsManagementPage() {
                     {selectedBooking.clientPhone}
                   </a>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-on-surface-variant">Payment Status:</span>
-                  <StatusBadge status={selectedBooking.paymentStatus} size="sm" />
+              </div>
+            </div>
+
+            {/* Payment Status & Manual Settlement Section */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-label-caps text-[11px] uppercase tracking-wider text-forest-green font-semibold block">
+                  Payment Status &amp; Manual Settlement
+                </span>
+                <span className="text-[11px] font-semibold text-primary">
+                  Fee: ₹{(selectedBooking.price || 1800).toLocaleString("en-IN")}
+                </span>
+              </div>
+              <div className="p-4 rounded-2xl bg-surface border border-surface-container space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-xs text-on-surface-variant block mb-1">Status</span>
+                    <StatusBadge status={selectedBooking.paymentStatus || "pending"} size="sm" />
+                  </div>
+
+                  {/* Manual payment controls */}
+                  <div className="flex items-center gap-2">
+                    {selectedBooking.paymentStatus !== "paid" ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleUpdatePaymentStatus(
+                            selectedBooking.id,
+                            "paid",
+                            "Marked as paid manually (Cash / UPI / Reception)",
+                            sendPaymentEmail
+                          )
+                        }
+                        disabled={isUpdatingPayment}
+                        className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        title="Mark payment as received via Cash, UPI, or clinic reception"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Mark as Paid</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleUpdatePaymentStatus(
+                            selectedBooking.id,
+                            "pending",
+                            "Reverted to pending manually",
+                            sendPaymentEmail
+                          )
+                        }
+                        disabled={isUpdatingPayment}
+                        className="px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                        title="Revert status to pending settlement"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                        <span>Mark Pending</span>
+                      </button>
+                    )}
+
+                    <select
+                      value={selectedBooking.paymentStatus || "pending"}
+                      onChange={(e) =>
+                        handleUpdatePaymentStatus(
+                          selectedBooking.id,
+                          e.target.value as "pending" | "paid" | "refunded",
+                          undefined,
+                          sendPaymentEmail
+                        )
+                      }
+                      disabled={isUpdatingPayment}
+                      className="text-xs py-1.5 px-2.5 rounded-lg border border-surface-container bg-surface-container-low text-primary cursor-pointer focus:outline-none focus:border-forest-green"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="paid">Paid</option>
+                      <option value="refunded">Refunded</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Email Option Checkbox & Send Receipt Button */}
+                <div className="pt-2.5 border-t border-surface-container/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <label className="flex items-center gap-2 text-xs text-primary cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={sendPaymentEmail}
+                      onChange={(e) => setSendPaymentEmail(e.target.checked)}
+                      className="rounded border-surface-container-high text-forest-green focus:ring-forest-green cursor-pointer"
+                    />
+                    <span className="flex items-center gap-1.5 text-[11px] text-on-surface-variant font-medium">
+                      <Mail className="w-3.5 h-3.5 text-forest-green" />
+                      <span>Send receipt email to client ({selectedBooking.clientEmail})</span>
+                    </span>
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSendPaymentReceipt(selectedBooking.id)}
+                    disabled={isSendingReceipt || isUpdatingPayment}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-forest-green/30 bg-surface hover:bg-forest-green/10 text-forest-green text-xs font-semibold transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto"
+                    title="Send or re-send payment receipt email to client"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>{isSendingReceipt ? "Sending Receipt..." : "Send Paid Receipt in Mail"}</span>
+                  </button>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-surface-container-low text-[11px] text-on-surface-variant flex items-start gap-2">
+                  <CreditCard className="w-3.5 h-3.5 text-forest-green shrink-0 mt-0.5" />
+                  <span>
+                    When online payment is disabled, use these controls to manually record payments settled via Cash, Clinic POS, direct UPI, or bank transfer.
+                  </span>
                 </div>
               </div>
             </div>
@@ -614,7 +894,7 @@ export default function BookingsManagementPage() {
                   <span className="text-on-surface-variant">Consultation Mode:</span>
                   <span className="capitalize font-medium text-primary flex items-center gap-1">
                     <Video className="w-3.5 h-3.5 text-forest-green" />
-                    <span>100% Online Telehealth</span>
+                    <span>{selectedBooking.format === "in-person" ? "In-Person Clinic" : "100% Online Telehealth"}</span>
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -623,6 +903,72 @@ export default function BookingsManagementPage() {
                     Website Direct Intake
                   </span>
                 </div>
+              </div>
+            </div>
+
+            {/* Google Calendar & Meet Integration Card */}
+            <div className="space-y-2">
+              <span className="font-label-caps text-[11px] uppercase tracking-wider text-forest-green font-semibold block">
+                Google Calendar &amp; Video Consultation
+              </span>
+              <div className="p-4 rounded-2xl bg-surface border border-surface-container space-y-3">
+                {selectedBooking.meetingLink && selectedBooking.meetingLink.startsWith("http") ? (
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <span className="text-[11px] text-emerald-700 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                          Google Meet Active
+                        </span>
+                        <a
+                          href={selectedBooking.meetingLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary font-mono hover:underline break-all mt-1 block"
+                        >
+                          {selectedBooking.meetingLink}
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-container">
+                      <a
+                        href={selectedBooking.meetingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs"
+                      >
+                        <Video className="w-3.5 h-3.5" />
+                        <span>Join Google Meet</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateMeet(selectedBooking.id)}
+                        disabled={isGeneratingMeet}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-container bg-surface-container-low hover:bg-surface-container text-xs text-primary transition-all cursor-pointer disabled:opacity-50"
+                        title="Re-generate Google Meet room and send updated invite"
+                      >
+                        <RefreshCw className={`w-3.5 h-3.5 ${isGeneratingMeet ? "animate-spin" : ""}`} />
+                        <span>{isGeneratingMeet ? "Syncing..." : "Re-sync Calendar & Meet"}</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-xs text-on-surface-variant">
+                      No Google Meet link has been generated for this booking yet.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => handleGenerateMeet(selectedBooking.id)}
+                      disabled={isGeneratingMeet}
+                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-forest-green hover:bg-forest-green/90 text-white text-xs font-semibold transition-all shadow-xs cursor-pointer disabled:opacity-50"
+                    >
+                      <Video className="w-3.5 h-3.5" />
+                      <span>{isGeneratingMeet ? "Creating Google Meet..." : "Generate Google Meet & Calendar Invite"}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

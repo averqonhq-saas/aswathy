@@ -35,6 +35,11 @@ export interface BookingProvider {
     status: "pending" | "confirmed" | "completed" | "cancelled",
     note?: string
   ): Promise<Booking | null>;
+  updatePaymentStatus(
+    id: string,
+    paymentStatus: "pending" | "paid" | "refunded",
+    note?: string
+  ): Promise<Booking | null>;
   updateBookingNotes(id: string, internalNotes: string): Promise<Booking | null>;
   rescheduleBooking(
     id: string,

@@ -71,7 +71,7 @@ export default function DataTable<T>({
 
       {/* Table Body */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse font-sans antialiased">
           <thead>
             <tr className="border-b border-surface-container bg-surface-container-low/70">
               {columns.map((col, idx) => (

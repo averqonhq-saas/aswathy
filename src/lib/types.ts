@@ -64,7 +64,11 @@ export interface Booking {
   status?: "pending" | "confirmed" | "completed" | "cancelled"; // alias for bookingStatus
   paymentStatus: "pending" | "paid" | "refunded";
   price?: number;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
   meetingLink?: string;
+  calendarEventId?: string;
   clientMessage?: string;
   clientNotes?: string; // alias for clientMessage
   internalNotes?: string;
@@ -239,6 +243,7 @@ export interface PracticeSettings {
     defaultFormat: "online" | "in-person";
     requireApproval?: boolean;
     slotDurationMinutes?: number;
+    enablePayment?: boolean;
   };
   account: {
     adminName: string;

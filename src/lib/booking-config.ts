@@ -20,6 +20,13 @@ export interface BookingTimeSlot {
   isEvening: boolean;
 }
 
+export interface TimeBreak {
+  id?: string;
+  from: string; // e.g. "13:00" or "01:00 PM"
+  to: string; // e.g. "14:00" or "02:00 PM"
+  label?: string; // e.g. "Lunch Break", "Tea & Rest", "Admin Reflection"
+}
+
 export interface SingleDaySlotOverride {
   id: string;
   date: string; // "YYYY-MM-DD"
@@ -27,6 +34,7 @@ export interface SingleDaySlotOverride {
   toTime?: string; // e.g. "06:00 PM" or "18:00"
   slotDurationMinutes?: number;
   note?: string; // e.g. "Special Weekend Clinic", "Evening Slots"
+  breaks?: TimeBreak[];
   isOffDay?: boolean; // If true, marked as unavailable for booking on this date
   slots: BookingTimeSlot[];
 }
@@ -50,6 +58,10 @@ export interface BookingFormConfig {
   whatsappNumber: string;
   confirmationTitle: string;
   confirmationSubtitle: string;
+  enablePayment?: boolean; // When true, client pays online via Razorpay. When false, direct booking with pay later.
+  paymentDisabledNote?: string;
+  defaultPaymentStatus?: "pending" | "paid"; // Default status when online payment is disabled
+  manualPaymentInstructions?: string; // Instructions for client on manual settlement
   updatedAt: string;
 }
 
@@ -138,6 +150,10 @@ export const DEFAULT_BOOKING_FORM_CONFIG: BookingFormConfig = {
   whatsappNumber: "+91 98765 43210",
   confirmationTitle: "Your Sanctuary Awaits",
   confirmationSubtitle: "Appointment Secured",
+  enablePayment: true,
+  defaultPaymentStatus: "pending",
+  paymentDisabledNote: "No upfront payment required online. You may settle your consultation fee directly at the clinic or after your session.",
+  manualPaymentInstructions: "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
   singleDaySlots: [],
   updatedAt: "2026-09-06T13:18:50.470Z",
 };
@@ -175,7 +191,7 @@ export function generateSlotsFromRange(
   toTime: string,
   slotDurationMinutes: number = 50,
   bufferMinutes: number = 10,
-  breakFrom?: string,
+  breakFromOrBreaks?: string | TimeBreak[],
   breakTo?: string
 ): BookingTimeSlot[] {
   const startMin = parseTimeToMinutes(fromTime);
@@ -185,16 +201,32 @@ export function generateSlotsFromRange(
   const step = slotDurationMinutes + bufferMinutes;
   const slots: BookingTimeSlot[] = [];
 
-  const breakStartMin = breakFrom ? parseTimeToMinutes(breakFrom) : null;
-  const breakEndMin = breakTo ? parseTimeToMinutes(breakTo) : null;
+  // Parse all breaks (supports array of TimeBreak OR single breakFrom / breakTo strings)
+  const breakIntervals: Array<{ startMin: number; endMin: number }> = [];
+
+  if (Array.isArray(breakFromOrBreaks)) {
+    for (const b of breakFromOrBreaks) {
+      if (b && b.from && b.to) {
+        const bStart = parseTimeToMinutes(b.from);
+        const bEnd = parseTimeToMinutes(b.to);
+        if (bStart < bEnd) {
+          breakIntervals.push({ startMin: bStart, endMin: bEnd });
+        }
+      }
+    }
+  } else if (typeof breakFromOrBreaks === "string" && breakTo) {
+    const bStart = parseTimeToMinutes(breakFromOrBreaks);
+    const bEnd = parseTimeToMinutes(breakTo);
+    if (bStart < bEnd) {
+      breakIntervals.push({ startMin: bStart, endMin: bEnd });
+    }
+  }
 
   let curr = startMin;
   while (curr + slotDurationMinutes <= endMin) {
-    const overlapsBreak =
-      breakStartMin !== null &&
-      breakEndMin !== null &&
-      curr < breakEndMin &&
-      curr + slotDurationMinutes > breakStartMin;
+    const overlapsBreak = breakIntervals.some(
+      (b) => curr < b.endMin && curr + slotDurationMinutes > b.startMin
+    );
 
     if (!overlapsBreak) {
       const timeStr = formatMinutesTo12Hour(curr);

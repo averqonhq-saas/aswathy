@@ -701,10 +701,10 @@ END:VCALENDAR`;
                       Reservation Confirmed
                     </span>
                     <h4 className="font-headline-md text-headline-md text-primary tracking-tight">
-                      Your Safe Space Is Reserved
+                      Thanks for Choosing Us!
                     </h4>
                     <p className="text-body-md text-on-surface-variant max-w-md mx-auto">
-                      Thank you, {confirmedBooking.fullName}. A calendar invitation and confidential telehealth link have been sent to{" "}
+                      Thank you, {confirmedBooking.fullName}! We have received your booking and <strong>we will contact you soon</strong>. A confirmation email has been sent to{" "}
                       <span className="font-semibold text-primary">{confirmedBooking.email}</span>.
                     </p>
                   </div>

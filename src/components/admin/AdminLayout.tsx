@@ -159,7 +159,7 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
                 Psychology Admin
               </span>
               <span className="text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">
-                Aswathy Sanctuary
+
               </span>
             </div>
           </Link>
@@ -189,15 +189,15 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
                       key={item.href}
                       href={item.href}
                       className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all group ${isActive
-                          ? "bg-forest-green text-white font-semibold shadow-xs"
-                          : "text-on-surface-variant hover:text-primary hover:bg-surface-container"
+                        ? "bg-forest-green text-white font-semibold shadow-xs"
+                        : "text-on-surface-variant hover:text-primary hover:bg-surface-container"
                         }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <Icon
                           className={`w-4 h-4 transition-colors ${isActive
-                              ? "text-[#F4D242]"
-                              : "text-on-surface-variant group-hover:text-forest-green"
+                            ? "text-[#F4D242]"
+                            : "text-on-surface-variant group-hover:text-forest-green"
                             }`}
                         />
                         <span>{item.label}</span>
@@ -206,8 +206,8 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
                       {item.badge !== undefined && (
                         <span
                           className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${isActive
-                              ? "bg-[#F4D242] text-[#1A3828]"
-                              : "bg-[#FEF7E0] text-[#B78103]"
+                            ? "bg-[#F4D242] text-[#1A3828]"
+                            : "bg-[#FEF7E0] text-[#B78103]"
                             }`}
                         >
                           {item.badge}

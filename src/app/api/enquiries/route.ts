@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDatabase, saveDatabase, Enquiry } from "@/lib/db";
+import { sendEnquiryNotificationToAdmin, sendEnquiryAutoReplyToClient } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -57,6 +58,16 @@ export async function POST(request: Request) {
     });
 
     await saveDatabase(db);
+
+    // Dispatch email notifications (non-blocking for client response reliability)
+    try {
+      await Promise.allSettled([
+        sendEnquiryNotificationToAdmin(newEnquiry),
+        sendEnquiryAutoReplyToClient(newEnquiry),
+      ]);
+    } catch (emailErr) {
+      console.error("[Email Notification Error - Enquiry]:", emailErr);
+    }
 
     return NextResponse.json(
       {

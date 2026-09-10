@@ -16,6 +16,7 @@ import {
   CalendarPlus,
   MessageSquare,
   RefreshCw,
+  CreditCard,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import type { BookingFormConfig } from "@/lib/booking-config";
@@ -242,7 +243,13 @@ export default function BookingForm({
     time: string;
     clientName: string;
     clientEmail: string;
+    paymentStatus?: "pending" | "paid" | "refunded";
+    razorpayPaymentId?: string;
   } | null>(null);
+
+  // Razorpay Payment state
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
 
   // Generate calendar days for current view month
   const calendarDays = useMemo(() => {
@@ -353,6 +360,7 @@ export default function BookingForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
+    setPaymentError("");
 
     if (!fullName.trim()) {
       setErrorMessage("Please enter your full name.");
@@ -371,7 +379,73 @@ export default function BookingForm({
 
     const formattedIsoDate = selectedDateStr;
 
-    try {
+    // If online payment is disabled by practice administrator, book directly
+    if (config.enablePayment === false) {
+      try {
+        const res = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            clientName: fullName.trim(),
+            clientEmail: email.trim().toLowerCase(),
+            clientPhone: phone.trim() || undefined,
+            serviceName: selectedService?.name || "Clinical Consultation",
+            serviceId: selectedService?.id || "svc_emotional_wellbeing",
+            format: "online",
+            price: selectedService?.price || 1800,
+            durationMinutes: selectedService?.durationMinutes || 50,
+            appointmentDate: formattedIsoDate,
+            appointmentTime: selectedTime,
+            clientMessage: notes.trim() || undefined,
+            contactChannel: contactChannel,
+            bookingStatus: "confirmed",
+            paymentStatus: config.defaultPaymentStatus || "pending",
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to schedule appointment. Please contact practice.");
+        }
+
+        const confirmed = {
+          id: data.booking?.id || `ASW-${Math.floor(100000 + Math.random() * 900000)}`,
+          format: "online",
+          serviceName: selectedService?.name || "Clinical Consultation",
+          categoryName: selectedService?.categoryName || "Therapy",
+          price: selectedService?.price || 1800,
+          durationMinutes: selectedService?.durationMinutes || 50,
+          date: formattedIsoDate,
+          time: selectedTime,
+          clientName: fullName.trim(),
+          clientEmail: email.trim().toLowerCase(),
+          paymentStatus: (data.booking?.paymentStatus || config.defaultPaymentStatus || "pending") as "pending" | "paid" | "refunded",
+        };
+
+        setConfirmedBooking(confirmed);
+
+        // Trigger celebratory confetti
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ["#1A3828", "#705d00", "#F4D242", "#ffffff"],
+        });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Failed to record appointment.";
+        setErrorMessage(msg);
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // Helper to finalize and record booking in DB only after payment is verified
+    const finalizeBookingAfterPayment = async (paymentDetails: {
+      orderId: string;
+      paymentId: string;
+      signature?: string;
+    }) => {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -388,13 +462,17 @@ export default function BookingForm({
           appointmentTime: selectedTime,
           clientMessage: notes.trim() || undefined,
           contactChannel: contactChannel,
+          bookingStatus: "confirmed",
+          paymentStatus: "paid",
+          razorpayOrderId: paymentDetails.orderId,
+          razorpayPaymentId: paymentDetails.paymentId,
+          razorpaySignature: paymentDetails.signature,
         }),
       });
 
       const data = await res.json();
-
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Failed to create booking.");
+        throw new Error(data.error || "Payment received, but failed to save booking record. Please contact practice.");
       }
 
       const confirmed = {
@@ -406,23 +484,106 @@ export default function BookingForm({
         durationMinutes: selectedService?.durationMinutes || 50,
         date: formattedIsoDate,
         time: selectedTime,
-        clientName: fullName,
-        clientEmail: email,
+        clientName: fullName.trim(),
+        clientEmail: email.trim().toLowerCase(),
+        paymentStatus: "paid" as const,
+        razorpayPaymentId: paymentDetails.paymentId,
       };
 
       setConfirmedBooking(confirmed);
 
       // Trigger celebratory confetti
       confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 },
-        colors: ["#705d00", "#F4D242", "#412a1e", "#ffdbc8"],
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.5 },
+        colors: ["#1A3828", "#705d00", "#F4D242", "#ffffff"],
       });
+    };
+
+    try {
+      // 1. Create Razorpay order on server
+      const orderRes = await fetch("/api/payments/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: selectedService?.price || 1800,
+          serviceName: selectedService?.name || "Clinical Consultation",
+          clientName: fullName.trim(),
+          clientEmail: email.trim().toLowerCase(),
+          clientPhone: phone.trim() || undefined,
+        }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok || !orderData.success) {
+        throw new Error(orderData.error || "Failed to initialize payment gateway.");
+      }
+
+      // 2. Load Razorpay client script
+      const scriptLoaded = await loadRazorpayScript();
+
+      // If simulated demo/mock mode without Razorpay credentials
+      if (orderData.isMock && (!(window as any).Razorpay || !scriptLoaded)) {
+        await finalizeBookingAfterPayment({
+          orderId: orderData.orderId,
+          paymentId: `pay_demo_${Date.now()}`,
+          signature: "verified_demo",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 3. Open official Razorpay Checkout popup
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "Aswathy Jeyarajasekar",
+        description: `Consultation: ${selectedService?.name || "Therapy Session"}`,
+        order_id: orderData.orderId,
+        prefill: {
+          name: fullName.trim(),
+          email: email.trim().toLowerCase(),
+          contact: phone.trim() || "",
+        },
+        theme: {
+          color: "#1A3828",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsSubmitting(false);
+            setErrorMessage(
+              "Payment was not completed. Your appointment has not been booked yet. Please complete payment to reserve your time slot."
+            );
+          },
+        },
+        handler: async function (response: any) {
+          try {
+            await finalizeBookingAfterPayment({
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+            });
+          } catch (finalizeErr: any) {
+            setErrorMessage(finalizeErr.message || "Payment succeeded, but could not record appointment.");
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        setErrorMessage(
+          response.error?.description || "Payment was unsuccessful. Your appointment has not been booked."
+        );
+        setIsSubmitting(false);
+      });
+      rzp.open();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      const msg = err instanceof Error ? err.message : "Something went wrong initiating payment.";
       setErrorMessage(msg);
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -437,7 +598,7 @@ UID:${confirmedBooking.id}@aswathycounselling.com
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z
 DTSTART:${confirmedBooking.date.replace(/-/g, "")}T100000Z
 SUMMARY:${confirmedBooking.serviceName} - Aswathy Counselling
-DESCRIPTION:Confidential consultation with Aswathy Jeyarajasekar.\\nBooking Reference: ${confirmedBooking.id}\\nFormat: ${confirmedBooking.format.toUpperCase()}
+DESCRIPTION:Confidential consultation with Aswathy Jeyarajasekar.\\nBooking Reference: ${confirmedBooking.id}\\nFormat: ONLINE TELEHEALTH
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`;
@@ -455,7 +616,7 @@ END:VCALENDAR`;
   const handleWhatsAppChat = () => {
     if (!confirmedBooking) return;
     const msg = encodeURIComponent(
-      `Hello Aswathy, I have scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}). Looking forward to connecting.`
+      `Hello Aswathy, I have paid and scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}, Payment ID: ${confirmedBooking.razorpayPaymentId || "Verified"}). Looking forward to connecting.`
     );
     const cleanPhone = (config.whatsappNumber || "+919876543210").replace(/[^0-9]/g, "");
     window.open(`https://wa.me/${cleanPhone}?text=${msg}`, "_blank");
@@ -468,6 +629,161 @@ END:VCALENDAR`;
     setPhone("");
     setNotes("");
     setErrorMessage("");
+    setPaymentError("");
+    setIsPaying(false);
+    setIsSubmitting(false);
+  };
+
+  // Helper to dynamically load Razorpay checkout script
+  const loadRazorpayScript = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (typeof window === "undefined") return resolve(false);
+      if ((window as any).Razorpay) return resolve(true);
+
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  // Initiate Razorpay payment
+  const handleInitiateRazorpayPayment = async () => {
+    if (!confirmedBooking) return;
+    setIsPaying(true);
+    setPaymentError("");
+
+    try {
+      // 1. Create order on server
+      const orderRes = await fetch("/api/payments/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId: confirmedBooking.id,
+          amount: confirmedBooking.price || 1800,
+          serviceName: confirmedBooking.serviceName,
+          clientName: confirmedBooking.clientName,
+          clientEmail: confirmedBooking.clientEmail,
+          clientPhone: phone.trim() || undefined,
+        }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok || !orderData.success) {
+        throw new Error(orderData.error || "Failed to initiate payment order.");
+      }
+
+      // 2. Load script if needed
+      const scriptLoaded = await loadRazorpayScript();
+
+      // If simulated demo/mock mode without Razorpay library available
+      if (orderData.isMock && (!(window as any).Razorpay || !scriptLoaded)) {
+        const verifyRes = await fetch("/api/payments/razorpay/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: confirmedBooking.id,
+            razorpay_order_id: orderData.orderId,
+            razorpay_payment_id: `pay_demo_${Date.now()}`,
+            isMock: true,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (verifyRes.ok && verifyData.success) {
+          setConfirmedBooking((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  paymentStatus: "paid",
+                  razorpayPaymentId: verifyData.booking?.razorpayPaymentId || "pay_demo_verified",
+                }
+              : null
+          );
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+          });
+        }
+        setIsPaying(false);
+        return;
+      }
+
+      // 3. Launch official Razorpay Checkout popup
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "Aswathy Jeyarajasekar",
+        description: `Consultation: ${confirmedBooking.serviceName}`,
+        order_id: orderData.orderId,
+        prefill: {
+          name: confirmedBooking.clientName,
+          email: confirmedBooking.clientEmail,
+          contact: phone.trim() || "",
+        },
+        theme: {
+          color: "#1A3828",
+        },
+        modal: {
+          ondismiss: () => {
+            setIsPaying(false);
+          },
+        },
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await fetch("/api/payments/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                bookingId: confirmedBooking.id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok || !verifyData.success) {
+              throw new Error(verifyData.error || "Payment verification failed.");
+            }
+
+            setConfirmedBooking((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    paymentStatus: "paid",
+                    razorpayPaymentId: response.razorpay_payment_id,
+                  }
+                : null
+            );
+
+            confetti({
+              particleCount: 120,
+              spread: 80,
+              origin: { y: 0.5 },
+              colors: ["#1A3828", "#705d00", "#F4D242", "#ffffff"],
+            });
+          } catch (verErr: any) {
+            setPaymentError(verErr.message || "Payment verification failed.");
+          } finally {
+            setIsPaying(false);
+          }
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        setPaymentError(response.error?.description || "Payment was unsuccessful. Please try again.");
+        setIsPaying(false);
+      });
+      rzp.open();
+    } catch (err: any) {
+      setPaymentError(err.message || "Payment could not be started.");
+      setIsPaying(false);
+    }
   };
 
   // ----------------------------------------------------
@@ -488,10 +804,10 @@ END:VCALENDAR`;
               Appointment Secured
             </span>
             <h3 className="font-serif text-3xl sm:text-4xl text-[#412a1e] font-normal tracking-tight">
-              Your Sanctuary Awaits
+              Thanks for Choosing Us!
             </h3>
             <p className="text-sm text-[#4f443f] max-w-md mx-auto">
-              A confidential confirmation email has been sent to{" "}
+              We have received your booking and <strong>we will contact you soon</strong>. A confirmation email has been sent to{" "}
               <strong className="text-[#412a1e] font-medium">{confirmedBooking.clientEmail}</strong>.
             </p>
           </div>
@@ -538,6 +854,43 @@ END:VCALENDAR`;
               </div>
             </div>
           </div>
+
+          {/* PAYMENT RECEIPT / CONFIRMATION CARD */}
+          {confirmedBooking.paymentStatus === "paid" ? (
+            <div className="rounded-2xl p-5 sm:p-6 border text-left space-y-2.5 transition-all duration-300 bg-white border-[#e2d9ce] shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>Payment Verified via Razorpay</span>
+                </span>
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  Paid ₹{confirmedBooking.price?.toLocaleString("en-IN")}
+                </span>
+              </div>
+              <p className="text-xs text-[#5a4033] leading-relaxed">
+                Your appointment is confirmed and consultation fee has been settled. Razorpay Payment ID:{" "}
+                <code className="bg-[#f6f3ec] px-1.5 py-0.5 rounded font-mono text-[11px] text-[#1A3828] font-semibold">
+                  {confirmedBooking.razorpayPaymentId || "rzp_paid"}
+                </code>
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-2xl p-5 sm:p-6 border text-left space-y-2.5 transition-all duration-300 bg-white border-[#e2d9ce] shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-amber-700" />
+                  <span>Session Confirmed · Settle Later</span>
+                </span>
+                <span className="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                  ₹{confirmedBooking.price?.toLocaleString("en-IN")} Due at Session
+                </span>
+              </div>
+              <p className="text-xs text-[#5a4033] leading-relaxed">
+                {config.paymentDisabledNote ||
+                  "Your appointment slot has been reserved. You can settle the consultation fee in person at the clinic or during your consultation."}
+              </p>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
@@ -1049,6 +1402,26 @@ END:VCALENDAR`;
                 {config.ethicsNotice || "All communications are bound by strict psychological ethics and confidential data protocols."}
               </span>
             </div>
+
+            {/* Offline / Pay Later Notice when online payments disabled */}
+            {config.enablePayment === false && (
+              <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-[#5a4033] text-xs flex items-start gap-3 mt-3">
+                <CreditCard className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div className="space-y-1 w-full">
+                  <div className="flex flex-wrap items-center justify-between gap-1">
+                    <p className="font-semibold text-[#1A3828]">Manual Payment Settlement</p>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-300">
+                      Status: {config.defaultPaymentStatus === "paid" ? "Marked as Paid" : "Pay at Clinic / Session"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-[#5a4033]">
+                    {config.manualPaymentInstructions ||
+                      config.paymentDisabledNote ||
+                      "Your booking will be reserved instantly. You can settle the consultation fee in person at the clinic or during your consultation."}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -1074,10 +1447,21 @@ END:VCALENDAR`;
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
-              <span>Scheduling session...</span>
+              <span>
+                {config.enablePayment === false
+                  ? "Securing Appointment..."
+                  : "Connecting to Razorpay..."}
+              </span>
             ) : (
               <>
-                <span>{config.submitButtonText || "Confirm & Request Session"}</span>
+                <span>
+                  {config.enablePayment === false
+                    ? config.submitButtonText || "Confirm & Book Session (Pay Later)"
+                    : config.submitButtonText &&
+                      config.submitButtonText !== "Confirm & Request Session"
+                    ? config.submitButtonText
+                    : `Pay via Razorpay & Book Session (₹${selectedService?.price?.toLocaleString("en-IN") || "1,800"})`}
+                </span>
                 <ArrowRight className="w-4 h-4 text-[#F4D242]" />
               </>
             )}

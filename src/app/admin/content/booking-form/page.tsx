@@ -22,6 +22,10 @@ import {
   MessageSquare,
   Calendar,
   Sparkles,
+  Coffee,
+  Utensils,
+  CreditCard,
+  Wallet,
 } from "lucide-react";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
@@ -30,6 +34,7 @@ import {
   BookingFormConfig,
   SingleDaySlotOverride,
   BookingTimeSlot,
+  TimeBreak,
   DEFAULT_BOOKING_FORM_CONFIG,
   DEFAULT_SESSION_FORMATS,
   generateSlotsFromRange,
@@ -40,7 +45,7 @@ import {
 export default function AdminBookingFormControlPage() {
   const { success, error } = useToast();
 
-  const [activeTab, setActiveTab] = useState<"formats" | "slots" | "text" | "intake">("formats");
+  const [activeTab, setActiveTab] = useState<"formats" | "slots" | "payments" | "text" | "intake">("formats");
 
   const [formats, setFormats] = useState<SessionFormat[]>(DEFAULT_SESSION_FORMATS);
   const [config, setConfig] = useState<BookingFormConfig>(DEFAULT_BOOKING_FORM_CONFIG);
@@ -60,10 +65,43 @@ export default function AdminBookingFormControlPage() {
   const [rangeToTime, setRangeToTime] = useState("18:00");
   const [rangeSlotDuration, setRangeSlotDuration] = useState(50);
   const [rangeBuffer, setRangeBuffer] = useState(10);
-  const [enableBreak, setEnableBreak] = useState(false);
-  const [rangeBreakFrom, setRangeBreakFrom] = useState("13:00");
-  const [rangeBreakTo, setRangeBreakTo] = useState("14:00");
+  const [enableBreaks, setEnableBreaks] = useState(false);
+  const [breaksList, setBreaksList] = useState<TimeBreak[]>([
+    { id: "break_1", from: "13:00", to: "14:00", label: "Lunch Break" },
+  ]);
   const [rangeNote, setRangeNote] = useState("");
+
+  const handleAddBreak = (preset?: { from: string; to: string; label: string }) => {
+    const id = `brk_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    const newBreak: TimeBreak = preset
+      ? { id, ...preset }
+      : {
+          id,
+          from: "16:30",
+          to: "17:00",
+          label: "Tea Break",
+        };
+    setBreaksList((prev) => [...prev, newBreak]);
+    if (!enableBreaks) setEnableBreaks(true);
+  };
+
+  const handleUpdateBreak = (id: string | undefined, field: "from" | "to" | "label", value: string) => {
+    if (!id) return;
+    setBreaksList((prev) =>
+      prev.map((b) => (b.id === id ? { ...b, [field]: value } : b))
+    );
+  };
+
+  const handleRemoveBreak = (id: string | undefined) => {
+    if (!id) return;
+    setBreaksList((prev) => {
+      const updated = prev.filter((b) => b.id !== id);
+      if (updated.length === 0) {
+        setEnableBreaks(false);
+      }
+      return updated;
+    });
+  };
 
 
 
@@ -170,22 +208,21 @@ export default function AdminBookingFormControlPage() {
   // PARTICULAR DAY TIME RANGE HANDLERS (From ... To ...)
   // ----------------------------------------------------
   const previewGeneratedSlots = useMemo(() => {
+    const activeBreaks = enableBreaks ? breaksList.filter((b) => b.from && b.to) : [];
     return generateSlotsFromRange(
       rangeFromTime,
       rangeToTime,
       rangeSlotDuration,
       rangeBuffer,
-      enableBreak ? rangeBreakFrom : undefined,
-      enableBreak ? rangeBreakTo : undefined
+      activeBreaks
     );
   }, [
     rangeFromTime,
     rangeToTime,
     rangeSlotDuration,
     rangeBuffer,
-    enableBreak,
-    rangeBreakFrom,
-    rangeBreakTo,
+    enableBreaks,
+    breaksList,
   ]);
 
   const handleApplyRangeToDay = (e: React.FormEvent) => {
@@ -221,6 +258,8 @@ export default function AdminBookingFormControlPage() {
       datesToApply.push(particularDate);
     }
 
+    const activeBreaks = enableBreaks ? breaksList.filter((b) => b.from && b.to) : [];
+
     for (const d of datesToApply) {
       const existingIndex = currentList.findIndex((item) => item.date === d);
       const overrideObj: SingleDaySlotOverride = {
@@ -230,6 +269,7 @@ export default function AdminBookingFormControlPage() {
         toTime: formatMinutesTo12Hour(parseTimeToMinutes(rangeToTime)),
         slotDurationMinutes: rangeSlotDuration,
         note: rangeNote.trim() || undefined,
+        breaks: activeBreaks.length > 0 ? [...activeBreaks] : undefined,
         slots: [...previewGeneratedSlots],
       };
 
@@ -388,6 +428,18 @@ export default function AdminBookingFormControlPage() {
         >
           <Clock className="w-4 h-4" />
           <span>Available Time Slots ({config.timeSlots.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("payments")}
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
+            activeTab === "payments"
+              ? "bg-[#1A3828] text-[#F4D242] shadow-xs"
+              : "text-[#7B7368] hover:text-[#1A3828] hover:bg-[#1A3828]/5"
+          }`}
+        >
+          <CreditCard className="w-4 h-4" />
+          <span>Payment Settings ({config.enablePayment !== false ? "Enabled" : "Disabled"})</span>
         </button>
 
         <button
@@ -845,47 +897,164 @@ export default function AdminBookingFormControlPage() {
                 </div>
               </div>
 
-              {/* Row 3: Optional Lunch / Break Exclusion */}
-              <div className="pt-2 border-t border-[#e2d9ce]/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-1.5 text-xs text-[#1A3828] cursor-pointer">
+              {/* Row 3: Multiple Breaks & Rest Periods Exclusion */}
+              <div className="pt-3 border-t border-[#e2d9ce]/60 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <label className="flex items-center gap-2 text-xs font-semibold text-[#1A3828] cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={enableBreak}
-                      onChange={(e) => setEnableBreak(e.target.checked)}
-                      className="rounded border-[#1A3828]/20 text-[#1A3828]"
+                      checked={enableBreaks}
+                      onChange={(e) => {
+                        const val = e.target.checked;
+                        setEnableBreaks(val);
+                        if (val && breaksList.length === 0) {
+                          setBreaksList([
+                            { id: "break_1", from: "13:00", to: "14:00", label: "Lunch Break" },
+                          ]);
+                        }
+                      }}
+                      className="rounded border-[#1A3828]/20 text-[#1A3828] focus:ring-[#1A3828]"
                     />
-                    <span>Exclude Lunch / Break Period</span>
+                    <span className="flex items-center gap-1.5">
+                      <Coffee className="w-3.5 h-3.5 text-[#705d00]" />
+                      <span>Exclude Breaks / Rest Periods ({breaksList.length} defined)</span>
+                    </span>
                   </label>
 
-                  {enableBreak && (
-                    <div className="flex items-center gap-2 text-xs">
-                      <input
-                        type="time"
-                        value={rangeBreakFrom}
-                        onChange={(e) => setRangeBreakFrom(e.target.value)}
-                        className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white"
-                      />
-                      <span className="text-[#7B7368]">to</span>
-                      <input
-                        type="time"
-                        value={rangeBreakTo}
-                        onChange={(e) => setRangeBreakTo(e.target.value)}
-                        className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white"
-                      />
-                    </div>
-                  )}
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 rounded-xl bg-[#1A3828] text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-[#142C1F] cursor-pointer shadow-xs sm:ml-auto"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#F4D242]" />
+                    <span>
+                      Apply Range to {isDateRangeMode ? "Date Range" : "Particular Day"}
+                    </span>
+                  </button>
                 </div>
 
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-[#1A3828] text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-[#142C1F] cursor-pointer shadow-xs ml-auto"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#F4D242]" />
-                  <span>
-                    Apply Range to {isDateRangeMode ? "Date Range" : "Particular Day"}
-                  </span>
-                </button>
+                {/* Multiple Breaks Configuration Panel */}
+                {enableBreaks && (
+                  <div className="p-4 rounded-xl bg-white border border-[#e2d9ce] space-y-3 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#e2d9ce]/60">
+                      <div>
+                        <span className="text-xs font-bold text-[#1A3828] flex items-center gap-1.5">
+                          <Coffee className="w-3.5 h-3.5 text-[#705d00]" />
+                          <span>Comfortable Breaks &amp; Unavailability Periods</span>
+                        </span>
+                        <p className="text-[11px] text-[#7B7368] mt-0.5">
+                          Slots overlapping any of these break times will be omitted automatically from booking.
+                        </p>
+                      </div>
+
+                      {/* Quick Presets */}
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[10px] text-[#7B7368] font-semibold uppercase tracking-wider">Presets:</span>
+                        <button
+                          type="button"
+                          onClick={() => handleAddBreak({ from: "13:00", to: "14:00", label: "Lunch Break" })}
+                          className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <Utensils className="w-2.5 h-2.5 text-[#705d00]" />
+                          <span>+ Lunch (1-2 PM)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleAddBreak({ from: "16:30", to: "17:00", label: "Tea Break" })}
+                          className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <Coffee className="w-2.5 h-2.5 text-[#705d00]" />
+                          <span>+ Tea (4:30-5 PM)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleAddBreak({ from: "18:00", to: "18:30", label: "Evening Rest" })}
+                          className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <Clock className="w-2.5 h-2.5 text-[#705d00]" />
+                          <span>+ Rest (6-6:30 PM)</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Break Items List */}
+                    <div className="space-y-2.5">
+                      {breaksList.map((brk, idx) => (
+                        <div
+                          key={brk.id || idx}
+                          className="flex flex-col sm:flex-row sm:items-center gap-2.5 p-2.5 rounded-lg bg-[#fbf9f5] border border-[#e2d9ce]/80 text-xs"
+                        >
+                          <span className="text-[11px] font-bold text-[#705d00] bg-[#F4D242]/20 px-2 py-1 rounded w-fit">
+                            Break {idx + 1}
+                          </span>
+
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              value={brk.label || ""}
+                              onChange={(e) => handleUpdateBreak(brk.id, "label", e.target.value)}
+                              placeholder="Break Name (e.g. Lunch, Tea Break, Rest)"
+                              className="w-full text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none text-[#1A3828]"
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] text-[#7B7368]">From:</span>
+                              <input
+                                type="time"
+                                value={brk.from}
+                                onChange={(e) => handleUpdateBreak(brk.id, "from", e.target.value)}
+                                className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
+                                required
+                              />
+                            </div>
+
+                            <span className="text-[#7B7368]">to</span>
+
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] text-[#7B7368]">To:</span>
+                              <input
+                                type="time"
+                                value={brk.to}
+                                onChange={(e) => handleUpdateBreak(brk.id, "to", e.target.value)}
+                                className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
+                                required
+                              />
+                            </div>
+
+                            <span className="text-[10px] text-[#7B7368] font-mono whitespace-nowrap bg-white px-2 py-1 rounded border border-[#e2d9ce] hidden md:inline">
+                              {formatMinutesTo12Hour(parseTimeToMinutes(brk.from))} – {formatMinutesTo12Hour(parseTimeToMinutes(brk.to))}
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveBreak(brk.id)}
+                              className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors ml-auto cursor-pointer"
+                              title="Delete this break"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <button
+                        type="button"
+                        onClick={() => handleAddBreak()}
+                        className="text-xs font-semibold text-[#1A3828] hover:text-[#142C1F] flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-dashed border-[#1A3828]/30 hover:border-[#1A3828] bg-white transition-all cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Another Break</span>
+                      </button>
+
+                      <span className="text-[11px] text-[#7B7368]">
+                        {breaksList.filter((b) => b.from && b.to).length} active break{breaksList.length === 1 ? "" : "s"} scheduled
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Live Preview of Generated Slots */}
@@ -970,7 +1139,32 @@ export default function AdminBookingFormControlPage() {
                               {dayOverride.note}
                             </span>
                           )}
+                          {dayOverride.breaks && dayOverride.breaks.length > 0 && (
+                            <span className="text-[10px] font-medium text-[#705d00] bg-[#fbf7ee] border border-[#705d00]/20 px-2 py-0.5 rounded-md flex items-center gap-1">
+                              <Coffee className="w-2.5 h-2.5" />
+                              <span>{dayOverride.breaks.length} break{dayOverride.breaks.length === 1 ? "" : "s"} excluded</span>
+                            </span>
+                          )}
                         </div>
+
+                        {/* List breaks if any */}
+                        {dayOverride.breaks && dayOverride.breaks.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                            <span className="text-[10px] font-semibold text-[#7B7368] flex items-center gap-1">
+                              <Coffee className="w-3 h-3 text-[#705d00]" />
+                              <span>Breaks:</span>
+                            </span>
+                            {dayOverride.breaks.map((b, bIdx) => (
+                              <span
+                                key={bIdx}
+                                className="text-[10px] font-medium bg-white text-[#5a4033] border border-[#e2d9ce] px-2 py-0.5 rounded-md"
+                              >
+                                {b.label ? `${b.label}: ` : ""}
+                                {formatMinutesTo12Hour(parseTimeToMinutes(b.from))} – {formatMinutesTo12Hour(parseTimeToMinutes(b.to))}
+                              </span>
+                            ))}
+                          </div>
+                        )}
 
                         {/* Slots for this day */}
                         <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -1062,6 +1256,189 @@ export default function AdminBookingFormControlPage() {
                 onChange={(e) => setConfig({ ...config, cadenceDescription: e.target.value })}
                 className="w-full text-xs p-3 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans leading-relaxed resize-none text-[#1A3828]"
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* TAB: PAYMENT SETTINGS (ENABLE / DISABLE PAYMENTS)            */}
+      {/* ============================================================ */}
+      {activeTab === "payments" && (
+        <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#1A3828]/10">
+            <div>
+              <h3 className="font-playfair text-base font-semibold text-[#1A3828]">
+                Online Payment Collection Settings
+              </h3>
+              <p className="text-xs text-[#7B7368] mt-0.5">
+                Toggle whether clients must pay online via Razorpay to confirm their booking, or allow direct booking with payment settled later.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                  config.enablePayment !== false
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                    : "bg-amber-50 text-amber-800 border-amber-200"
+                }`}
+              >
+                {config.enablePayment !== false
+                  ? "● Razorpay Online Payments Active"
+                  : "○ Direct Booking (Pay Later) Active"}
+              </span>
+            </div>
+          </div>
+
+          {/* Master Toggle Card */}
+          <div
+            className={`p-5 rounded-2xl border transition-all ${
+              config.enablePayment !== false
+                ? "bg-emerald-50/50 border-emerald-200"
+                : "bg-amber-50/40 border-amber-200"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3.5">
+                <div
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    config.enablePayment !== false
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-amber-100 text-amber-800"
+                  }`}
+                >
+                  <CreditCard className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-[#1A3828]">
+                    Require Online Payment via Razorpay
+                  </h4>
+                  <p className="text-xs text-[#5a4033] mt-1 leading-relaxed">
+                    {config.enablePayment !== false
+                      ? "Enabled: Clients are required to complete online payment (cards, UPI, netbanking) through Razorpay before their appointment is booked."
+                      : "Disabled: Online checkout is skipped. Clients book their session immediately and can settle fees directly at the clinic, via personal UPI, or after consultation."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Toggle Switch */}
+              <label className="relative inline-flex items-center cursor-pointer shrink-0 mt-1">
+                <input
+                  type="checkbox"
+                  checked={config.enablePayment !== false}
+                  onChange={(e) => {
+                    const enabled = e.target.checked;
+                    setConfig({
+                      ...config,
+                      enablePayment: enabled,
+                      submitButtonText: enabled
+                        ? "Pay via Razorpay & Book Session"
+                        : "Confirm & Book Session (Pay Later)",
+                    });
+                  }}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1A3828]"></div>
+              </label>
+            </div>
+          </div>
+
+          {/* Pay Later Client Guidance Note */}
+          <div className="space-y-4 pt-2">
+            {/* When payment is disabled, show manual payment status controls */}
+            {config.enablePayment === false && (
+              <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-4">
+                <h5 className="text-xs font-semibold text-[#1A3828] flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5 text-[#705d00]" />
+                  <span>Manual Payment Status Configuration</span>
+                </h5>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
+                    Default Payment Status for New Bookings
+                  </label>
+                  <select
+                    value={config.defaultPaymentStatus || "pending"}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        defaultPaymentStatus: e.target.value as "pending" | "paid",
+                      })
+                    }
+                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
+                  >
+                    <option value="pending">Pending (Pay Later / Settle at Clinic / Cash / UPI)</option>
+                    <option value="paid">Paid (Marked as Paid Automatically)</option>
+                  </select>
+                  <p className="text-[11px] text-[#7B7368] mt-1">
+                    When set to Pending, bookings will show as unpaid until you manually mark them as Paid in the Admin Bookings page.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
+                    Manual Payment Instructions (Cash / UPI / Reception)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={
+                      config.manualPaymentInstructions ??
+                      "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation."
+                    }
+                    onChange={(e) =>
+                      setConfig({ ...config, manualPaymentInstructions: e.target.value })
+                    }
+                    placeholder="Instructions for client on how to pay manually..."
+                    className="w-full text-xs p-3 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans leading-relaxed resize-none text-[#1A3828]"
+                  />
+                  <p className="text-[11px] text-[#7B7368] mt-1">
+                    Shown to clients during booking so they know the exact offline payment procedure.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1A3828] mb-1">
+                Client Notice When Online Payment is Disabled
+              </label>
+              <textarea
+                rows={2}
+                value={
+                  config.paymentDisabledNote ||
+                  "No upfront payment required online. You may settle your consultation fee directly at the clinic or after your session."
+                }
+                onChange={(e) =>
+                  setConfig({ ...config, paymentDisabledNote: e.target.value })
+                }
+                placeholder="Message displayed to clients explaining how/when payment will be handled..."
+                className="w-full text-xs p-3 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans leading-relaxed resize-none text-[#1A3828]"
+              />
+              <p className="text-[11px] text-[#7B7368] mt-1">
+                This notice is shown to clients in Step 3 when online payments are turned off.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1A3828] mb-1">
+                Submit Button Label
+              </label>
+              <input
+                type="text"
+                value={
+                  config.submitButtonText ||
+                  (config.enablePayment !== false
+                    ? "Pay via Razorpay & Book Session"
+                    : "Confirm & Book Session (Pay Later)")
+                }
+                onChange={(e) =>
+                  setConfig({ ...config, submitButtonText: e.target.value })
+                }
+                className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
+              />
+              <p className="text-[11px] text-[#7B7368] mt-1">
+                The call-to-action text on the final booking button.
+              </p>
             </div>
           </div>
         </div>

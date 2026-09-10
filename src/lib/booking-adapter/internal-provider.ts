@@ -201,30 +201,70 @@ export class InternalBookingProvider implements BookingProvider {
     return newBooking;
   }
 
+  private async findOrLoadBooking(
+    id: string,
+    db: any
+  ): Promise<{ booking: Booking; index: number } | null> {
+    const cleanId = id.trim();
+    const index = db.bookings.findIndex(
+      (b: Booking) =>
+        (b.id === cleanId || b.id.toLowerCase() === cleanId.toLowerCase()) && !b.deletedAt
+    );
+
+    if (index !== -1) {
+      return { booking: db.bookings[index], index };
+    }
+
+    // Check PostgreSQL relational table
+    try {
+      const pool = getPgPool();
+      const res = await pool.query(
+        `SELECT * FROM bookings WHERE (id = $1 OR LOWER(id) = LOWER($1)) AND deleted_at IS NULL LIMIT 1`,
+        [cleanId]
+      );
+      if (res.rows.length > 0) {
+        const loaded = sqlRowToBooking(res.rows[0]);
+        db.bookings.unshift(loaded);
+        return { booking: loaded, index: 0 };
+      }
+    } catch (sqlErr) {
+      console.warn("[InternalProvider] SQL lookup error:", sqlErr);
+    }
+
+    return null;
+  }
+
   async updateBookingStatus(
     id: string,
     status: "pending" | "confirmed" | "completed" | "cancelled",
     note?: string
   ): Promise<Booking | null> {
     const db = await getDatabase();
-    const index = db.bookings.findIndex((b) => b.id === id && !b.deletedAt);
-    if (index === -1) return null;
+    const found = await this.findOrLoadBooking(id, db);
+    if (!found) return null;
 
-    const booking = db.bookings[index];
+    const booking = found.booking;
     const now = new Date().toISOString();
 
     booking.bookingStatus = status;
     booking.updatedAt = now;
-
-    if (status === "confirmed") {
-      booking.paymentStatus = "paid";
-    }
 
     booking.history.unshift({
       timestamp: now,
       action: `Status updated to ${status.toUpperCase()}`,
       note: note || undefined,
     });
+
+    // Update relational PostgreSQL table
+    try {
+      const pool = getPgPool();
+      await pool.query(
+        `UPDATE bookings SET status = $1, updated_at = $2 WHERE id = $3 OR LOWER(id) = LOWER($3)`,
+        [status, now, booking.id]
+      );
+    } catch (sqlErr) {
+      console.warn("[InternalProvider] SQL booking status update error:", sqlErr);
+    }
 
     // Notify if status changed
     db.notifications.unshift({
@@ -241,16 +281,79 @@ export class InternalBookingProvider implements BookingProvider {
     return booking;
   }
 
+  async updatePaymentStatus(
+    id: string,
+    paymentStatus: "pending" | "paid" | "refunded",
+    note?: string
+  ): Promise<Booking | null> {
+    const db = await getDatabase();
+    const found = await this.findOrLoadBooking(id, db);
+    if (!found) return null;
+
+    const booking = found.booking;
+    const now = new Date().toISOString();
+    const prevPaymentStatus = booking.paymentStatus || "pending";
+
+    booking.paymentStatus = paymentStatus;
+    booking.updatedAt = now;
+
+    if (!booking.history) booking.history = [];
+    booking.history.unshift({
+      timestamp: now,
+      action: `Payment status manually updated from ${prevPaymentStatus.toUpperCase()} to ${paymentStatus.toUpperCase()}${note ? ` (${note})` : ""}`,
+      note: note || undefined,
+    });
+
+    // Update relational PostgreSQL table
+    try {
+      const pool = getPgPool();
+      await pool.query(
+        `UPDATE bookings SET payment_status = $1, updated_at = $2 WHERE id = $3 OR LOWER(id) = LOWER($3)`,
+        [paymentStatus, now, booking.id]
+      );
+    } catch (sqlErr) {
+      console.warn("[InternalProvider] SQL payment status update error:", sqlErr);
+    }
+
+    // Notify practice admin of manual payment update
+    if (!db.notifications) db.notifications = [];
+    db.notifications.unshift({
+      id: `notif_${Date.now()}`,
+      type: "status_change",
+      title: `Payment ${paymentStatus.toUpperCase()}`,
+      message: `Payment status for ${booking.clientName} (#${booking.id}) manually marked as ${paymentStatus.toUpperCase()}${note ? ` (${note})` : ""}.`,
+      link: "/admin/bookings",
+      isRead: false,
+      createdAt: now,
+    });
+
+    await saveDatabase(db);
+    return booking;
+  }
+
   async updateBookingNotes(
     id: string,
     internalNotes: string
   ): Promise<Booking | null> {
     const db = await getDatabase();
-    const booking = db.bookings.find((b) => b.id === id && !b.deletedAt);
-    if (!booking) return null;
+    const found = await this.findOrLoadBooking(id, db);
+    if (!found) return null;
 
+    const booking = found.booking;
+    const now = new Date().toISOString();
     booking.internalNotes = internalNotes;
-    booking.updatedAt = new Date().toISOString();
+    booking.updatedAt = now;
+
+    try {
+      const pool = getPgPool();
+      await pool.query(
+        `UPDATE bookings SET internal_notes = $1, updated_at = $2 WHERE id = $3 OR LOWER(id) = LOWER($3)`,
+        [internalNotes, now, booking.id]
+      );
+    } catch (sqlErr) {
+      console.warn("[InternalProvider] SQL notes update error:", sqlErr);
+    }
+
     await saveDatabase(db);
     return booking;
   }
@@ -262,9 +365,10 @@ export class InternalBookingProvider implements BookingProvider {
     note?: string
   ): Promise<Booking | null> {
     const db = await getDatabase();
-    const booking = db.bookings.find((b) => b.id === id && !b.deletedAt);
-    if (!booking) return null;
+    const found = await this.findOrLoadBooking(id, db);
+    if (!found) return null;
 
+    const booking = found.booking;
     const now = new Date().toISOString();
     const prevDate = booking.appointmentDate;
     const prevTime = booking.appointmentTime;
@@ -278,6 +382,16 @@ export class InternalBookingProvider implements BookingProvider {
       action: `Rescheduled from ${prevDate} ${prevTime} to ${date} ${time}`,
       note: note || undefined,
     });
+
+    try {
+      const pool = getPgPool();
+      await pool.query(
+        `UPDATE bookings SET appointment_date = $1, appointment_time = $2, updated_at = $3 WHERE id = $4 OR LOWER(id) = LOWER($4)`,
+        [date, time, now, booking.id]
+      );
+    } catch (sqlErr) {
+      console.warn("[InternalProvider] SQL reschedule update error:", sqlErr);
+    }
 
     // Push notification for reschedule
     db.notifications.unshift({

@@ -266,7 +266,7 @@ export default function AdminDashboardPage() {
                     className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-surface-container-low/40 rounded-xl px-2 transition-colors"
                   >
                     <div className="flex items-start sm:items-center gap-3.5">
-                      <div className="px-3 py-1.5 rounded-xl bg-forest-green/10 text-forest-green font-mono font-semibold text-xs text-center min-w-[76px]">
+                      <div className="px-3 py-1.5 rounded-xl bg-forest-green/10 text-forest-green font-sans font-semibold text-xs text-center min-w-[76px] whitespace-nowrap">
                         {appt.appointmentTime}
                       </div>
 
@@ -275,7 +275,7 @@ export default function AdminDashboardPage() {
                           <span className="font-semibold text-xs text-primary">
                             {appt.clientName}
                           </span>
-                          <span className="font-mono text-[10px] text-on-surface-variant/60">
+                          <span className="font-sans text-[10px] text-on-surface-variant/60">
                             ({appt.id})
                           </span>
                         </div>
@@ -392,7 +392,7 @@ export default function AdminDashboardPage() {
 
                   return (
                     <div key={i} className="flex flex-col items-center gap-1.5 h-full justify-end group">
-                      <div className="text-[10px] font-mono text-on-surface-variant/70 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="text-[10px] font-sans text-on-surface-variant/70 opacity-0 group-hover:opacity-100 transition-opacity">
                         {d.total}
                       </div>
                       <div
