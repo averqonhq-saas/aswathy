@@ -111,7 +111,7 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             <div className="bg-tertiary-container p-space-lg rounded-xl flex items-center justify-between">
               <div className="space-y-space-xxs">
                 <span className="font-label-caps text-label-caps text-secondary-fixed block">
-                  Warm Consultation
+                  Support &amp; Consultations
                 </span>
                 <span className="font-body-sm text-body-sm text-surface-bright block">
                   100% Online Consultations

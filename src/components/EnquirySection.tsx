@@ -97,19 +97,17 @@ export default function EnquirySection() {
               <div className="inline-flex items-center gap-space-xs px-space-sm py-space-xxs rounded-full bg-surface-container text-on-surface-variant">
                 <span className="w-2 h-2 rounded-full bg-secondary"></span>
                 <span className="font-label-caps text-label-caps uppercase tracking-widest text-primary">
-                  Warm Inquiry
+                  Support &amp; Payment Inquiry
                 </span>
               </div>
               <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
-                Have questions before{" "}
+                Support inquiries or{" "}
                 <span className="italic font-normal text-soft-terracotta">
-                  you begin?
+                  payment issues?
                 </span>
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed pt-space-xs">
-                Reaching out for psychological support can feel like a significant
-                step. If you have questions about the format, session focus, or
-                comfort level, you are welcome to send an unhurried message here.
+                Whether you have questions before booking, need help with a payment issue or transaction, or want to inquire about our consultation formats, we are here to assist you promptly.
               </p>
             </div>
 
@@ -312,6 +310,12 @@ export default function EnquirySection() {
                       >
                         <option value="General Consultation Inquiry">
                           General Practice &amp; Questions
+                        </option>
+                        <option value="Payment Issue / Billing Assistance">
+                          Payment Issue / Billing Assistance
+                        </option>
+                        <option value="Booking & Scheduling Support">
+                          Booking &amp; Scheduling Assistance
                         </option>
                         <option value="Emotional Wellbeing & Stress">
                           Emotional Wellbeing &amp; Stress Management
