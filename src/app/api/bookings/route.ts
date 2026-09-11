@@ -1,8 +1,28 @@
 import { NextResponse } from "next/server";
-import { getDatabase, saveDatabase, Booking } from "@/lib/db";
+import { getDatabase, saveDatabase, getBookedSlots, Booking } from "@/lib/db";
+import { areSlotsMatching } from "@/lib/booking-config";
 import { sendBookingConfirmationToClient, sendBookingAlertToAdmin } from "@/lib/email";
 import { createCalendarEventWithMeet } from "@/lib/google-calendar";
 import { getPgPool } from "@/lib/supabase-db";
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const date = searchParams.get("date") || undefined;
+    const bookedSlots = await getBookedSlots(date);
+
+    return NextResponse.json({
+      success: true,
+      bookedSlots,
+    });
+  } catch (error: any) {
+    console.error("[Public Bookings GET Error]:", error);
+    return NextResponse.json(
+      { error: "Failed to retrieve booked slots.", details: error?.message },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -116,21 +136,53 @@ export async function POST(request: Request) {
       );
     }
 
-    // Prevent duplicate booking entry
-    const existing = db.bookings.find(
+    // Check if the specific slot is blocked by admin
+    const isSlotBlocked = db.blockedSlots?.some(
       (b) =>
-        b.clientEmail.toLowerCase() === clientEmail.toLowerCase() &&
-        b.appointmentDate === appointmentDate &&
-        b.appointmentTime === appointmentTime &&
-        !b.deletedAt
+        b.date === appointmentDate &&
+        b.type === "slot" &&
+        b.startTime &&
+        areSlotsMatching(b.startTime, appointmentTime)
     );
 
-    if (existing) {
-      return NextResponse.json({
-        success: true,
-        message: "Booking already registered in practice database.",
-        booking: existing,
-      });
+    if (isSlotBlocked) {
+      return NextResponse.json(
+        {
+          error: `The consultation slot at ${appointmentTime} on ${appointmentDate} is unavailable. Please select an alternate slot.`,
+        },
+        { status: 409 }
+      );
+    }
+
+    // Check if slot has already been booked by an active appointment
+    const activeBookedSlots = await getBookedSlots(appointmentDate);
+    const isSlotAlreadyBooked = activeBookedSlots.some((b) =>
+      areSlotsMatching(b.time, appointmentTime)
+    );
+
+    if (isSlotAlreadyBooked) {
+      // Check if it's the same client resubmitting their own identical booking
+      const sameClientBooking = db.bookings.find(
+        (b) =>
+          b.clientEmail.toLowerCase() === clientEmail.toLowerCase() &&
+          b.appointmentDate === appointmentDate &&
+          areSlotsMatching(b.appointmentTime, appointmentTime) &&
+          !b.deletedAt
+      );
+      if (sameClientBooking) {
+        return NextResponse.json({
+          success: true,
+          message: "Booking already registered in practice database.",
+          booking: sameClientBooking,
+        });
+      }
+
+      return NextResponse.json(
+        {
+          error: `The consultation slot at ${appointmentTime} on ${appointmentDate} has already been reserved by another client. Please select an alternate time slot.`,
+        },
+        { status: 409 }
+      );
     }
 
     // Match service

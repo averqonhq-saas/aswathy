@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { hashPassword } from "./auth";
-import { loadDatabaseFromSupabase, saveDatabaseToSupabase } from "./supabase-db";
+import { loadDatabaseFromSupabase, saveDatabaseToSupabase, getPgPool } from "./supabase-db";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const DB_FILE = path.join(DATA_DIR, "database.json");
@@ -537,12 +537,12 @@ export function createInitialSeedData(): DatabaseSchema {
         tagline: "Gentle, non-judgmental space for emotional healing",
         email: "roottherapyonline@gmail.com",
         contactEmail: "roottherapyonline@gmail.com",
-        phone: "+91 98765 43210",
-        contactPhone: "+91 98765 43210",
+        phone: "+91 755 000 2973",
+        contactPhone: "+91 755 000 2973",
         clinicAddress: "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu",
         instagram: "https://instagram.com/aswathy.psychology",
         linkedin: "https://linkedin.com/in/aswathy-jeyarajasekar",
-        whatsapp: "https://wa.me/919876543210",
+        whatsapp: "https://wa.me/917550002973",
         currency: "INR (₹)",
         timezone: "Asia/Kolkata (IST)",
       },
@@ -670,4 +670,53 @@ export async function saveDatabase(data: DatabaseSchema): Promise<void> {
   } catch (err) {
     console.error("Error updating local backup:", err);
   }
+}
+
+/**
+ * Returns privacy-safe booked slot timestamps ({ date, time }) for active bookings.
+ * Merges memory/JSONB data and relational PostgreSQL data.
+ */
+export async function getBookedSlots(
+  dateFilter?: string
+): Promise<Array<{ date: string; time: string }>> {
+  const db = await getDatabase();
+  const bookedMap = new Map<string, { date: string; time: string }>();
+
+  // 1. From active bookings in JSONB / memory database
+  for (const b of db.bookings || []) {
+    if (!b.deletedAt && b.bookingStatus !== "cancelled") {
+      const bDate = (b.appointmentDate || (b as any).date || "").split("T")[0];
+      const bTime = (b.appointmentTime || (b as any).time || "").trim();
+      if (bDate && bTime && (!dateFilter || bDate === dateFilter)) {
+        const key = `${bDate}__${bTime.toLowerCase()}`;
+        bookedMap.set(key, { date: bDate, time: bTime });
+      }
+    }
+  }
+
+  // 2. From relational bookings table in PostgreSQL if reachable
+  try {
+    const pool = getPgPool();
+    const query = dateFilter
+      ? `SELECT appointment_date, appointment_time FROM bookings WHERE deleted_at IS NULL AND status != 'cancelled' AND (appointment_date = $1 OR appointment_date::text LIKE $2)`
+      : `SELECT appointment_date, appointment_time FROM bookings WHERE deleted_at IS NULL AND status != 'cancelled'`;
+    const params = dateFilter ? [dateFilter, `${dateFilter}%`] : [];
+    const res = await pool.query(query, params);
+    for (const row of res.rows) {
+      const bDate = row.appointment_date
+        ? new Date(row.appointment_date).toISOString().split("T")[0]
+        : "";
+      const bTime = (row.appointment_time || "").trim();
+      if (bDate && bTime && (!dateFilter || bDate === dateFilter)) {
+        const key = `${bDate}__${bTime.toLowerCase()}`;
+        if (!bookedMap.has(key)) {
+          bookedMap.set(key, { date: bDate, time: bTime });
+        }
+      }
+    }
+  } catch {
+    // Non-fatal fallback to memory data
+  }
+
+  return Array.from(bookedMap.values());
 }

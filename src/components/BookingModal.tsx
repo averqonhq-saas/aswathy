@@ -14,6 +14,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { areSlotsMatching } from "@/lib/booking-config";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -92,9 +93,37 @@ export default function BookingModal({
     }
   }, [availableDates, selectedDate]);
 
-  const morningSlots = ["10:00 AM", "11:30 AM"];
-  const afternoonSlots = ["02:00 PM", "03:30 PM"];
-  const eveningSlots = ["05:00 PM", "06:30 PM", "07:30 PM"];
+  const [bookedSlots, setBookedSlots] = useState<Array<{ date: string; time: string }>>([]);
+
+  useEffect(() => {
+    async function loadBooked() {
+      try {
+        const res = await fetch("/api/bookings");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (Array.isArray(data.bookedSlots)) {
+          setBookedSlots(data.bookedSlots);
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    loadBooked();
+  }, []);
+
+  const isSlotBooked = (dateStr: string, timeStr: string) => {
+    return bookedSlots.some(
+      (b) => b.date === dateStr && areSlotsMatching(b.time, timeStr)
+    );
+  };
+
+  const rawMorningSlots = ["10:00 AM", "11:30 AM"];
+  const rawAfternoonSlots = ["02:00 PM", "03:30 PM"];
+  const rawEveningSlots = ["05:00 PM", "06:30 PM", "07:30 PM"];
+
+  const morningSlots = rawMorningSlots.filter((t) => !isSlotBooked(selectedDate, t));
+  const afternoonSlots = rawAfternoonSlots.filter((t) => !isSlotBooked(selectedDate, t));
+  const eveningSlots = rawEveningSlots.filter((t) => !isSlotBooked(selectedDate, t));
 
   const handleNextFromStep1 = () => setStep(2);
 
@@ -212,7 +241,7 @@ END:VCALENDAR`;
     const msg = encodeURIComponent(
       `Hello Aswathy, I have booked a ${confirmedBooking.sessionType} on ${confirmedBooking.date} at ${confirmedBooking.timeSlot} (Booking ID: ${confirmedBooking.id}). Looking forward to our conversation.`
     );
-    window.open(`https://wa.me/919876543210?text=${msg}`, "_blank");
+    window.open(`https://wa.me/917550002973?text=${msg}`, "_blank");
   };
 
   if (!isOpen) return null;
@@ -614,7 +643,7 @@ END:VCALENDAR`;
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 755 000 2973"
                         className="w-full px-space-md py-space-sm rounded-xl border border-surface-container-high bg-surface text-on-surface font-body-md focus:outline-none focus:border-primary"
                       />
                     </div>

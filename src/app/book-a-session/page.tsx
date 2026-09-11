@@ -20,15 +20,9 @@ export default function BookASessionPage() {
       <header className="fixed top-0 left-0 w-full z-50 bg-surface/85 backdrop-blur-md transition-all duration-300 shadow-[0_1px_8px_rgba(74,51,40,0.04)]">
         <div className="h-20 max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop flex items-center justify-between">
           <Link
-            className="flex items-center gap-space-sm group text-left"
+            className="flex items-center group text-left"
             href="/"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt="Aswathy Logo"
-              className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-              src="/logo.svg"
-            />
             <div className="flex flex-col">
               <span className="font-headline-sm text-headline-sm text-primary tracking-tight font-medium">
                 Aswathy Jeyarajasekar

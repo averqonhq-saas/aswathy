@@ -161,12 +161,21 @@ export default function EnquirySection() {
             {/* Direct Email fallback */}
             <div className="pt-space-xs text-on-surface-variant text-xs flex flex-col gap-1">
               <span>Prefer direct correspondence?</span>
-              <a
-                href="mailto:roottherapyonline@gmail.com"
-                className="font-medium text-primary hover:text-secondary underline underline-offset-4 decoration-secondary transition-colors"
-              >
-                roottherapyonline@gmail.com
-              </a>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <a
+                  href="mailto:roottherapyonline@gmail.com"
+                  className="font-medium text-primary hover:text-secondary underline underline-offset-4 decoration-secondary transition-colors"
+                >
+                  roottherapyonline@gmail.com
+                </a>
+                <span>•</span>
+                <a
+                  href="tel:+917550002973"
+                  className="font-medium text-primary hover:text-secondary underline underline-offset-4 decoration-secondary transition-colors"
+                >
+                  +91 755 000 2973
+                </a>
+              </div>
             </div>
           </div>
 
@@ -280,7 +289,7 @@ export default function EnquirySection() {
                         type="tel"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="e.g., +91 98765 43210"
+                        placeholder="e.g., +91 755 000 2973"
                         className="w-full px-4 py-2.5 rounded-xl bg-surface border border-parchment-border text-xs text-primary placeholder:text-on-surface-variant/50 focus:outline-none focus:border-forest-green focus:ring-1 focus:ring-forest-green transition-all"
                       />
                     </div>

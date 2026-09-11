@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { getDatabase } from "@/lib/db";
+import { getDatabase, getBookedSlots } from "@/lib/db";
 
 export async function GET() {
   try {
     const db = await getDatabase();
+    const bookedSlots = await getBookedSlots();
 
     return NextResponse.json({
       success: true,
@@ -22,6 +23,7 @@ export async function GET() {
       settings: db.settings,
       bookingFormConfig: db.bookingFormConfig,
       blockedSlots: db.blockedSlots || [],
+      bookedSlots,
     });
   } catch (error) {
     console.error("Public content GET error:", error);

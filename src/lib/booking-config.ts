@@ -40,6 +40,13 @@ export interface SingleDaySlotOverride {
   slots: BookingTimeSlot[];
 }
 
+export interface BookingNoticeBox {
+  enabled: boolean;
+  title?: string;
+  message: string;
+  type?: "info" | "warning" | "announcement" | "success";
+}
+
 export interface BookingFormConfig {
   headerBadge: string;
   headerTitle: string;
@@ -57,6 +64,8 @@ export interface BookingFormConfig {
     title: string;
     date: string;
     type: string;
+    startTime?: string;
+    endTime?: string;
     reason?: string;
   }>;
   contactChannels: string[];
@@ -70,6 +79,7 @@ export interface BookingFormConfig {
   paymentDisabledNote?: string;
   defaultPaymentStatus?: "pending" | "paid"; // Default status when online payment is disabled
   manualPaymentInstructions?: string; // Instructions for client on manual settlement
+  noticeBox?: BookingNoticeBox; // Client-facing announcement/notice banner on booking form
   updatedAt: string;
 }
 
@@ -155,7 +165,7 @@ export const DEFAULT_BOOKING_FORM_CONFIG: BookingFormConfig = {
   instantConfirmationText:
     "Instant booking confirmation & Google Meet invitation",
   submitButtonText: "Confirm & Request Session",
-  whatsappNumber: "+91 98765 43210",
+  whatsappNumber: "+91 755 000 2973",
   confirmationTitle: "Your Sanctuary Awaits",
   confirmationSubtitle: "Appointment Secured",
   enablePayment: true,
@@ -163,6 +173,12 @@ export const DEFAULT_BOOKING_FORM_CONFIG: BookingFormConfig = {
   paymentDisabledNote: "No upfront payment required online. You may settle your consultation fee directly at the clinic or after your session.",
   manualPaymentInstructions: "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
   singleDaySlots: [],
+  noticeBox: {
+    enabled: false,
+    title: "Important Clinic Notice",
+    message: "",
+    type: "announcement",
+  },
   updatedAt: "2026-09-06T13:18:50.470Z",
 };
 
@@ -249,5 +265,19 @@ export function generateSlotsFromRange(
   }
 
   return slots;
+}
+
+/**
+ * Compares two time slot strings (e.g. "05:30 PM (Evening Slot)" vs "05:30 PM" vs "17:30")
+ * to check if they represent the same appointment starting time.
+ */
+export function areSlotsMatching(time1: string, time2: string): boolean {
+  if (!time1 || !time2) return false;
+  const clean1 = time1.trim().toLowerCase();
+  const clean2 = time2.trim().toLowerCase();
+  if (clean1 === clean2) return true;
+  const min1 = parseTimeToMinutes(time1);
+  const min2 = parseTimeToMinutes(time2);
+  return min1 === min2;
 }
 

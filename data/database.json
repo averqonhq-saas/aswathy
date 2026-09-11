@@ -109,41 +109,6 @@
       "shortDescription": "₹700 sliding-scale fee may be available upon prior approval by the psychologist. Please confirm the approved fee before payment."
     }
   ],
-  "media": [
-    {
-      "id": "med_1",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-      "title": "Aswathy Jeyarajasekar Portrait",
-      "category": "profile",
-      "filename": "aswathy-portrait.jpg",
-      "mimeType": "image/jpeg",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 145000,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
-    },
-    {
-      "id": "med_2",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-      "title": "Quiet Consulting Sanctuary Studio",
-      "category": "website",
-      "filename": "sanctuary-room.jpg",
-      "mimeType": "image/jpeg",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 210000,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
-    },
-    {
-      "id": "med_3",
-      "url": "/logo.svg",
-      "title": "Botanical Therapy Emblem",
-      "category": "website",
-      "filename": "logo-emblem.svg",
-      "mimeType": "image/svg+xml",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 8400,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
-    }
-  ],
   "feedback": [
     {
       "id": "fb_1789106911436",
@@ -194,6 +159,40 @@
       "clientDisplayName": "Client M"
     }
   ],
+  "sessionFormats": [
+    {
+      "id": "individual-online",
+      "tag": "Video Consultation",
+      "icon": "video",
+      "badge": "Popular",
+      "order": 1,
+      "price": 1800,
+      "title": "Individual Online Counselling",
+      "format": "online",
+      "duration": "50 Minutes · Secure Video",
+      "isActive": true,
+      "badgeType": "popular",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-11T12:41:38.741Z",
+      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
+    },
+    {
+      "id": "initial-discovery",
+      "tag": "Exploratory",
+      "icon": "discovery",
+      "badge": "Introductory",
+      "order": 2,
+      "price": 0,
+      "title": "Initial Discovery Call",
+      "format": "online",
+      "duration": "20 Minutes · Introductory",
+      "isActive": true,
+      "badgeType": "introductory",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-11T12:41:38.741Z",
+      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
+    }
+  ],
   "clientTypes": [
     {
       "id": "ct_1",
@@ -241,40 +240,6 @@
       "description": "Managing corporate stress, work-life balance erosion, and interpersonal conflicts."
     }
   ],
-  "sessionFormats": [
-    {
-      "id": "individual-online",
-      "title": "Individual Online Counselling",
-      "format": "online",
-      "duration": "50 Minutes · Secure Video",
-      "tag": "Video Consultation",
-      "badge": "Popular",
-      "badgeType": "popular",
-      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle.",
-      "icon": "video",
-      "price": 1800,
-      "isActive": true,
-      "order": 1,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-11T06:44:41.013Z"
-    },
-    {
-      "id": "initial-discovery",
-      "title": "Initial Discovery Call",
-      "format": "online",
-      "duration": "20 Minutes · Introductory",
-      "tag": "Exploratory",
-      "badge": "Introductory",
-      "badgeType": "introductory",
-      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit.",
-      "icon": "discovery",
-      "price": 0,
-      "isActive": true,
-      "order": 2,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-11T06:44:41.013Z"
-    }
-  ],
   "settings": {
     "account": {
       "email": "roottherapyonline@gmail.com",
@@ -298,7 +263,7 @@
     },
     "general": {
       "email": "roottherapyonline@gmail.com",
-      "phone": "+91 98765 43210",
+      "phone": "+91 755 0002973",
       "tagline": "Gentle, non-judgmental space for emotional healing",
       "currency": "INR (₹)",
       "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
@@ -307,7 +272,7 @@
       "instagram": "https://instagram.com/aswathy.psychology",
       "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
       "contactEmail": "roottherapyonline@gmail.com",
-      "contactPhone": "+91 98765 43210",
+      "contactPhone": "+91 755 0002973",
       "practiceName": "The Safe Sanctuary | Aswathy Counselling",
       "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
     },
@@ -321,6 +286,135 @@
       "emailNotifications": true
     }
   },
+  "media": [
+    {
+      "id": "med_1",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      "title": "Aswathy Jeyarajasekar Portrait",
+      "category": "profile",
+      "filename": "aswathy-portrait.jpg",
+      "mimeType": "image/jpeg",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "sizeBytes": 145000,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
+    },
+    {
+      "id": "med_2",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      "title": "Quiet Consulting Sanctuary Studio",
+      "category": "website",
+      "filename": "sanctuary-room.jpg",
+      "mimeType": "image/jpeg",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "sizeBytes": 210000,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
+    },
+    {
+      "id": "med_3",
+      "url": "/logo.svg",
+      "title": "Botanical Therapy Emblem",
+      "category": "website",
+      "filename": "logo-emblem.svg",
+      "mimeType": "image/svg+xml",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "sizeBytes": 8400,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif_1789126924343",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Aswathy J (#ASW-676483) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-11T11:42:02.900Z"
+    },
+    {
+      "id": "notif_1789126872280",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Aswathy J booked \"Individual Session \" for 2026-09-14 at 7:00. Google Meet room ready.",
+      "createdAt": "2026-09-11T11:41:11.562Z"
+    },
+    {
+      "id": "notif_1789109320434",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Aswathy J booked \"Individual Session \" for 2026-09-12 at 7:00. Google Meet room ready.",
+      "createdAt": "2026-09-11T06:48:39.623Z"
+    },
+    {
+      "id": "notif_1789055838107",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Muneeswaran P (#ASW-493384) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-10T15:57:16.792Z"
+    },
+    {
+      "id": "notif_1789055755349",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Counselling for Students\" for 2026-09-11 at 10:00 AM. Google Meet room ready.",
+      "createdAt": "2026-09-10T15:55:54.566Z"
+    },
+    {
+      "id": "notif_1788871456203",
+      "link": "/admin/enquiries",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "isRead": true,
+      "message": "Muneeswaran P: Emotional Wellbeing & Stress",
+      "createdAt": "2026-09-08T12:44:16.202Z"
+    }
+  ],
+  "journeyEntries": [
+    {
+      "id": "jrn_2",
+      "year": "High School | Where It Began",
+      "order": 1,
+      "heading": "My first experience with professional psychological support.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-09T09:47:39.688Z",
+      "description": "Going through a difficult phase in my life and experiencing professional psychological support introduced me to the impact that a safe therapeutic space can have. This experience sparked my curiosity about psychology and planted the first seed of what would eventually become my career. Sometimes, our own experiences become the beginning of the work we are meant to do."
+    },
+    {
+      "id": "jrn_1",
+      "year": "Undergraduate Years | Discovering Psychology",
+      "order": 2,
+      "heading": "Beginning my academic journey in Psychology.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-09T09:47:39.688Z",
+      "description": "What started as a personal interest gradually grew into a deeper academic and professional curiosity. Studying psychology helped me understand human behaviour, emotions, relationships, and the many factors that shape our experiences. Psychology taught me that there is always more beneath what we see on the surface."
+    },
+    {
+      "id": "jrn_3",
+      "year": "Postgraduate Years | Finding My Path",
+      "order": 3,
+      "heading": "Pursuing Counselling Psychology.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-09T09:47:39.688Z",
+      "description": "My postgraduate journey gave me the opportunity to move beyond understanding psychology theoretically and begin developing the skills required to work therapeutically with people. Through academic learning, practical experiences, and supervision, I began developing my own understanding of what it means to be a counsellor. Becoming a therapist is not simply about learning techniques, it is also about developing self-awareness, empathy, and the ability to truly be present with another person."
+    },
+    {
+      "id": "jrn_4",
+      "year": "Today | Becoming, Not Arriving",
+      "order": 4,
+      "heading": "Growing as a Counselling Psychologist and building my practice.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-09T09:47:39.688Z",
+      "description": "Today, I approach counselling with empathy, genuineness, and respect for each person’s individuality. I primarily follow a client-centred approach, creating a safe and non-judgmental space where individuals can explore their thoughts, emotions, relationships, and life experiences at their own pace.\n\nI see becoming a psychologist not as a destination, but as an ongoing journey of learning, reflection, and growth. I am grateful for the experiences that brought me here and for the opportunity to continue learning alongside the people I work with. Therapy is not about having all the answers. Sometimes, it is about creating a space where someone feels safe enough to discover their own."
+    }
+  ],
   "admins": [
     {
       "id": "admin_aswathy_1",
@@ -333,6 +427,16 @@
       "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
     }
   ],
+  "websiteAbout": {
+    "name": "Aswathy Jeyarajasekar",
+    "title": "Counselling Psychologist",
+    "fullBio": "I hold a B.Sc. in Psychology and an M.Sc. in Counselling Psychology, along with intensive training in Learning Disabilities.\n\nAs a Counselling Psychologist, I take a Client-Centred approach, focusing on creating a safe, compassionate, and non-judgmental space where you can feel heard and understood.\n\nMy practice is centred around helping individuals explore their emotions, develop deeper self-understanding, navigate life’s challenges, and work towards meaningful personal growth. I believe therapy is a collaborative process, where your experiences, needs, and pace remain at the heart of the work.\n",
+    "updatedAt": "2026-09-10T07:05:53.126Z",
+    "shortIntro": "Hi, I’m Aswathy, a Counselling Psychologist. I believe therapy is a space where you can feel heard, understood, and accepted without judgment. My goal is to create a safe and comfortable environment where you can openly explore your thoughts, emotions, relationships, and life experiences.",
+    "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+    "qualifications": [],
+    "experienceYears": "1+ Year in Supervised Private Practice"
+  },
   "sessionSteps": [
     {
       "id": "step_1",
@@ -401,17 +505,74 @@
       "internalNotes": ""
     }
   ],
-  "websiteAbout": {
-    "name": "Aswathy Jeyarajasekar",
-    "title": "Counselling Psychologist",
-    "fullBio": "I hold a B.Sc. in Psychology and an M.Sc. in Counselling Psychology, along with intensive training in Learning Disabilities.\n\nAs a Counselling Psychologist, I take a Client-Centred approach, focusing on creating a safe, compassionate, and non-judgmental space where you can feel heard and understood.\n\nMy practice is centred around helping individuals explore their emotions, develop deeper self-understanding, navigate life’s challenges, and work towards meaningful personal growth. I believe therapy is a collaborative process, where your experiences, needs, and pace remain at the heart of the work.\n",
-    "updatedAt": "2026-09-10T07:05:53.126Z",
-    "shortIntro": "Hi, I’m Aswathy, a Counselling Psychologist. I believe therapy is a space where you can feel heard, understood, and accepted without judgment. My goal is to create a safe and comfortable environment where you can openly explore your thoughts, emotions, relationships, and life experiences.",
-    "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-    "qualifications": [],
-    "experienceYears": "1+ Year in Supervised Private Practice"
-  },
   "bookings": [
+    {
+      "id": "ASW-676483",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Marked as paid manually (Cash / UPI / Reception)",
+          "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
+          "timestamp": "2026-09-11T11:42:02.900Z"
+        },
+        {
+          "action": "Google Calendar invitation dispatched & Google Meet generated (mvchtt18a36pjvnhbs5rtj2fa4)",
+          "timestamp": "2026-09-11T11:41:11.562Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-11T11:41:11.562Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-11T11:41:11.562Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-09-11T11:42:02.900Z",
+      "clientName": "Aswathy J",
+      "clientEmail": "aswathyjeyarajasekar21@gmail.com",
+      "clientPhone": "7550002973",
+      "meetingLink": "https://meet.google.com/nbf-bjfj-cfz",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "nil",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-09-14",
+      "appointmentTime": "7:00",
+      "calendarEventId": "mvchtt18a36pjvnhbs5rtj2fa4",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-857250",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Google Calendar invitation dispatched & Google Meet generated (8h28t9mbivlu3iftapjsvda21o)",
+          "timestamp": "2026-09-11T06:48:39.623Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-11T06:48:39.623Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-11T06:48:39.623Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-09-11T06:48:39.623Z",
+      "clientName": "Aswathy J",
+      "clientEmail": "aswathyjeyarajasekar21@gmail.com",
+      "clientPhone": "7550002973",
+      "meetingLink": "https://meet.google.com/hdz-osni-dww",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "pending",
+      "appointmentDate": "2026-09-12",
+      "appointmentTime": "7:00",
+      "calendarEventId": "8h28t9mbivlu3iftapjsvda21o",
+      "durationMinutes": 60
+    },
     {
       "id": "ASW-493384",
       "price": 600,
@@ -461,22 +622,6 @@
       "createdAt": "2026-09-06T13:18:50.470Z",
       "updatedAt": "2026-09-06T13:18:50.470Z",
       "description": "Anxiety, depression, chronic stress regulation, emotional fatigue."
-    },
-    {
-      "id": "cat_personal",
-      "name": "Personal Growth",
-      "slug": "personal-growth",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Self-worth, perfectionism, decision clarity, inner compass."
-    },
-    {
-      "id": "cat_transitions",
-      "name": "Life Transitions",
-      "slug": "life-transitions",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Relocation, career transitions, grief, identity shifts."
     },
     {
       "id": "cat_1788882225101",
@@ -581,75 +726,14 @@
       "sessionDuration": 50
     }
   ],
-  "journeyEntries": [
-    {
-      "id": "jrn_2",
-      "year": "High School | Where It Began",
-      "order": 1,
-      "heading": "My first experience with professional psychological support.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "Going through a difficult phase in my life and experiencing professional psychological support introduced me to the impact that a safe therapeutic space can have. This experience sparked my curiosity about psychology and planted the first seed of what would eventually become my career. Sometimes, our own experiences become the beginning of the work we are meant to do."
-    },
-    {
-      "id": "jrn_1",
-      "year": "Undergraduate Years | Discovering Psychology",
-      "order": 2,
-      "heading": "Beginning my academic journey in Psychology.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "What started as a personal interest gradually grew into a deeper academic and professional curiosity. Studying psychology helped me understand human behaviour, emotions, relationships, and the many factors that shape our experiences. Psychology taught me that there is always more beneath what we see on the surface."
-    },
-    {
-      "id": "jrn_3",
-      "year": "Postgraduate Years | Finding My Path",
-      "order": 3,
-      "heading": "Pursuing Counselling Psychology.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "My postgraduate journey gave me the opportunity to move beyond understanding psychology theoretically and begin developing the skills required to work therapeutically with people. Through academic learning, practical experiences, and supervision, I began developing my own understanding of what it means to be a counsellor. Becoming a therapist is not simply about learning techniques, it is also about developing self-awareness, empathy, and the ability to truly be present with another person."
-    },
-    {
-      "id": "jrn_4",
-      "year": "Today | Becoming, Not Arriving",
-      "order": 4,
-      "heading": "Growing as a Counselling Psychologist and building my practice.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "Today, I approach counselling with empathy, genuineness, and respect for each person’s individuality. I primarily follow a client-centred approach, creating a safe and non-judgmental space where individuals can explore their thoughts, emotions, relationships, and life experiences at their own pace.\n\nI see becoming a psychologist not as a destination, but as an ongoing journey of learning, reflection, and growth. I am grateful for the experiences that brought me here and for the opportunity to continue learning alongside the people I work with. Therapy is not about having all the answers. Sometimes, it is about creating a space where someone feels safe enough to discover their own."
-    }
-  ],
-  "notifications": [
-    {
-      "id": "notif_1789055838107",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Payment PAID",
-      "isRead": false,
-      "message": "Payment status for Muneeswaran P (#ASW-493384) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
-      "createdAt": "2026-09-10T15:57:16.792Z"
-    },
-    {
-      "id": "notif_1789055755349",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Muneeswaran P booked \"Individual Counselling for Students\" for 2026-09-11 at 10:00 AM. Google Meet room ready.",
-      "createdAt": "2026-09-10T15:55:54.566Z"
-    },
-    {
-      "id": "notif_1788871456203",
-      "link": "/admin/enquiries",
-      "type": "enquiry_new",
-      "title": "New Client Enquiry",
-      "isRead": true,
-      "message": "Muneeswaran P: Emotional Wellbeing & Stress",
-      "createdAt": "2026-09-08T12:44:16.202Z"
-    }
-  ],
   "bookingFormConfig": {
     "timezone": "IST (GMT+5:30)",
+    "noticeBox": {
+      "type": "info",
+      "title": "Clients Welcome",
+      "enabled": true,
+      "message": "If this is your first therapy consultation, there is no need to prepare anything beforehand. We move at your unhurried pace."
+    },
     "timeSlots": [
       {
         "time": "7:00",
@@ -664,7 +748,7 @@
         "isEvening": true
       }
     ],
-    "updatedAt": "2026-09-11T06:44:41.013Z",
+    "updatedAt": "2026-09-11T12:41:38.741Z",
     "step1Title": "Choose Session Format",
     "step2Title": "Choose Preferred Date & Time",
     "step3Title": "Your Confidential Information",
@@ -672,7 +756,7 @@
     "headerTitle": "Select your consultation preference",
     "cadenceTitle": "50-Minute Gentle Cadence",
     "ethicsNotice": "All communications are bound by strict psychological ethics and confidential data protocols.",
-    "enablePayment": false,
+    "enablePayment": true,
     "securityBadge": "Encrypted Healthcare Schedule",
     "singleDaySlots": [
       {
@@ -780,7 +864,7 @@
     "contactChannels": [
       "Email Invitation"
     ],
-    "submitButtonText": "Confirm & Book Session (Pay Later)",
+    "submitButtonText": "Pay via Razorpay & Book Session",
     "confirmationTitle": "Your Sanctuary Awaits",
     "cadenceDescription": "All sessions conclude with 10 minutes of integration buffer to keep conversations unhurried.",
     "paymentDisabledNote": "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",

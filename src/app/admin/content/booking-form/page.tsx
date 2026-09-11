@@ -6,16 +6,9 @@ import {
   CalendarCheck,
   Plus,
   Trash2,
-  MoveUp,
-  MoveDown,
   Save,
-  CheckCircle2,
-  XCircle,
-  Video,
-  Building2,
   Clock,
   ExternalLink,
-  Layers,
   Settings2,
   Sliders,
   ShieldCheck,
@@ -30,8 +23,12 @@ import {
   Palmtree,
   AlertCircle,
   Ban,
+  Megaphone,
+  Bell,
+  Info,
+  Eye,
+  CheckCircle2,
 } from "lucide-react";
-import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
 import {
   SessionFormat,
@@ -49,14 +46,13 @@ import {
 export default function AdminBookingFormControlPage() {
   const { success, error } = useToast();
 
-  const [activeTab, setActiveTab] = useState<"formats" | "slots" | "payments" | "text" | "intake">("formats");
+  const [activeTab, setActiveTab] = useState<"slots" | "notice" | "payments" | "text" | "intake">("slots");
 
   const [formats, setFormats] = useState<SessionFormat[]>(DEFAULT_SESSION_FORMATS);
   const [config, setConfig] = useState<BookingFormConfig>(DEFAULT_BOOKING_FORM_CONFIG);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  const [deletingFormatId, setDeletingFormatId] = useState<string | null>(null);
   const [newSlotTime, setNewSlotTime] = useState("");
   const [newSlotIsEvening, setNewSlotIsEvening] = useState(false);
   const [newChannelText, setNewChannelText] = useState("");
@@ -135,60 +131,6 @@ export default function AdminBookingFormControlPage() {
   useEffect(() => {
     loadData();
   }, []);
-
-  // ----------------------------------------------------
-  // FORMATS HANDLERS
-  // ----------------------------------------------------
-  const handleAddFormat = () => {
-    const newFmt: SessionFormat = {
-      id: `fmt_${Date.now()}`,
-      title: "New Session Format",
-      format: "online",
-      duration: "50 Minutes · Secure Video",
-      tag: "Video Consultation",
-      badge: "New",
-      badgeType: "popular",
-      description: "Describe what this consultation offers and who it is best suited for.",
-      icon: "video",
-      price: 1800,
-      isActive: true,
-      order: formats.length + 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setFormats([...formats, newFmt]);
-    success("New format added. Customize fields below.");
-  };
-
-  const moveFormat = (index: number, direction: "up" | "down") => {
-    const nextIdx = direction === "up" ? index - 1 : index + 1;
-    if (nextIdx < 0 || nextIdx >= formats.length) return;
-    const copy = [...formats];
-    const temp = copy[index];
-    copy[index] = copy[nextIdx];
-    copy[nextIdx] = temp;
-    copy.forEach((f, idx) => {
-      f.order = idx + 1;
-    });
-    setFormats(copy);
-  };
-
-  const updateFormat = (index: number, field: keyof SessionFormat, value: unknown) => {
-    const copy = [...formats];
-    copy[index] = { ...copy[index], [field]: value };
-    setFormats(copy);
-  };
-
-  const handleDeleteFormat = () => {
-    if (!deletingFormatId) return;
-    const filtered = formats.filter((f) => f.id !== deletingFormatId);
-    filtered.forEach((f, idx) => {
-      f.order = idx + 1;
-    });
-    setFormats(filtered);
-    setDeletingFormatId(null);
-    success("Session format removed.");
-  };
 
   // ----------------------------------------------------
   // TIME SLOTS HANDLERS
@@ -479,7 +421,7 @@ export default function AdminBookingFormControlPage() {
             Booking Form Controls
           </h1>
           <p className="text-sm text-[#7B7368] mt-1 font-sans">
-            Customize every aspect of the client booking experience: consultation formats, slot availability, text disclosures, and channels.
+            Customize every aspect of the client booking experience: slot availability, day schedules, payment settings, disclosures, and follow-up channels.
           </p>
         </div>
 
@@ -507,18 +449,6 @@ export default function AdminBookingFormControlPage() {
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2 border-b border-[#1A3828]/10 pb-2">
         <button
-          onClick={() => setActiveTab("formats")}
-          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
-            activeTab === "formats"
-              ? "bg-[#1A3828] text-[#F4D242] shadow-xs"
-              : "text-[#7B7368] hover:text-[#1A3828] hover:bg-[#1A3828]/5"
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Session Formats ({formats.length})</span>
-        </button>
-
-        <button
           onClick={() => setActiveTab("slots")}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
             activeTab === "slots"
@@ -528,6 +458,18 @@ export default function AdminBookingFormControlPage() {
         >
           <Clock className="w-4 h-4" />
           <span>Available Time Slots ({config.timeSlots.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("notice")}
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
+            activeTab === "notice"
+              ? "bg-[#1A3828] text-[#F4D242] shadow-xs"
+              : "text-[#7B7368] hover:text-[#1A3828] hover:bg-[#1A3828]/5"
+          }`}
+        >
+          <Bell className="w-4 h-4" />
+          <span>Notice Box Banner {config.noticeBox?.enabled ? "(Active)" : "(Off)"}</span>
         </button>
 
         <button
@@ -568,212 +510,7 @@ export default function AdminBookingFormControlPage() {
       </div>
 
       {/* ============================================================ */}
-      {/* TAB 1: SESSION FORMATS                                       */}
-      {/* ============================================================ */}
-      {activeTab === "formats" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between bg-[#fcf9f2] p-4 rounded-xl border border-[#e2d9ce] text-xs text-[#5a4033]">
-            <span>
-              These 3 consultation options are displayed in <strong>Step 1</strong> of the live booking form.
-            </span>
-            <button
-              onClick={handleAddFormat}
-              className="px-3 py-1.5 rounded-lg bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center gap-1.5 hover:bg-[#5a4033] transition-colors cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add Format</span>
-            </button>
-          </div>
-
-          {formats.map((fmt, idx) => (
-            <div
-              key={fmt.id}
-              className={`bg-white rounded-2xl border shadow-xs hover:border-[#1A3828]/25 p-5 sm:p-6 transition-all space-y-4 ${
-                fmt.isActive ? "border-[#1A3828]/10" : "border-slate-200 opacity-60 bg-slate-50/50"
-              }`}
-            >
-              {/* Header row */}
-              <div className="flex items-center justify-between gap-4 pb-3 border-b border-[#1A3828]/5">
-                <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-xl bg-[#1A3828] text-[#F4D242] font-semibold text-xs flex items-center justify-center shadow-xs">
-                    {idx + 1}
-                  </span>
-                  <div>
-                    <span className="font-playfair font-semibold text-sm text-[#1A3828] block">
-                      {fmt.title || "Untitled Format"}
-                    </span>
-                    <span className="text-[11px] text-[#7B7368]">
-                      {fmt.format === "online" ? "Telehealth (Video)" : "In-Person (Studio)"} · {fmt.duration}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => updateFormat(idx, "isActive", !fmt.isActive)}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all flex items-center gap-1 cursor-pointer ${
-                      fmt.isActive
-                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                        : "bg-slate-100 text-slate-600 border border-slate-200"
-                    }`}
-                  >
-                    {fmt.isActive ? (
-                      <>
-                        <CheckCircle2 className="w-3 h-3" /> Active
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="w-3 h-3" /> Hidden
-                      </>
-                    )}
-                  </button>
-
-                  <div className="flex items-center gap-1 border-l border-[#1A3828]/10 pl-2">
-                    <button
-                      type="button"
-                      onClick={() => moveFormat(idx, "up")}
-                      disabled={idx === 0}
-                      className="p-1.5 rounded-lg border border-[#1A3828]/15 hover:bg-[#1A3828]/5 text-[#1A3828] disabled:opacity-30 cursor-pointer"
-                      title="Move Up"
-                    >
-                      <MoveUp className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveFormat(idx, "down")}
-                      disabled={idx === formats.length - 1}
-                      className="p-1.5 rounded-lg border border-[#1A3828]/15 hover:bg-[#1A3828]/5 text-[#1A3828] disabled:opacity-30 cursor-pointer"
-                      title="Move Down"
-                    >
-                      <MoveDown className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDeletingFormatId(fmt.id)}
-                      className="p-1.5 rounded-lg border border-rose-200 hover:bg-rose-50 text-rose-600 transition-colors ml-1 cursor-pointer"
-                      title="Delete Format"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Format Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={fmt.title}
-                    onChange={(e) => updateFormat(idx, "title", e.target.value)}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans font-semibold text-[#1A3828]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Modality *
-                  </label>
-                  <select
-                    value={fmt.format}
-                    onChange={(e) => updateFormat(idx, "format", e.target.value as "online" | "in-person")}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
-                  >
-                    <option value="online">Online (Secure Video)</option>
-                    <option value="in-person">In-Person (Studio)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Card Icon *
-                  </label>
-                  <select
-                    value={fmt.icon}
-                    onChange={(e) => updateFormat(idx, "icon", e.target.value as "video" | "studio" | "discovery")}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
-                  >
-                    <option value="video">📹 Video / Camera</option>
-                    <option value="studio">🏛️ Studio / Building</option>
-                    <option value="discovery">✨ Sparkle / Discovery</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Duration Subtitle *
-                  </label>
-                  <input
-                    type="text"
-                    value={fmt.duration}
-                    onChange={(e) => updateFormat(idx, "duration", e.target.value)}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Bottom Tag *
-                  </label>
-                  <input
-                    type="text"
-                    value={fmt.tag}
-                    onChange={(e) => updateFormat(idx, "tag", e.target.value)}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={fmt.badge || ""}
-                    onChange={(e) => updateFormat(idx, "badge", e.target.value)}
-                    placeholder="Popular, Introductory"
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                    Badge Theme
-                  </label>
-                  <select
-                    value={fmt.badgeType || "popular"}
-                    onChange={(e) => updateFormat(idx, "badgeType", e.target.value as "popular" | "in-person" | "introductory")}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
-                  >
-                    <option value="popular">Gold / Yellow (Popular)</option>
-                    <option value="introductory">Peach / Soft Rose (Introductory)</option>
-                    <option value="in-person">Neutral Beige (In-Person)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1A3828] mb-1">
-                  Card Description *
-                </label>
-                <textarea
-                  rows={2}
-                  value={fmt.description}
-                  onChange={(e) => updateFormat(idx, "description", e.target.value)}
-                  className="w-full text-xs p-3 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans leading-relaxed resize-none text-[#1A3828]"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* ============================================================ */}
-      {/* TAB 2: TIME SLOTS & CADENCE                                  */}
+      {/* TIME SLOTS & CADENCE                                         */}
       {/* ============================================================ */}
       {activeTab === "slots" && (
         <div className="space-y-6">
@@ -1626,6 +1363,286 @@ export default function AdminBookingFormControlPage() {
       )}
 
       {/* ============================================================ */}
+      {/* TAB: NOTICE BOX BANNER (ANNOUNCEMENTS & CLINIC UPDATES)      */}
+      {/* ============================================================ */}
+      {activeTab === "notice" && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1A3828]/10 pb-5">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-playfair text-base font-semibold text-[#1A3828]">
+                    Booking Form Notice Box
+                  </h3>
+                  <span
+                    className={`text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full ${
+                      config.noticeBox?.enabled
+                        ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                        : "bg-slate-100 text-slate-600 border border-slate-300"
+                    }`}
+                  >
+                    {config.noticeBox?.enabled ? "● Active on Website" : "○ Turned Off"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#7B7368] mt-1">
+                  Display an announcement, clinic holiday update, policy note, or special instructions directly at the top of the booking form.
+                </p>
+              </div>
+
+              {/* Master Toggle */}
+              <label className="flex items-center gap-3 cursor-pointer self-start sm:self-auto bg-[#f6f3ec] px-4 py-2.5 rounded-xl border border-[#e2d9ce] hover:bg-[#ece8df] transition-colors shadow-2xs">
+                <input
+                  type="checkbox"
+                  checked={Boolean(config.noticeBox?.enabled)}
+                  onChange={(e) =>
+                    setConfig({
+                      ...config,
+                      noticeBox: {
+                        enabled: e.target.checked,
+                        title: config.noticeBox?.title || "Important Clinic Notice",
+                        message: config.noticeBox?.message || "",
+                        type: config.noticeBox?.type || "announcement",
+                      },
+                    })
+                  }
+                  className="w-4 h-4 text-[#1A3828] rounded border-gray-300 focus:ring-[#1A3828] cursor-pointer"
+                />
+                <span className="text-xs font-semibold text-[#1A3828]">
+                  Enable Notice Box on Booking Form
+                </span>
+              </label>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Left Column: Form Controls */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#1A3828] mb-1.5">
+                    Notice Banner Style &amp; Theme
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { type: "announcement", label: "Announcement", desc: "Warm Sunlit Gold" },
+                      { type: "info", label: "Information", desc: "Calm Sky Blue" },
+                      { type: "warning", label: "Important Alert", desc: "Soft Amber" },
+                      { type: "success", label: "Friendly Note", desc: "Gentle Sage Green" },
+                    ].map((style) => (
+                      <button
+                        key={style.type}
+                        type="button"
+                        onClick={() =>
+                          setConfig({
+                            ...config,
+                            noticeBox: {
+                              enabled: config.noticeBox?.enabled ?? true,
+                              title: config.noticeBox?.title || "Important Clinic Notice",
+                              message: config.noticeBox?.message || "",
+                              type: style.type as "info" | "warning" | "announcement" | "success",
+                            },
+                          })
+                        }
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                          (config.noticeBox?.type || "announcement") === style.type
+                            ? "border-[#1A3828] bg-[#1A3828]/5 ring-1 ring-[#1A3828]"
+                            : "border-[#e2d9ce] bg-white hover:bg-slate-50"
+                        }`}
+                      >
+                        <span className="block text-xs font-semibold text-[#1A3828]">
+                          {style.label}
+                        </span>
+                        <span className="block text-[10px] text-[#7B7368] mt-0.5">
+                          {style.desc}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
+                    Notice Title (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. In-Person Consultations & Holiday Schedule"
+                    value={config.noticeBox?.title || ""}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        noticeBox: {
+                          enabled: config.noticeBox?.enabled ?? true,
+                          title: e.target.value,
+                          message: config.noticeBox?.message || "",
+                          type: config.noticeBox?.type || "announcement",
+                        },
+                      })
+                    }
+                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1A3828] mb-1">
+                    Notice Content / Message
+                  </label>
+                  <textarea
+                    rows={4}
+                    placeholder="Write the message or instructions clients should read before booking (supports multiple lines)..."
+                    value={config.noticeBox?.message || ""}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        noticeBox: {
+                          enabled: config.noticeBox?.enabled ?? true,
+                          title: config.noticeBox?.title || "",
+                          message: e.target.value,
+                          type: config.noticeBox?.type || "announcement",
+                        },
+                      })
+                    }
+                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828] leading-relaxed"
+                  />
+                  <p className="text-[11px] text-[#7B7368] mt-1">
+                    Paragraphs and line breaks are preserved cleanly on the client form.
+                  </p>
+                </div>
+
+                {/* Quick Templates */}
+                <div>
+                  <label className="block text-[11px] font-semibold text-[#7B7368] uppercase tracking-wider mb-2">
+                    Quick Preset Templates
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          noticeBox: {
+                            enabled: true,
+                            type: "announcement",
+                            title: "100% Online Telehealth Appointments",
+                            message: "All sessions are currently hosted safely online via encrypted Google Meet links. If you require special accommodations, feel free to mention them in your confidential notes.",
+                          },
+                        })
+                      }
+                      className="text-[11px] px-2.5 py-1 rounded-lg border border-[#e2d9ce] bg-[#f6f3ec] text-[#412a1e] hover:bg-[#ece8df] cursor-pointer"
+                    >
+                      Telehealth Note
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          noticeBox: {
+                            enabled: true,
+                            type: "warning",
+                            title: "Holiday Schedule Notice",
+                            message: "The practice will be operating on adjusted hours this upcoming week. Slots shown on the calendar represent current real-time availability.",
+                          },
+                        })
+                      }
+                      className="text-[11px] px-2.5 py-1 rounded-lg border border-[#e2d9ce] bg-[#f6f3ec] text-[#412a1e] hover:bg-[#ece8df] cursor-pointer"
+                    >
+                      Holiday Hours
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setConfig({
+                          ...config,
+                          noticeBox: {
+                            enabled: true,
+                            type: "info",
+                            title: "First-Time Clients Welcome",
+                            message: "If this is your first therapy consultation, there is no need to prepare anything beforehand. We move at your unhurried pace.",
+                          },
+                        })
+                      }
+                      className="text-[11px] px-2.5 py-1 rounded-lg border border-[#e2d9ce] bg-[#f6f3ec] text-[#412a1e] hover:bg-[#ece8df] cursor-pointer"
+                    >
+                      First-Time Clients
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Live Client Preview */}
+              <div className="bg-[#f6f3ec] rounded-2xl p-5 border border-[#e2d9ce] space-y-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Eye className="w-4 h-4 text-[#705d00]" />
+                    <span className="text-xs font-semibold text-[#412a1e] uppercase tracking-wider">
+                      Live Client Preview
+                    </span>
+                  </div>
+
+                  {config.noticeBox?.enabled ? (
+                    <div
+                      className={`rounded-2xl p-4 border shadow-2xs transition-all ${
+                        config.noticeBox?.type === "warning"
+                          ? "bg-[#fff7ed] border-[#fed7aa] text-[#7c2d12]"
+                          : config.noticeBox?.type === "info"
+                          ? "bg-[#eff6ff] border-[#bfdbfe] text-[#1e3a8a]"
+                          : config.noticeBox?.type === "success"
+                          ? "bg-[#f0fdf4] border-[#bbf7d0] text-[#14532d]"
+                          : "bg-[#fdf9e8] border-[#fde68a] text-[#78350f]"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`p-2 rounded-xl shrink-0 mt-0.5 ${
+                            config.noticeBox?.type === "warning"
+                              ? "bg-[#ffedd5] text-[#c2410c]"
+                              : config.noticeBox?.type === "info"
+                              ? "bg-[#dbeafe] text-[#2563eb]"
+                              : config.noticeBox?.type === "success"
+                              ? "bg-[#dcfce7] text-[#16a34a]"
+                              : "bg-[#fef3c7] text-[#b45309]"
+                          }`}
+                        >
+                          {config.noticeBox?.type === "warning" ? (
+                            <AlertCircle className="w-4 h-4" />
+                          ) : config.noticeBox?.type === "info" ? (
+                            <Info className="w-4 h-4" />
+                          ) : config.noticeBox?.type === "success" ? (
+                            <CheckCircle2 className="w-4 h-4" />
+                          ) : (
+                            <Megaphone className="w-4 h-4" />
+                          )}
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="text-sm font-semibold tracking-tight">
+                            {config.noticeBox?.title || "Notice Title Here"}
+                          </h4>
+                          <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line opacity-95">
+                            {config.noticeBox?.message ||
+                              "Your notice message will appear here for clients visiting the booking form."}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-8 text-center border-2 border-dashed border-[#e2d9ce] rounded-2xl bg-white/60">
+                      <Megaphone className="w-8 h-8 text-[#82746f]/40 mx-auto mb-2" />
+                      <p className="text-xs text-[#82746f] font-medium">
+                        Notice box is currently turned off. Toggle the switch above to activate it.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-3 border-t border-[#e2d9ce] text-[11px] text-[#82746f]">
+                  💡 <em>Remember to click <strong>&quot;Publish Form Controls&quot;</strong> in the top-right corner to save and publish your notice to the live booking form.</em>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
       {/* TAB: PAYMENT SETTINGS (ENABLE / DISABLE PAYMENTS)            */}
       {/* ============================================================ */}
       {activeTab === "payments" && (
@@ -2003,7 +2020,7 @@ export default function AdminBookingFormControlPage() {
                   type="text"
                   value={config.whatsappNumber}
                   onChange={(e) => setConfig({ ...config, whatsappNumber: e.target.value })}
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 755 000 2973"
                   className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
                 />
               </div>
@@ -2023,17 +2040,6 @@ export default function AdminBookingFormControlPage() {
           </div>
         </div>
       )}
-
-      {/* CONFIRM DELETE FORMAT DIALOG */}
-      <ConfirmDialog
-        isOpen={Boolean(deletingFormatId)}
-        title="Remove Session Format"
-        message="Are you sure you want to remove this consultation format? It will no longer appear on the live booking form."
-        confirmText="Remove Format"
-        isDestructive={true}
-        onConfirm={handleDeleteFormat}
-        onClose={() => setDeletingFormatId(null)}
-      />
     </div>
   );
 }

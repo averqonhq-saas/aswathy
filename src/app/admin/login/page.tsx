@@ -92,14 +92,6 @@ function AdminLoginForm() {
       <div className="w-full max-w-md bg-surface rounded-3xl p-8 sm:p-10 border border-parchment-border shadow-[0_8px_30px_rgba(26,56,40,0.06)] relative z-10 animate-scaleUp">
         {/* Brand Header */}
         <div className="text-center space-y-2 mb-8">
-          <Link href="/" className="inline-block group mb-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.svg"
-              alt="Logo"
-              className="h-10 w-auto mx-auto object-contain transition-transform group-hover:scale-105"
-            />
-          </Link>
           <div className="flex items-center justify-center gap-1.5 text-forest-green text-xs font-label-caps uppercase tracking-widest font-semibold">
             <ShieldCheck className="w-4 h-4" />
             <span>Private Practice Sanctuary</span>

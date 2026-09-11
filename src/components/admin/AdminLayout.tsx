@@ -146,20 +146,14 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
         <div className="p-5 border-b border-surface-container bg-surface flex items-center justify-between">
           <Link
             href="/admin/dashboard"
-            className="flex items-center gap-3 text-left group"
+            className="flex items-center text-left group"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.svg"
-              alt="Logo"
-              className="w-8 h-8 object-contain transition-transform group-hover:scale-105"
-            />
             <div className="flex flex-col">
               <span className="font-headline-sm text-sm font-semibold text-forest-green tracking-tight">
                 Psychology Admin
               </span>
               <span className="text-[10px] font-label-caps text-on-surface-variant uppercase tracking-widest">
-
+                Aswathy Counselling
               </span>
             </div>
           </Link>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Video,
   Building2,
@@ -21,13 +21,14 @@ import {
   CalendarX,
   AlertCircle,
   Ban,
+  Megaphone,
+  Info,
+  Bell,
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import type { BookingFormConfig } from "@/lib/booking-config";
-import { DEFAULT_BOOKING_FORM_CONFIG, DEFAULT_SESSION_FORMATS, SessionFormat } from "@/lib/booking-config";
+import type { BookingFormConfig, SessionFormat } from "@/lib/booking-config";
+import { DEFAULT_BOOKING_FORM_CONFIG, areSlotsMatching } from "@/lib/booking-config";
 import type { Service, ServiceCategory } from "@/lib/types";
-
-const SESSION_FORMATS: SessionFormat[] = DEFAULT_SESSION_FORMATS;
 
 const DEFAULT_SERVICES: Service[] = [
   {
@@ -118,10 +119,7 @@ export default function BookingForm({
   className = "",
 }: BookingFormProps) {
   const [config, setConfig] = useState<BookingFormConfig>(DEFAULT_BOOKING_FORM_CONFIG);
-  const [formatsList, setFormatsList] = useState<SessionFormat[]>(SESSION_FORMATS);
-  const [selectedFormat, setSelectedFormat] = useState<SessionFormat>(
-    SESSION_FORMATS.find((f) => f.id === initialFormatId) || SESSION_FORMATS[0]
-  );
+  const [bookedSlots, setBookedSlots] = useState<Array<{ date: string; time: string }>>([]);
 
   // Live Clinical Services & Categories state
   const [services, setServices] = useState<Service[]>(DEFAULT_SERVICES);
@@ -130,6 +128,20 @@ export default function BookingForm({
   const [selectedService, setSelectedService] = useState<Service>(DEFAULT_SERVICES[0]);
   const selectedModality = "online";
 
+  // Function to refresh booked slots from the server
+  const refreshBookedSlots = useCallback(async () => {
+    try {
+      const res = await fetch("/api/bookings");
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data.bookedSlots)) {
+        setBookedSlots(data.bookedSlots);
+      }
+    } catch {
+      // Non-fatal
+    }
+  }, []);
+
   // Fetch dynamic session formats and form configuration from admin
   useEffect(() => {
     async function loadLiveConfig() {
@@ -137,6 +149,9 @@ export default function BookingForm({
         const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
+        if (Array.isArray(data.bookedSlots)) {
+          setBookedSlots(data.bookedSlots);
+        }
         if (data.bookingFormConfig) {
           const loadedConfig: BookingFormConfig = {
             ...data.bookingFormConfig,
@@ -150,19 +165,13 @@ export default function BookingForm({
             setContactChannel(data.bookingFormConfig.contactChannels[0]);
           }
         }
-        if (Array.isArray(data.sessionFormats) && data.sessionFormats.length > 0) {
-          setFormatsList(data.sessionFormats);
-          setSelectedFormat((prev) => {
-            const match = data.sessionFormats.find((f: SessionFormat) => f.id === prev.id);
-            return match || data.sessionFormats[0];
-          });
-        }
       } catch {
         // Fallback to defaults
       }
     }
     loadLiveConfig();
-  }, []);
+    refreshBookedSlots();
+  }, [refreshBookedSlots]);
 
   // Fetch live clinical services & categories
   useEffect(() => {
@@ -360,19 +369,35 @@ export default function BookingForm({
     return isFullDayBlocked;
   }, [activeSingleDayOverride, isFullDayBlocked]);
 
-  // Check if it is Sunday without an override
-  const isSundayClosed = useMemo(() => {
-    return (
-      selectedDate.getDay() === 0 &&
-      (!activeSingleDayOverride ||
-        !activeSingleDayOverride.slots ||
-        activeSingleDayOverride.slots.length === 0)
-    );
-  }, [selectedDate, activeSingleDayOverride]);
+  // Helper to determine if a specific slot on a given date is booked or individually blocked
+  const isSlotBookedOrBlocked = useCallback(
+    (dateStr: string, slotTime: string) => {
+      // 1. Check if booked by any active booking
+      const isBooked = bookedSlots.some(
+        (b) => b.date === dateStr && areSlotsMatching(b.time, slotTime)
+      );
+      if (isBooked) return true;
 
-  // Active time slots (empty when date is on leave or closed Sunday; override slots take precedence over daily default slots)
-  const activeTimeSlots = useMemo(() => {
-    if (isDateOnLeave || isSundayClosed) {
+      // 2. Check if individually blocked by admin in blockedSlots
+      if (config.blockedSlots && Array.isArray(config.blockedSlots)) {
+        const isBlocked = config.blockedSlots.some(
+          (b) =>
+            b.date === dateStr &&
+            b.type === "slot" &&
+            b.startTime &&
+            areSlotsMatching(b.startTime, slotTime)
+        );
+        if (isBlocked) return true;
+      }
+
+      return false;
+    },
+    [bookedSlots, config.blockedSlots]
+  );
+
+  // Candidate time slots configured for the date before filtering booked slots
+  const candidateTimeSlots = useMemo(() => {
+    if (isDateOnLeave) {
       return [];
     }
     if (
@@ -383,7 +408,23 @@ export default function BookingForm({
       return activeSingleDayOverride.slots;
     }
     return config.timeSlots || TIME_SLOTS;
-  }, [isDateOnLeave, isSundayClosed, activeSingleDayOverride, config.timeSlots]);
+  }, [isDateOnLeave, activeSingleDayOverride, config.timeSlots]);
+
+  // Active time slots: Filter out any slot that is booked or blocked
+  const activeTimeSlots = useMemo(() => {
+    return candidateTimeSlots.filter(
+      (slot) => !isSlotBookedOrBlocked(selectedDateStr, slot.time)
+    );
+  }, [candidateTimeSlots, selectedDateStr, isSlotBookedOrBlocked]);
+
+  // Determine if the selected date had slots configured, but all of them are already booked
+  const isAllSlotsBooked = useMemo(() => {
+    return (
+      !isDateOnLeave &&
+      candidateTimeSlots.length > 0 &&
+      activeTimeSlots.length === 0
+    );
+  }, [isDateOnLeave, candidateTimeSlots, activeTimeSlots]);
 
   // Automatically keep selectedTime pointing to a valid slot when date changes
   useEffect(() => {
@@ -397,7 +438,7 @@ export default function BookingForm({
     }
   }, [activeTimeSlots, selectedTime]);
 
-  // Jump to the next upcoming available date that has open slots
+  // Jump to the next upcoming available date that has open, unbooked slots
   const handleJumpToNextAvailableDate = () => {
     const candidate = new Date(selectedDate);
     for (let i = 1; i <= 30; i++) {
@@ -414,11 +455,12 @@ export default function BookingForm({
               (b.type === "full_day" || b.type === "all_day" || b.type === "holiday")
           ))
       );
-      const isSun = candidate.getDay() === 0;
-      const hasSlots = override
-        ? override.slots && override.slots.length > 0 && !override.isOffDay
-        : !isSun;
-      if (!isLeave && hasSlots) {
+      const daySlots = override && override.slots && override.slots.length > 0 && !override.isOffDay
+        ? override.slots
+        : (config.timeSlots || TIME_SLOTS);
+      const hasOpenSlots = daySlots.some((s) => !isSlotBookedOrBlocked(cDateStr, s.time));
+
+      if (!isLeave && hasOpenSlots) {
         setSelectedDate(new Date(candidate));
         setViewDate(new Date(candidate));
         break;
@@ -439,10 +481,12 @@ export default function BookingForm({
     setErrorMessage("");
     setPaymentError("");
 
-    if (isDateOnLeave || isSundayClosed || activeTimeSlots.length === 0) {
+    if (isDateOnLeave || activeTimeSlots.length === 0) {
       setErrorMessage(
         isDateOnLeave
           ? "No consultation slots are available on this date as the therapist is on leave. Please choose an alternate date."
+          : isAllSlotsBooked
+          ? "All consultation slots for this date have already been reserved. Please select another date."
           : "No appointment slots are available on this date. Please select an alternate date."
       );
       return;
@@ -456,8 +500,8 @@ export default function BookingForm({
       setErrorMessage("Please provide a valid email address.");
       return;
     }
-    if (!selectedTime) {
-      setErrorMessage("Please choose an available appointment time.");
+    if (!selectedTime || isSlotBookedOrBlocked(selectedDateStr, selectedTime)) {
+      setErrorMessage("The selected appointment slot is no longer available. Please choose another time slot.");
       return;
     }
 
@@ -509,6 +553,7 @@ export default function BookingForm({
         };
 
         setConfirmedBooking(confirmed);
+        setBookedSlots((prev) => [...prev, { date: formattedIsoDate, time: selectedTime }]);
 
         // Trigger celebratory confetti
         confetti({
@@ -577,6 +622,7 @@ export default function BookingForm({
       };
 
       setConfirmedBooking(confirmed);
+      setBookedSlots((prev) => [...prev, { date: formattedIsoDate, time: selectedTime }]);
 
       // Trigger celebratory confetti
       confetti({
@@ -704,7 +750,7 @@ END:VCALENDAR`;
     const msg = encodeURIComponent(
       `Hello Aswathy, I have paid and scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}, Payment ID: ${confirmedBooking.razorpayPaymentId || "Verified"}). Looking forward to connecting.`
     );
-    const cleanPhone = (config.whatsappNumber || "+919876543210").replace(/[^0-9]/g, "");
+    const cleanPhone = (config.whatsappNumber || "+917550002973").replace(/[^0-9]/g, "");
     window.open(`https://wa.me/${cleanPhone}?text=${msg}`, "_blank");
   };
 
@@ -1251,9 +1297,17 @@ END:VCALENDAR`;
                       dayOverride.slots.length > 0 &&
                       !dayOverride.isOffDay
                     );
-                    const isSunday = item.date.getDay() === 0;
+                    const dayCandidateSlots = hasCustomSingleDaySlots
+                      ? (dayOverride?.slots || [])
+                      : (config.timeSlots || TIME_SLOTS);
+                    const isFullyBooked =
+                      !isLeaveDay &&
+                      !past &&
+                      item.isCurrentMonth &&
+                      dayCandidateSlots.length > 0 &&
+                      dayCandidateSlots.every((s) => isSlotBookedOrBlocked(itemDateStr, s.time));
                     const isAvailable =
-                      item.isCurrentMonth && !past && !isLeaveDay && (hasCustomSingleDaySlots || !isSunday);
+                      item.isCurrentMonth && !past && !isLeaveDay && !isFullyBooked;
 
                     return (
                       <button
@@ -1268,6 +1322,8 @@ END:VCALENDAR`;
                         title={
                           isLeaveDay
                             ? `${itemDateStr}: Therapist on Leave · No Slots Available`
+                            : isFullyBooked
+                            ? `${itemDateStr}: All Consultation Slots Booked`
                             : undefined
                         }
                         className={`relative h-10 w-full rounded-lg flex flex-col items-center justify-center text-xs transition-all font-medium ${
@@ -1278,9 +1334,13 @@ END:VCALENDAR`;
                             : isSelected
                             ? isLeaveDay
                               ? "bg-rose-800 text-white font-semibold shadow-sm ring-2 ring-rose-400"
+                              : isFullyBooked
+                              ? "bg-[#6b584e] text-white font-semibold shadow-sm ring-2 ring-[#a8988e]"
                               : "bg-[#412a1e] text-[#fcf9f2] font-semibold shadow-sm"
                             : isLeaveDay
                             ? "text-rose-700 bg-rose-50/70 hover:bg-rose-100/80 border border-rose-200/70 cursor-pointer"
+                            : isFullyBooked
+                            ? "text-[#82746f] bg-[#ede8e1]/60 hover:bg-[#e4ded6] border border-[#d8d0c5] cursor-pointer"
                             : "text-[#1c1c18] hover:bg-[#e5e2db]/70 cursor-pointer"
                         }`}
                       >
@@ -1294,6 +1354,10 @@ END:VCALENDAR`;
                                 : "bg-[#F4D242]"
                             }`}
                           ></span>
+                        )}
+                        {/* Dot indicator for fully booked days */}
+                        {isFullyBooked && item.isCurrentMonth && !past && !isSelected && (
+                          <span className="w-1.5 h-1.5 rounded-full absolute bottom-1 bg-[#8c7d75]" title="Fully Booked"></span>
                         )}
                         {/* Dot indicator for leave days */}
                         {isLeaveDay && item.isCurrentMonth && !past && !isSelected && (
@@ -1318,6 +1382,10 @@ END:VCALENDAR`;
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#705d00] ring-1 ring-[#F4D242] inline-block"></span>
                   <span>Custom Day Slots</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#8c7d75] inline-block"></span>
+                  <span className="text-[#8c7d75] font-medium">Fully Booked</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
@@ -1353,7 +1421,7 @@ END:VCALENDAR`;
                 )}
 
                 {/* IF ON LEAVE OR NO SLOTS: EMPATHETIC NOTICE CARD */}
-                {isDateOnLeave || isSundayClosed || activeTimeSlots.length === 0 ? (
+                {isDateOnLeave || activeTimeSlots.length === 0 ? (
                   <div className="rounded-2xl bg-[#fff5f5] border border-rose-200 p-6 text-center space-y-4 my-auto">
                     <div className="w-12 h-12 rounded-full bg-rose-100 border border-rose-200 flex items-center justify-center mx-auto text-rose-700 shadow-xs">
                       <CalendarOff className="w-6 h-6 text-rose-600" />
@@ -1361,13 +1429,17 @@ END:VCALENDAR`;
 
                     <div className="space-y-1.5">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-rose-800 bg-rose-100 px-2.5 py-0.5 rounded-full inline-block border border-rose-200">
-                        {isDateOnLeave ? "Therapist On Leave" : "No Slots Available"}
+                        {isDateOnLeave
+                          ? "Therapist On Leave"
+                          : isAllSlotsBooked
+                          ? "Fully Booked"
+                          : "No Slots Available"}
                       </span>
                       <h4 className="font-serif text-lg font-medium text-[#412a1e]">
                         {isDateOnLeave
                           ? "No Consultation Slots Available"
-                          : isSundayClosed
-                          ? "Practice Closed on Sundays"
+                          : isAllSlotsBooked
+                          ? "All Consultation Slots Booked"
                           : "No Slots Available for this Date"}
                       </h4>
                       <p className="text-xs text-[#5a4033] max-w-xs mx-auto leading-relaxed">
@@ -1375,8 +1447,8 @@ END:VCALENDAR`;
                           ? `Notice: ${activeSingleDayOverride.leaveReason || activeSingleDayOverride.note}`
                           : isDateOnLeave
                           ? "Aswathy is away on leave on this date. No consultation slots are available."
-                          : isSundayClosed
-                          ? "The practice is closed on Sundays for clinician rest and case integration."
+                          : isAllSlotsBooked
+                          ? "All consultation slots for this date have already been reserved by other clients. Please choose another date or tap below to jump to the next available opening."
                           : "There are no consultation slots available for booking on this date."}
                       </p>
                       <p className="text-[11px] text-[#82746f] pt-1">
@@ -1477,8 +1549,6 @@ END:VCALENDAR`;
                     {selectedDateStr}{" "}
                     {isDateOnLeave
                       ? "· (Therapist on Leave — No Slots Available)"
-                      : isSundayClosed
-                      ? "· (Practice Closed on Sundays)"
                       : selectedTime
                       ? `at ${selectedTime}`
                       : "· (Select a slot)"}
@@ -1545,7 +1615,7 @@ END:VCALENDAR`;
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
+                  placeholder="+91 755 000 2973"
                   className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
                 />
               </div>
@@ -1602,6 +1672,57 @@ END:VCALENDAR`;
           </div>
         )}
 
+        {/* OPTIONAL PRACTICE NOTICE BOX (BOTTOM PLACEMENT) */}
+        {config.noticeBox?.enabled && config.noticeBox?.message && (
+          <div
+            role="region"
+            aria-label="Practice Notice"
+            className={`rounded-2xl p-4 sm:p-5 border transition-all ${
+              config.noticeBox.type === "warning"
+                ? "bg-[#fff7ed] border-[#fed7aa] text-[#7c2d12]"
+                : config.noticeBox.type === "info"
+                ? "bg-[#eff6ff] border-[#bfdbfe] text-[#1e3a8a]"
+                : config.noticeBox.type === "success"
+                ? "bg-[#f0fdf4] border-[#bbf7d0] text-[#14532d]"
+                : "bg-[#fdf9e8] border-[#fde68a] text-[#78350f]"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <div
+                className={`p-2 rounded-xl shrink-0 mt-0.5 ${
+                  config.noticeBox.type === "warning"
+                    ? "bg-[#ffedd5] text-[#c2410c]"
+                    : config.noticeBox.type === "info"
+                    ? "bg-[#dbeafe] text-[#2563eb]"
+                    : config.noticeBox.type === "success"
+                    ? "bg-[#dcfce7] text-[#16a34a]"
+                    : "bg-[#fef3c7] text-[#b45309]"
+                }`}
+              >
+                {config.noticeBox.type === "warning" ? (
+                  <AlertCircle className="w-4 h-4" />
+                ) : config.noticeBox.type === "info" ? (
+                  <Info className="w-4 h-4" />
+                ) : config.noticeBox.type === "success" ? (
+                  <CheckCircle2 className="w-4 h-4" />
+                ) : (
+                  <Megaphone className="w-4 h-4" />
+                )}
+              </div>
+              <div className="space-y-1">
+                {config.noticeBox.title && (
+                  <h4 className="text-sm font-semibold tracking-tight">
+                    {config.noticeBox.title}
+                  </h4>
+                )}
+                <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line opacity-95">
+                  {config.noticeBox.message}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ============================================================ */}
         {/* BOTTOM ACTION BAR                                            */}
         {/* ============================================================ */}
@@ -1616,7 +1737,6 @@ END:VCALENDAR`;
             disabled={
               isSubmitting ||
               isDateOnLeave ||
-              isSundayClosed ||
               activeTimeSlots.length === 0 ||
               !selectedTime
             }
@@ -1628,14 +1748,14 @@ END:VCALENDAR`;
                   ? "Securing Appointment..."
                   : "Connecting to Razorpay..."}
               </span>
-            ) : isDateOnLeave || isSundayClosed || activeTimeSlots.length === 0 ? (
+            ) : isDateOnLeave || activeTimeSlots.length === 0 ? (
               <span className="flex items-center gap-2 text-rose-200">
                 <CalendarOff className="w-4 h-4 text-rose-300" />
                 <span>
                   {isDateOnLeave
                     ? "No Slots Available (On Leave) — Choose Another Date"
-                    : isSundayClosed
-                    ? "Practice Closed on Sundays — Choose Another Date"
+                    : isAllSlotsBooked
+                    ? "All Slots Booked — Choose Another Date"
                     : "No Slots Available — Choose Another Date"}
                 </span>
               </span>

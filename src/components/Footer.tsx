@@ -36,12 +36,18 @@ export default function Footer({ onOpenBooking }: FooterProps) {
               <span className="font-body-sm text-body-sm text-on-tertiary-container">
                 Specialized in Anxiety, Relational Dynamics, and Somatic Grounding
               </span>
-              <div className="pt-space-xs">
+              <div className="pt-space-xs flex flex-col sm:flex-row sm:items-center gap-y-1 sm:gap-x-4">
                 <a
                   href="mailto:roottherapyonline@gmail.com"
                   className="inline-flex items-center gap-1.5 text-[13px] text-secondary-fixed hover:text-surface-bright transition-colors duration-200"
                 >
                   <span>✉ roottherapyonline@gmail.com</span>
+                </a>
+                <a
+                  href="tel:+917550002973"
+                  className="inline-flex items-center gap-1.5 text-[13px] text-secondary-fixed hover:text-surface-bright transition-colors duration-200"
+                >
+                  <span>📞 +91 755 000 2973</span>
                 </a>
               </div>
             </div>
