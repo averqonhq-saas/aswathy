@@ -48,6 +48,7 @@ export default function AdminCalendarPage() {
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [blockedSlots, setBlockedSlots] = useState<BlockedSlot[]>([]);
+  const [singleDaySlots, setSingleDaySlots] = useState<any[]>([]);
   const [availability, setAvailability] = useState<AvailabilityRule[]>([]);
   const [bookingSettings, setBookingSettings] = useState<{
     bufferTimeMinutes: number;
@@ -96,6 +97,7 @@ export default function AdminCalendarPage() {
       const data = await res.json();
       setBookings(data.bookings || []);
       setBlockedSlots(data.blockedSlots || []);
+      setSingleDaySlots(data.singleDaySlots || []);
       setAvailability(data.availability || []);
 
       // Also load booking settings from availability endpoint
@@ -268,8 +270,29 @@ export default function AdminCalendarPage() {
       list.push(blk);
       map.set(blk.date, list);
     });
+
+    // Also include configured Leave / Off Days from booking settings
+    singleDaySlots.forEach((s) => {
+      if (s.isOffDay || (Array.isArray(s.slots) && s.slots.length === 0)) {
+        const list = map.get(s.date) || [];
+        const exists = list.some((b) => b.id === s.id);
+        if (!exists) {
+          list.unshift({
+            id: s.id,
+            title: `On Leave · ${s.leaveReason || s.note || "Therapist on Leave"}`,
+            type: "full_day",
+            date: s.date,
+            reason: s.note,
+            createdAt: "",
+            updatedAt: "",
+          });
+          map.set(s.date, list);
+        }
+      }
+    });
+
     return map;
-  }, [blockedSlots]);
+  }, [blockedSlots, singleDaySlots]);
 
   // Action handlers
   const handleUpdateStatus = async (status: Booking["bookingStatus"]) => {

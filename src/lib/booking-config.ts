@@ -35,7 +35,8 @@ export interface SingleDaySlotOverride {
   slotDurationMinutes?: number;
   note?: string; // e.g. "Special Weekend Clinic", "Evening Slots"
   breaks?: TimeBreak[];
-  isOffDay?: boolean; // If true, marked as unavailable for booking on this date
+  isOffDay?: boolean; // If true, marked as unavailable for booking on this date (On Leave)
+  leaveReason?: string; // Reason or label for leave, e.g. "Personal Leave", "Public Holiday"
   slots: BookingTimeSlot[];
 }
 
@@ -51,6 +52,13 @@ export interface BookingFormConfig {
   cadenceDescription: string;
   timeSlots: BookingTimeSlot[];
   singleDaySlots?: SingleDaySlotOverride[];
+  blockedSlots?: Array<{
+    id: string;
+    title: string;
+    date: string;
+    type: string;
+    reason?: string;
+  }>;
   contactChannels: string[];
   ethicsNotice: string;
   instantConfirmationText: string;

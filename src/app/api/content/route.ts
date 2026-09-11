@@ -21,6 +21,7 @@ export async function GET() {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
       settings: db.settings,
       bookingFormConfig: db.bookingFormConfig,
+      blockedSlots: db.blockedSlots || [],
     });
   } catch (error) {
     console.error("Public content GET error:", error);

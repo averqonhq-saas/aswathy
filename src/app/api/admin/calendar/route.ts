@@ -14,11 +14,13 @@ export async function GET() {
     const bookings = db.bookings.filter((b) => !b.deletedAt);
     const blockedSlots = db.blockedSlots;
     const availability = db.availability;
+    const singleDaySlots = db.bookingFormConfig?.singleDaySlots || [];
 
     return NextResponse.json({
       bookings,
       blockedSlots,
       availability,
+      singleDaySlots,
     });
   } catch (error) {
     console.error("Calendar GET error:", error);

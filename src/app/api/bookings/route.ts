@@ -88,6 +88,34 @@ export async function POST(request: Request) {
     const db = await getDatabase();
     const now = new Date().toISOString();
 
+    // Check if the appointment date is on leave or marked as off-day
+    const dayOverride = db.bookingFormConfig?.singleDaySlots?.find(
+      (s) => s.date === appointmentDate
+    );
+    const isLeaveInConfig =
+      dayOverride &&
+      (dayOverride.isOffDay ||
+        (Array.isArray(dayOverride.slots) && dayOverride.slots.length === 0));
+    const isBlockedFullDay = db.blockedSlots?.some(
+      (b) =>
+        b.date === appointmentDate &&
+        (b.type === "full_day" || b.type === "all_day" || b.type === "holiday")
+    );
+
+    if (isLeaveInConfig || isBlockedFullDay) {
+      const reason =
+        dayOverride?.leaveReason ||
+        dayOverride?.note ||
+        db.blockedSlots?.find((b) => b.date === appointmentDate)?.title ||
+        "Therapist is on leave";
+      return NextResponse.json(
+        {
+          error: `No consultation slots are available on ${appointmentDate}. The therapist is on leave (${reason}). Please choose an alternate date.`,
+        },
+        { status: 400 }
+      );
+    }
+
     // Prevent duplicate booking entry
     const existing = db.bookings.find(
       (b) =>

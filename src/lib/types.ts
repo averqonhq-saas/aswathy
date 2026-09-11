@@ -105,7 +105,7 @@ export interface AvailabilityRule {
 export interface BlockedSlot {
   id: string;
   title: string;
-  type: "slot" | "full_day" | "holiday";
+  type: "slot" | "full_day" | "holiday" | "all_day";
   date: string; // YYYY-MM-DD
   startTime?: string;
   endTime?: string;

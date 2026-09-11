@@ -26,6 +26,10 @@ import {
   Utensils,
   CreditCard,
   Wallet,
+  CalendarOff,
+  Palmtree,
+  AlertCircle,
+  Ban,
 } from "lucide-react";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
@@ -70,6 +74,9 @@ export default function AdminBookingFormControlPage() {
     { id: "break_1", from: "13:00", to: "14:00", label: "Lunch Break" },
   ]);
   const [rangeNote, setRangeNote] = useState("");
+  const [dayScheduleMode, setDayScheduleMode] = useState<"slots" | "leave">("slots");
+  const [leaveReason, setLeaveReason] = useState("Therapist on Leave");
+  const [customLeaveNote, setCustomLeaveNote] = useState("");
 
   const handleAddBreak = (preset?: { from: string; to: string; label: string }) => {
     const id = `brk_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
@@ -311,7 +318,100 @@ export default function AdminBookingFormControlPage() {
   const handleDeleteSingleDayOverride = (date: string) => {
     const currentList = (config.singleDaySlots || []).filter((item) => item.date !== date);
     setConfig({ ...config, singleDaySlots: currentList });
-    success(`Custom slots for ${date} removed.`);
+    success(`Custom slots/leave for ${date} removed.`);
+  };
+
+  const handleApplyLeaveToDay = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!particularDate) {
+      error("Please select a date for the leave.");
+      return;
+    }
+
+    const currentList = config.singleDaySlots ? [...config.singleDaySlots] : [];
+    const datesToApply: string[] = [];
+
+    if (isDateRangeMode && particularEndDate) {
+      const start = new Date(particularDate + "T00:00:00");
+      const end = new Date(particularEndDate + "T00:00:00");
+      if (end < start) {
+        error("End date cannot be earlier than start date.");
+        return;
+      }
+      const curr = new Date(start);
+      while (curr <= end) {
+        const y = curr.getFullYear();
+        const m = String(curr.getMonth() + 1).padStart(2, "0");
+        const d = String(curr.getDate()).padStart(2, "0");
+        datesToApply.push(`${y}-${m}-${d}`);
+        curr.setDate(curr.getDate() + 1);
+      }
+    } else {
+      datesToApply.push(particularDate);
+    }
+
+    const finalReason = leaveReason.trim() || "Therapist on Leave";
+    const finalNote = customLeaveNote.trim() || finalReason;
+
+    for (const d of datesToApply) {
+      const existingIndex = currentList.findIndex((item) => item.date === d);
+      const overrideObj: SingleDaySlotOverride = {
+        id: existingIndex >= 0 ? currentList[existingIndex].id : `sds_${Date.now()}_${d}`,
+        date: d,
+        isOffDay: true,
+        leaveReason: finalReason,
+        note: finalNote,
+        slots: [],
+      };
+
+      if (existingIndex >= 0) {
+        currentList[existingIndex] = overrideObj;
+      } else {
+        currentList.push(overrideObj);
+      }
+    }
+
+    currentList.sort((a, b) => a.date.localeCompare(b.date));
+    setConfig({ ...config, singleDaySlots: currentList });
+    success(
+      `Marked as Leave (No Slots Available) for ${
+        datesToApply.length === 1 ? particularDate : `${datesToApply.length} days`
+      }. (${finalReason})`
+    );
+  };
+
+  const handleToggleDayOff = (date: string) => {
+    const currentList = config.singleDaySlots ? [...config.singleDaySlots] : [];
+    const existingIndex = currentList.findIndex((item) => item.date === date);
+    if (existingIndex < 0) return;
+
+    const existing = currentList[existingIndex];
+    if (existing.isOffDay) {
+      // Switch back to working day with standard range slots
+      const defSlots = generateSlotsFromRange("10:00", "18:00", 50, 10);
+      currentList[existingIndex] = {
+        ...existing,
+        isOffDay: false,
+        fromTime: "10:00 AM",
+        toTime: "06:00 PM",
+        note: undefined,
+        leaveReason: undefined,
+        slots: defSlots,
+      };
+      setConfig({ ...config, singleDaySlots: currentList });
+      success(`Switched ${date} back to Active Working Day (${defSlots.length} slots).`);
+    } else {
+      // Switch to leave
+      currentList[existingIndex] = {
+        ...existing,
+        isOffDay: true,
+        leaveReason: "Therapist on Leave",
+        note: "Therapist on Leave (No Slots Available)",
+        slots: [],
+      };
+      setConfig({ ...config, singleDaySlots: currentList });
+      success(`Marked ${date} as On Leave (No Slots).`);
+    }
   };
 
 
@@ -748,364 +848,558 @@ export default function AdminBookingFormControlPage() {
           </div>
 
           {/* ============================================================ */}
-          {/* PARTICULAR DAY TIME RANGE (FROM ... TO ...)                 */}
+          {/* PARTICULAR DAY SCHEDULE & LEAVE / OFF DAY MANAGEMENT         */}
           {/* ============================================================ */}
           <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#1A3828]/10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#1A3828]/10">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#705d00] inline-block"></span>
                   <h3 className="font-playfair text-base font-semibold text-[#1A3828]">
-                    Particular Day Time Range (From – To)
+                    Day Schedule &amp; Leave / Off Day Management
                   </h3>
                 </div>
                 <p className="text-xs text-[#7B7368] mt-0.5">
-                  Choose a custom operating time range <strong>From ... To ...</strong> for any particular day. Time slots and evening tags are automatically generated.
+                  Set custom operating hours for specific dates, or mark dates as <strong>Leave / Off Days</strong> so clients are informed that <strong>no slots are available</strong>.
                 </p>
               </div>
 
-              <span className="text-[11px] font-semibold text-[#705d00] bg-[#fbf7ee] border border-[#705d00]/20 px-2.5 py-1 rounded-full self-start sm:self-auto">
-                {(config.singleDaySlots || []).length} custom day{(config.singleDaySlots || []).length === 1 ? "" : "s"} configured
-              </span>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="text-[11px] font-semibold text-[#705d00] bg-[#fbf7ee] border border-[#705d00]/20 px-2.5 py-1 rounded-full">
+                  {(config.singleDaySlots || []).filter((s) => !s.isOffDay).length} custom day{(config.singleDaySlots || []).filter((s) => !s.isOffDay).length === 1 ? "" : "s"}
+                </span>
+                <span className="text-[11px] font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <CalendarOff className="w-3 h-3 text-rose-600" />
+                  <span>{(config.singleDaySlots || []).filter((s) => s.isOffDay).length} on leave</span>
+                </span>
+              </div>
             </div>
 
-            {/* Time Range Generator Form */}
-            <form onSubmit={handleApplyRangeToDay} className="p-5 rounded-2xl bg-[#f6f3ec]/80 border border-[#e2d9ce] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e2d9ce]">
-                <span className="text-xs font-semibold text-[#1A3828] flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-[#705d00]" />
-                  <span>Configure Schedule for a Day</span>
+            {/* Mode Selector Tabs: Working Slots vs Leave / Off Day */}
+            <div className="flex items-center gap-2 p-1 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] w-fit">
+              <button
+                type="button"
+                onClick={() => setDayScheduleMode("slots")}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
+                  dayScheduleMode === "slots"
+                    ? "bg-[#1A3828] text-white shadow-xs"
+                    : "text-[#5a4033] hover:bg-[#eae5dc]"
+                }`}
+              >
+                <Clock className="w-3.5 h-3.5" />
+                <span>Working Hours &amp; Slots</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDayScheduleMode("leave")}
+                className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
+                  dayScheduleMode === "leave"
+                    ? "bg-rose-700 text-white shadow-xs"
+                    : "text-rose-700 hover:bg-rose-50 border border-rose-200/60"
+                }`}
+              >
+                <CalendarOff className="w-3.5 h-3.5 text-rose-300" />
+                <span>Mark as Leave / Off Day</span>
+                <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.2 rounded bg-white/20 text-white font-bold">
+                  No Slots
                 </span>
+              </button>
+            </div>
 
-                <label className="flex items-center gap-2 text-xs text-[#5a4033] cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isDateRangeMode}
-                    onChange={(e) => setIsDateRangeMode(e.target.checked)}
-                    className="rounded border-[#1A3828]/20 text-[#1A3828]"
-                  />
-                  <span>Apply across a Date Range (From Date → To Date)</span>
-                </label>
-              </div>
+            {/* MODE 1: WORKING HOURS & CUSTOM SLOTS */}
+            {dayScheduleMode === "slots" && (
+              <form onSubmit={handleApplyRangeToDay} className="p-5 rounded-2xl bg-[#f6f3ec]/80 border border-[#e2d9ce] space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#e2d9ce]">
+                  <span className="text-xs font-semibold text-[#1A3828] flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-[#705d00]" />
+                    <span>Configure Working Hours for a Day</span>
+                  </span>
 
-              {/* Row 1: Date(s) & Note */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
-                    {isDateRangeMode ? "Start Date *" : "Particular Day / Date *"}
+                  <label className="flex items-center gap-2 text-xs text-[#5a4033] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isDateRangeMode}
+                      onChange={(e) => setIsDateRangeMode(e.target.checked)}
+                      className="rounded border-[#1A3828]/20 text-[#1A3828]"
+                    />
+                    <span>Apply across a Date Range (From Date → To Date)</span>
                   </label>
-                  <input
-                    type="date"
-                    value={particularDate}
-                    onChange={(e) => setParticularDate(e.target.value)}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
-                    required
-                  />
                 </div>
 
-                {isDateRangeMode && (
+                {/* Row 1: Date(s) & Note */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                   <div>
                     <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
-                      End Date *
+                      {isDateRangeMode ? "Start Date *" : "Particular Day / Date *"}
                     </label>
                     <input
                       type="date"
-                      value={particularEndDate}
-                      onChange={(e) => setParticularEndDate(e.target.value)}
-                      min={particularDate}
+                      value={particularDate}
+                      onChange={(e) => setParticularDate(e.target.value)}
                       className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
                       required
                     />
                   </div>
-                )}
 
-                <div className={isDateRangeMode ? "lg:col-span-1" : "sm:col-span-2"}>
-                  <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
-                    Day Schedule Label / Note (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={rangeNote}
-                    onChange={(e) => setRangeNote(e.target.value)}
-                    placeholder="e.g. Saturday Extended Clinic, Evening Consultations"
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
-                  />
-                </div>
-              </div>
+                  {isDateRangeMode && (
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
+                        End Date *
+                      </label>
+                      <input
+                        type="date"
+                        value={particularEndDate}
+                        onChange={(e) => setParticularEndDate(e.target.value)}
+                        min={particularDate}
+                        className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
+                        required
+                      />
+                    </div>
+                  )}
 
-              {/* Row 2: Time Range (From ... To ...) & Cadence */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#1A3828] mb-1 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-[#705d00]" />
-                    <span>From Time (Start) *</span>
-                  </label>
-                  <input
-                    type="time"
-                    value={rangeFromTime}
-                    onChange={(e) => setRangeFromTime(e.target.value)}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#1A3828] mb-1 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-[#705d00]" />
-                    <span>To Time (End) *</span>
-                  </label>
-                  <input
-                    type="time"
-                    value={rangeToTime}
-                    onChange={(e) => setRangeToTime(e.target.value)}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
-                    required
-                  />
+                  <div className={isDateRangeMode ? "lg:col-span-1" : "sm:col-span-2"}>
+                    <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
+                      Day Schedule Label / Note (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={rangeNote}
+                      onChange={(e) => setRangeNote(e.target.value)}
+                      placeholder="e.g. Saturday Extended Clinic, Evening Consultations"
+                      className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
-                    Session Duration
-                  </label>
-                  <select
-                    value={rangeSlotDuration}
-                    onChange={(e) => setRangeSlotDuration(Number(e.target.value))}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
-                  >
-                    <option value={50}>50 Minutes (Standard)</option>
-                    <option value={60}>60 Minutes (1 Hour)</option>
-                    <option value={45}>45 Minutes</option>
-                    <option value={30}>30 Minutes</option>
-                    <option value={90}>90 Minutes (Deep Dive)</option>
-                  </select>
+                {/* Row 2: Time Range (From ... To ...) & Cadence */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#1A3828] mb-1 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-[#705d00]" />
+                      <span>From Time (Start) *</span>
+                    </label>
+                    <input
+                      type="time"
+                      value={rangeFromTime}
+                      onChange={(e) => setRangeFromTime(e.target.value)}
+                      className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#1A3828] mb-1 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-[#705d00]" />
+                      <span>To Time (End) *</span>
+                    </label>
+                    <input
+                      type="time"
+                      value={rangeToTime}
+                      onChange={(e) => setRangeToTime(e.target.value)}
+                      className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
+                      Session Duration
+                    </label>
+                    <select
+                      value={rangeSlotDuration}
+                      onChange={(e) => setRangeSlotDuration(Number(e.target.value))}
+                      className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
+                    >
+                      <option value={50}>50 Minutes (Standard)</option>
+                      <option value={60}>60 Minutes (1 Hour)</option>
+                      <option value={45}>45 Minutes</option>
+                      <option value={30}>30 Minutes</option>
+                      <option value={90}>90 Minutes (Deep Dive)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
+                      Buffer Between Slots
+                    </label>
+                    <select
+                      value={rangeBuffer}
+                      onChange={(e) => setRangeBuffer(Number(e.target.value))}
+                      className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
+                    >
+                      <option value={10}>10 Minutes Integration</option>
+                      <option value={15}>15 Minutes Buffer</option>
+                      <option value={20}>20 Minutes Buffer</option>
+                      <option value={0}>0 Minutes (Back to Back)</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-semibold text-[#1A3828] mb-1">
-                    Buffer Between Slots
-                  </label>
-                  <select
-                    value={rangeBuffer}
-                    onChange={(e) => setRangeBuffer(Number(e.target.value))}
-                    className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none bg-white font-sans text-[#1A3828] cursor-pointer"
-                  >
-                    <option value={10}>10 Minutes Integration</option>
-                    <option value={15}>15 Minutes Buffer</option>
-                    <option value={20}>20 Minutes Buffer</option>
-                    <option value={0}>0 Minutes (Back to Back)</option>
-                  </select>
-                </div>
-              </div>
+                {/* Row 3: Multiple Breaks & Rest Periods Exclusion */}
+                <div className="pt-3 border-t border-[#e2d9ce]/60 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <label className="flex items-center gap-2 text-xs font-semibold text-[#1A3828] cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={enableBreaks}
+                        onChange={(e) => {
+                          const val = e.target.checked;
+                          setEnableBreaks(val);
+                          if (val && breaksList.length === 0) {
+                            setBreaksList([
+                              { id: "break_1", from: "13:00", to: "14:00", label: "Lunch Break" },
+                            ]);
+                          }
+                        }}
+                        className="rounded border-[#1A3828]/20 text-[#1A3828] focus:ring-[#1A3828]"
+                      />
+                      <span className="flex items-center gap-1.5">
+                        <Coffee className="w-3.5 h-3.5 text-[#705d00]" />
+                        <span>Exclude Breaks / Rest Periods ({breaksList.length} defined)</span>
+                      </span>
+                    </label>
 
-              {/* Row 3: Multiple Breaks & Rest Periods Exclusion */}
-              <div className="pt-3 border-t border-[#e2d9ce]/60 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <label className="flex items-center gap-2 text-xs font-semibold text-[#1A3828] cursor-pointer">
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 rounded-xl bg-[#1A3828] text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-[#142C1F] cursor-pointer shadow-xs sm:ml-auto"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[#F4D242]" />
+                      <span>
+                        Apply Range to {isDateRangeMode ? "Date Range" : "Particular Day"}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Multiple Breaks Configuration Panel */}
+                  {enableBreaks && (
+                    <div className="p-4 rounded-xl bg-white border border-[#e2d9ce] space-y-3 shadow-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#e2d9ce]/60">
+                        <div>
+                          <span className="text-xs font-bold text-[#1A3828] flex items-center gap-1.5">
+                            <Coffee className="w-3.5 h-3.5 text-[#705d00]" />
+                            <span>Comfortable Breaks &amp; Unavailability Periods</span>
+                          </span>
+                          <p className="text-[11px] text-[#7B7368] mt-0.5">
+                            Slots overlapping any of these break times will be omitted automatically from booking.
+                          </p>
+                        </div>
+
+                        {/* Quick Presets */}
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-[10px] text-[#7B7368] font-semibold uppercase tracking-wider">Presets:</span>
+                          <button
+                            type="button"
+                            onClick={() => handleAddBreak({ from: "13:00", to: "14:00", label: "Lunch Break" })}
+                            className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                          >
+                            <Utensils className="w-2.5 h-2.5 text-[#705d00]" />
+                            <span>+ Lunch (1-2 PM)</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleAddBreak({ from: "16:30", to: "17:00", label: "Tea Break" })}
+                            className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                          >
+                            <Coffee className="w-2.5 h-2.5 text-[#705d00]" />
+                            <span>+ Tea (4:30-5 PM)</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleAddBreak({ from: "18:00", to: "18:30", label: "Evening Rest" })}
+                            className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                          >
+                            <Clock className="w-2.5 h-2.5 text-[#705d00]" />
+                            <span>+ Rest (6-6:30 PM)</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Break Items List */}
+                      <div className="space-y-2.5">
+                        {breaksList.map((brk, idx) => (
+                          <div
+                            key={brk.id || idx}
+                            className="flex flex-col sm:flex-row sm:items-center gap-2.5 p-2.5 rounded-lg bg-[#fbf9f5] border border-[#e2d9ce]/80 text-xs"
+                          >
+                            <span className="text-[11px] font-bold text-[#705d00] bg-[#F4D242]/20 px-2 py-1 rounded w-fit">
+                              Break {idx + 1}
+                            </span>
+
+                            <div className="flex-1">
+                              <input
+                                type="text"
+                                value={brk.label || ""}
+                                onChange={(e) => handleUpdateBreak(brk.id, "label", e.target.value)}
+                                placeholder="Break Name (e.g. Lunch, Tea Break, Rest)"
+                                className="w-full text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none text-[#1A3828]"
+                              />
+                            </div>
+
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <div className="flex items-center gap-1">
+                                <span className="text-[11px] text-[#7B7368]">From:</span>
+                                <input
+                                  type="time"
+                                  value={brk.from}
+                                  onChange={(e) => handleUpdateBreak(brk.id, "from", e.target.value)}
+                                  className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
+                                  required
+                                />
+                              </div>
+
+                              <span className="text-[#7B7368]">to</span>
+
+                              <div className="flex items-center gap-1">
+                                <span className="text-[11px] text-[#7B7368]">To:</span>
+                                <input
+                                  type="time"
+                                  value={brk.to}
+                                  onChange={(e) => handleUpdateBreak(brk.id, "to", e.target.value)}
+                                  className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
+                                  required
+                                />
+                              </div>
+
+                              <span className="text-[10px] text-[#7B7368] font-mono whitespace-nowrap bg-white px-2 py-1 rounded border border-[#e2d9ce] hidden md:inline">
+                                {formatMinutesTo12Hour(parseTimeToMinutes(brk.from))} – {formatMinutesTo12Hour(parseTimeToMinutes(brk.to))}
+                              </span>
+
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveBreak(brk.id)}
+                                className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors ml-auto cursor-pointer"
+                                title="Delete this break"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          type="button"
+                          onClick={() => handleAddBreak()}
+                          className="text-xs font-semibold text-[#1A3828] hover:text-[#142C1F] flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-dashed border-[#1A3828]/30 hover:border-[#1A3828] bg-white transition-all cursor-pointer"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Add Another Break</span>
+                        </button>
+
+                        <span className="text-[11px] text-[#7B7368]">
+                          {breaksList.filter((b) => b.from && b.to).length} active break{breaksList.length === 1 ? "" : "s"} scheduled
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Live Preview of Generated Slots */}
+                <div className="p-3.5 rounded-xl bg-white border border-[#e2d9ce] space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#412a1e] flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#705d00]" />
+                      <span>Live Slots Preview:</span>
+                      <span className="text-[#705d00]">
+                        From {formatMinutesTo12Hour(parseTimeToMinutes(rangeFromTime))} To {formatMinutesTo12Hour(parseTimeToMinutes(rangeToTime))}
+                      </span>
+                    </span>
+                    <span className="text-[11px] font-semibold text-[#705d00] bg-[#F4D242]/20 px-2 py-0.5 rounded-md">
+                      {previewGeneratedSlots.length} slots generated
+                    </span>
+                  </div>
+
+                  {previewGeneratedSlots.length === 0 ? (
+                    <p className="text-xs text-rose-600">
+                      No slots could be generated with this time range. Ensure To Time is later than From Time.
+                    </p>
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {previewGeneratedSlots.map((slot: BookingTimeSlot, idx: number) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs bg-[#f6f3ec] border border-[#e2d9ce] text-[#412a1e] font-medium"
+                        >
+                          <Clock className="w-3 h-3 text-[#705d00]" />
+                          <span>{slot.time}</span>
+                          {slot.isEvening && (
+                            <span className="text-[9px] px-1 py-0.2 rounded bg-[#F4D242] text-[#221b00] font-semibold">
+                              Eve
+                            </span>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </form>
+            )}
+
+            {/* MODE 2: MARK AS LEAVE / OFF DAY (NO SLOTS) */}
+            {dayScheduleMode === "leave" && (
+              <form onSubmit={handleApplyLeaveToDay} className="p-5 rounded-2xl bg-rose-50/50 border border-rose-200 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-rose-200">
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-rose-100 border border-rose-300 flex items-center justify-center text-rose-700 shrink-0">
+                      <CalendarOff className="w-4 h-4" />
+                    </span>
+                    <div>
+                      <span className="text-xs font-bold text-rose-900 block">
+                        Mark Dates as Leave / Day Off
+                      </span>
+                      <p className="text-[11px] text-rose-700 mt-0.5">
+                        Selected dates will have <strong>no consultation slots available</strong>. Clients will see that the therapist is on leave.
+                      </p>
+                    </div>
+                  </div>
+
+                  <label className="flex items-center gap-2 text-xs text-[#5a4033] cursor-pointer self-start sm:self-auto">
                     <input
                       type="checkbox"
-                      checked={enableBreaks}
-                      onChange={(e) => {
-                        const val = e.target.checked;
-                        setEnableBreaks(val);
-                        if (val && breaksList.length === 0) {
-                          setBreaksList([
-                            { id: "break_1", from: "13:00", to: "14:00", label: "Lunch Break" },
-                          ]);
-                        }
-                      }}
-                      className="rounded border-[#1A3828]/20 text-[#1A3828] focus:ring-[#1A3828]"
+                      checked={isDateRangeMode}
+                      onChange={(e) => setIsDateRangeMode(e.target.checked)}
+                      className="rounded border-rose-300 text-rose-700 focus:ring-rose-500"
                     />
-                    <span className="flex items-center gap-1.5">
-                      <Coffee className="w-3.5 h-3.5 text-[#705d00]" />
-                      <span>Exclude Breaks / Rest Periods ({breaksList.length} defined)</span>
-                    </span>
+                    <span className="font-medium text-rose-950">Multiple Days Range (From Date → To Date)</span>
                   </label>
+                </div>
+
+                {/* Dates Selection */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-rose-950 mb-1">
+                      {isDateRangeMode ? "Leave Start Date *" : "Leave Date *"}
+                    </label>
+                    <input
+                      type="date"
+                      value={particularDate}
+                      onChange={(e) => setParticularDate(e.target.value)}
+                      className="w-full text-xs p-2.5 rounded-xl border border-rose-300 focus:border-rose-600 focus:outline-none bg-white font-sans text-[#1A3828]"
+                      required
+                    />
+                  </div>
+
+                  {isDateRangeMode && (
+                    <div>
+                      <label className="block text-[11px] font-semibold text-rose-950 mb-1">
+                        Leave End Date *
+                      </label>
+                      <input
+                        type="date"
+                        value={particularEndDate}
+                        onChange={(e) => setParticularEndDate(e.target.value)}
+                        min={particularDate}
+                        className="w-full text-xs p-2.5 rounded-xl border border-rose-300 focus:border-rose-600 focus:outline-none bg-white font-sans text-[#1A3828]"
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Quick Leave Reason Presets */}
+                <div className="space-y-1.5 pt-1">
+                  <label className="block text-[11px] font-semibold text-rose-950">
+                    Leave Reason Presets
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {[
+                      "Therapist on Leave",
+                      "Personal Leave",
+                      "Public Holiday",
+                      "Vacation / Travel",
+                      "Clinic Closed",
+                      "Conference / Training",
+                    ].map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => {
+                          setLeaveReason(preset);
+                          if (!customLeaveNote) setCustomLeaveNote(`${preset} (No consultation slots available)`);
+                        }}
+                        className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                          leaveReason === preset
+                            ? "bg-rose-700 text-white font-semibold shadow-xs"
+                            : "bg-white text-rose-900 hover:bg-rose-100 border border-rose-200"
+                        }`}
+                      >
+                        {preset}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Reason Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-rose-950 mb-1">
+                      Reason Label / Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={leaveReason}
+                      onChange={(e) => setLeaveReason(e.target.value)}
+                      placeholder="e.g. Annual Leave, Doctor on Leave"
+                      className="w-full text-xs p-2.5 rounded-xl border border-rose-300 focus:border-rose-600 focus:outline-none bg-white font-sans text-[#1A3828]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-rose-950 mb-1">
+                      Client-Facing Notice (Displayed on Booking Form)
+                    </label>
+                    <input
+                      type="text"
+                      value={customLeaveNote}
+                      onChange={(e) => setCustomLeaveNote(e.target.value)}
+                      placeholder="e.g. Aswathy is on leave on this date. Please pick another date."
+                      className="w-full text-xs p-2.5 rounded-xl border border-rose-300 focus:border-rose-600 focus:outline-none bg-white font-sans text-[#1A3828]"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit button for Leave */}
+                <div className="pt-2 flex items-center justify-between">
+                  <span className="text-[11px] text-rose-800 font-medium">
+                    {particularDate
+                      ? isDateRangeMode && particularEndDate
+                        ? `Will mark range ${particularDate} → ${particularEndDate} as on leave.`
+                        : `Will mark ${particularDate} as on leave.`
+                      : "Select date above to proceed."}
+                  </span>
 
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-[#1A3828] text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-[#142C1F] cursor-pointer shadow-xs sm:ml-auto"
+                    className="px-5 py-2.5 rounded-xl bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-[#F4D242]" />
+                    <CalendarOff className="w-3.5 h-3.5 text-rose-200" />
                     <span>
-                      Apply Range to {isDateRangeMode ? "Date Range" : "Particular Day"}
+                      Mark {isDateRangeMode ? "Date Range" : "Day"} as On Leave (No Slots)
                     </span>
                   </button>
                 </div>
+              </form>
+            )}
 
-                {/* Multiple Breaks Configuration Panel */}
-                {enableBreaks && (
-                  <div className="p-4 rounded-xl bg-white border border-[#e2d9ce] space-y-3 shadow-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#e2d9ce]/60">
-                      <div>
-                        <span className="text-xs font-bold text-[#1A3828] flex items-center gap-1.5">
-                          <Coffee className="w-3.5 h-3.5 text-[#705d00]" />
-                          <span>Comfortable Breaks &amp; Unavailability Periods</span>
-                        </span>
-                        <p className="text-[11px] text-[#7B7368] mt-0.5">
-                          Slots overlapping any of these break times will be omitted automatically from booking.
-                        </p>
-                      </div>
-
-                      {/* Quick Presets */}
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] text-[#7B7368] font-semibold uppercase tracking-wider">Presets:</span>
-                        <button
-                          type="button"
-                          onClick={() => handleAddBreak({ from: "13:00", to: "14:00", label: "Lunch Break" })}
-                          className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
-                        >
-                          <Utensils className="w-2.5 h-2.5 text-[#705d00]" />
-                          <span>+ Lunch (1-2 PM)</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleAddBreak({ from: "16:30", to: "17:00", label: "Tea Break" })}
-                          className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
-                        >
-                          <Coffee className="w-2.5 h-2.5 text-[#705d00]" />
-                          <span>+ Tea (4:30-5 PM)</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleAddBreak({ from: "18:00", to: "18:30", label: "Evening Rest" })}
-                          className="text-[10px] font-medium bg-[#f6f3ec] hover:bg-[#ede8df] text-[#412a1e] border border-[#e2d9ce] px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
-                        >
-                          <Clock className="w-2.5 h-2.5 text-[#705d00]" />
-                          <span>+ Rest (6-6:30 PM)</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Break Items List */}
-                    <div className="space-y-2.5">
-                      {breaksList.map((brk, idx) => (
-                        <div
-                          key={brk.id || idx}
-                          className="flex flex-col sm:flex-row sm:items-center gap-2.5 p-2.5 rounded-lg bg-[#fbf9f5] border border-[#e2d9ce]/80 text-xs"
-                        >
-                          <span className="text-[11px] font-bold text-[#705d00] bg-[#F4D242]/20 px-2 py-1 rounded w-fit">
-                            Break {idx + 1}
-                          </span>
-
-                          <div className="flex-1">
-                            <input
-                              type="text"
-                              value={brk.label || ""}
-                              onChange={(e) => handleUpdateBreak(brk.id, "label", e.target.value)}
-                              placeholder="Break Name (e.g. Lunch, Tea Break, Rest)"
-                              className="w-full text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none text-[#1A3828]"
-                            />
-                          </div>
-
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <div className="flex items-center gap-1">
-                              <span className="text-[11px] text-[#7B7368]">From:</span>
-                              <input
-                                type="time"
-                                value={brk.from}
-                                onChange={(e) => handleUpdateBreak(brk.id, "from", e.target.value)}
-                                className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
-                                required
-                              />
-                            </div>
-
-                            <span className="text-[#7B7368]">to</span>
-
-                            <div className="flex items-center gap-1">
-                              <span className="text-[11px] text-[#7B7368]">To:</span>
-                              <input
-                                type="time"
-                                value={brk.to}
-                                onChange={(e) => handleUpdateBreak(brk.id, "to", e.target.value)}
-                                className="text-xs p-1.5 rounded-lg border border-[#1A3828]/20 bg-white focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
-                                required
-                              />
-                            </div>
-
-                            <span className="text-[10px] text-[#7B7368] font-mono whitespace-nowrap bg-white px-2 py-1 rounded border border-[#e2d9ce] hidden md:inline">
-                              {formatMinutesTo12Hour(parseTimeToMinutes(brk.from))} – {formatMinutesTo12Hour(parseTimeToMinutes(brk.to))}
-                            </span>
-
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveBreak(brk.id)}
-                              className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors ml-auto cursor-pointer"
-                              title="Delete this break"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between pt-1">
-                      <button
-                        type="button"
-                        onClick={() => handleAddBreak()}
-                        className="text-xs font-semibold text-[#1A3828] hover:text-[#142C1F] flex items-center gap-1.5 py-1.5 px-3 rounded-lg border border-dashed border-[#1A3828]/30 hover:border-[#1A3828] bg-white transition-all cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>Add Another Break</span>
-                      </button>
-
-                      <span className="text-[11px] text-[#7B7368]">
-                        {breaksList.filter((b) => b.from && b.to).length} active break{breaksList.length === 1 ? "" : "s"} scheduled
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Live Preview of Generated Slots */}
-              <div className="p-3.5 rounded-xl bg-white border border-[#e2d9ce] space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-[#412a1e] flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-[#705d00]" />
-                    <span>Live Slots Preview:</span>
-                    <span className="text-[#705d00]">
-                      From {formatMinutesTo12Hour(parseTimeToMinutes(rangeFromTime))} To {formatMinutesTo12Hour(parseTimeToMinutes(rangeToTime))}
-                    </span>
-                  </span>
-                  <span className="text-[11px] font-semibold text-[#705d00] bg-[#F4D242]/20 px-2 py-0.5 rounded-md">
-                    {previewGeneratedSlots.length} slots generated
-                  </span>
-                </div>
-
-                {previewGeneratedSlots.length === 0 ? (
-                  <p className="text-xs text-rose-600">
-                    No slots could be generated with this time range. Ensure To Time is later than From Time.
-                  </p>
-                ) : (
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    {previewGeneratedSlots.map((slot: BookingTimeSlot, idx: number) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs bg-[#f6f3ec] border border-[#e2d9ce] text-[#412a1e] font-medium"
-                      >
-                        <Clock className="w-3 h-3 text-[#705d00]" />
-                        <span>{slot.time}</span>
-                        {slot.isEvening && (
-                          <span className="text-[9px] px-1 py-0.2 rounded bg-[#F4D242] text-[#221b00] font-semibold">
-                            Eve
-                          </span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </form>
-
-            {/* List of Configured Particular Days */}
+            {/* List of Configured Days (Both Working Custom Days & Leave Days) */}
             {(!config.singleDaySlots || config.singleDaySlots.length === 0) ? (
               <div className="text-center py-8 rounded-xl border border-dashed border-[#1A3828]/20 text-[#7B7368] text-xs space-y-1">
                 <Calendar className="w-6 h-6 mx-auto text-[#7B7368]/50" />
-                <p className="font-medium text-[#1A3828]">No particular day ranges configured</p>
-                <p>Standard daily slots apply to all open calendar dates. Choose a particular day and time range above to customize specific dates.</p>
+                <p className="font-medium text-[#1A3828]">No custom day schedules or leaves configured</p>
+                <p>Standard daily slots apply to all open calendar dates. You can customize hours or mark leaves above.</p>
               </div>
             ) : (
               <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs text-[#7B7368] pb-1">
+                  <span className="font-semibold uppercase tracking-wider text-[11px] text-[#1A3828]">
+                    Configured Days &amp; Leaves ({config.singleDaySlots.length})
+                  </span>
+                  <span>Click delete or toggle to update any day</span>
+                </div>
+
                 {config.singleDaySlots.map((dayOverride) => {
                   const dateObj = new Date(dayOverride.date + "T00:00:00");
                   const formattedDate = dateObj.toLocaleDateString("en-US", {
@@ -1115,6 +1409,64 @@ export default function AdminBookingFormControlPage() {
                     day: "numeric",
                   });
 
+                  // LEAVE / OFF DAY CARD
+                  if (dayOverride.isOffDay || (Array.isArray(dayOverride.slots) && dayOverride.slots.length === 0)) {
+                    return (
+                      <div
+                        key={dayOverride.date}
+                        className="p-4 rounded-xl bg-rose-50/60 border border-rose-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <CalendarOff className="w-4 h-4 text-rose-600" />
+                            <span className="text-xs font-bold text-rose-950 font-sans">
+                              {formattedDate}
+                            </span>
+                            <span className="text-[10px] text-rose-800 bg-rose-100 px-2 py-0.5 rounded-md border border-rose-200 font-mono">
+                              {dayOverride.date}
+                            </span>
+                            <span className="text-[10px] font-bold text-white bg-rose-700 px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                              <Ban className="w-2.5 h-2.5" />
+                              <span>On Leave · No Slots</span>
+                            </span>
+                            {(dayOverride.leaveReason || dayOverride.note) && (
+                              <span className="text-[11px] font-medium text-rose-800 bg-white/80 border border-rose-200 px-2.5 py-0.5 rounded-md">
+                                {dayOverride.leaveReason || dayOverride.note}
+                              </span>
+                            )}
+                          </div>
+
+                          <p className="text-[11px] text-rose-800 italic">
+                            Client Notice: &ldquo;{dayOverride.note || "Therapist is on leave. No slots are available for this date."}&rdquo;
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleDayOff(dayOverride.date)}
+                            className="text-xs text-[#1A3828] hover:bg-[#1A3828]/10 border border-[#1A3828]/30 px-3 py-1.5 rounded-xl font-medium transition-colors flex items-center gap-1 cursor-pointer bg-white"
+                            title="Switch back to active working day"
+                          >
+                            <Clock className="w-3.5 h-3.5 text-[#705d00]" />
+                            <span>Set as Working Day</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSingleDayOverride(dayOverride.date)}
+                            className="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-100 border border-rose-300 px-3 py-1.5 rounded-xl font-medium transition-colors flex items-center gap-1 cursor-pointer bg-white"
+                            title="Remove leave"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // ACTIVE WORKING DAY WITH CUSTOM SLOTS
                   return (
                     <div
                       key={dayOverride.date}
@@ -1193,15 +1545,27 @@ export default function AdminBookingFormControlPage() {
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSingleDayOverride(dayOverride.date)}
-                        className="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl font-medium transition-colors flex items-center gap-1 self-start sm:self-auto cursor-pointer"
-                        title="Delete entire day schedule"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Delete Day Schedule</span>
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleDayOff(dayOverride.date)}
+                          className="text-xs text-rose-700 hover:bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl font-medium transition-colors flex items-center gap-1 cursor-pointer bg-white"
+                          title="Change this day to Leave"
+                        >
+                          <CalendarOff className="w-3.5 h-3.5 text-rose-600" />
+                          <span>Mark as Leave</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSingleDayOverride(dayOverride.date)}
+                          className="text-xs text-rose-600 hover:text-rose-800 hover:bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl font-medium transition-colors flex items-center gap-1 cursor-pointer bg-white"
+                          title="Delete entire day schedule"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
