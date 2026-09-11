@@ -339,8 +339,7 @@ export function createInitialSeedData(): DatabaseSchema {
         "Trained in Person-Centered Therapy (PCT) & Somatic Grounding",
         "Clinical Supervision under Licensed Mental Health Practitioner",
       ],
-      profileImage:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      profileImage: "/aswathy-photo2.jpg",
       updatedAt: now,
     },
     journeyEntries: [

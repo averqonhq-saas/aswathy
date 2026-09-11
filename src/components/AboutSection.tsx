@@ -77,7 +77,9 @@ export default function AboutSection() {
                   : "Aswathy Jeyarajasekar, Counselling Psychologist"
               }
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              src={about?.profileImage || "/aswathy-photo.jpg"}
+              src={about?.profileImage || "/aswathy-photo2.jpg"}
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
