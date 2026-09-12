@@ -162,35 +162,35 @@
   "sessionFormats": [
     {
       "id": "individual-online",
-      "tag": "Video Consultation",
-      "icon": "video",
-      "badge": "Popular",
-      "order": 1,
-      "price": 1800,
       "title": "Individual Online Counselling",
       "format": "online",
       "duration": "50 Minutes · Secure Video",
-      "isActive": true,
+      "tag": "Video Consultation",
+      "badge": "Popular",
       "badgeType": "popular",
+      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle.",
+      "icon": "video",
+      "price": 1800,
+      "isActive": true,
+      "order": 1,
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-11T12:41:38.741Z",
-      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
+      "updatedAt": "2026-09-12T04:14:05.559Z"
     },
     {
       "id": "initial-discovery",
-      "tag": "Exploratory",
-      "icon": "discovery",
-      "badge": "Introductory",
-      "order": 2,
-      "price": 0,
       "title": "Initial Discovery Call",
       "format": "online",
       "duration": "20 Minutes · Introductory",
-      "isActive": true,
+      "tag": "Exploratory",
+      "badge": "Introductory",
       "badgeType": "introductory",
+      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit.",
+      "icon": "discovery",
+      "price": 0,
+      "isActive": true,
+      "order": 2,
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-11T12:41:38.741Z",
-      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
+      "updatedAt": "2026-09-12T04:14:05.559Z"
     }
   ],
   "clientTypes": [
@@ -727,13 +727,15 @@
     }
   ],
   "bookingFormConfig": {
+    "headerBadge": "Live Scheduling Sanctuary",
+    "headerTitle": "Select your consultation preference",
+    "securityBadge": "Encrypted Healthcare Schedule",
+    "step1Title": "Choose Session Format",
+    "step2Title": "Choose Preferred Date & Time",
+    "step3Title": "Your Confidential Information",
     "timezone": "IST (GMT+5:30)",
-    "noticeBox": {
-      "type": "info",
-      "title": "Clients Welcome",
-      "enabled": true,
-      "message": "If this is your first therapy consultation, there is no need to prepare anything beforehand. We move at your unhurried pace."
-    },
+    "cadenceTitle": "50-Minute Gentle Cadence",
+    "cadenceDescription": "All sessions conclude with 10 minutes of integration buffer to keep conversations unhurried.",
     "timeSlots": [
       {
         "time": "7:00",
@@ -748,16 +750,19 @@
         "isEvening": true
       }
     ],
-    "updatedAt": "2026-09-11T12:41:38.741Z",
-    "step1Title": "Choose Session Format",
-    "step2Title": "Choose Preferred Date & Time",
-    "step3Title": "Your Confidential Information",
-    "headerBadge": "Live Scheduling Sanctuary",
-    "headerTitle": "Select your consultation preference",
-    "cadenceTitle": "50-Minute Gentle Cadence",
+    "contactChannels": [
+      "Email Invitation"
+    ],
     "ethicsNotice": "All communications are bound by strict psychological ethics and confidential data protocols.",
-    "enablePayment": true,
-    "securityBadge": "Encrypted Healthcare Schedule",
+    "instantConfirmationText": "Instant booking confirmation & Google Meet invitation",
+    "submitButtonText": "Confirm & Book Session (Pay Later)",
+    "whatsappNumber": "+91 98765 43210",
+    "confirmationTitle": "Your Sanctuary Awaits",
+    "confirmationSubtitle": "Appointment Secured",
+    "enablePayment": false,
+    "defaultPaymentStatus": "pending",
+    "paymentDisabledNote": "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
+    "manualPaymentInstructions": "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
     "singleDaySlots": [
       {
         "id": "sds_1789108248252_2026-09-16",
@@ -860,15 +865,12 @@
         "slotDurationMinutes": 50
       }
     ],
-    "whatsappNumber": "+91 98765 43210",
-    "contactChannels": [
-      "Email Invitation"
-    ],
-    "submitButtonText": "Pay via Razorpay & Book Session",
-    "confirmationTitle": "Your Sanctuary Awaits",
-    "cadenceDescription": "All sessions conclude with 10 minutes of integration buffer to keep conversations unhurried.",
-    "paymentDisabledNote": "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
-    "confirmationSubtitle": "Appointment Secured",
-    "instantConfirmationText": "Instant booking confirmation & Google Meet invitation"
+    "noticeBox": {
+      "type": "info",
+      "title": "Clients Welcome",
+      "enabled": true,
+      "message": "If this is your first therapy consultation, there is no need to prepare anything beforehand. We move at your unhurried pace."
+    },
+    "updatedAt": "2026-09-12T04:14:05.559Z"
   }
 }

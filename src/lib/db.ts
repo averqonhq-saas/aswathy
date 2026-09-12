@@ -606,6 +606,11 @@ export async function getDatabase(): Promise<DatabaseSchema> {
       }
       if (!supabaseData.bookingFormConfig) {
         supabaseData.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+      } else {
+        supabaseData.bookingFormConfig = {
+          ...DEFAULT_BOOKING_FORM_CONFIG,
+          ...supabaseData.bookingFormConfig,
+        };
       }
       memoryDb = supabaseData;
       return memoryDb;
@@ -620,6 +625,11 @@ export async function getDatabase(): Promise<DatabaseSchema> {
     }
     if (!memoryDb.bookingFormConfig) {
       memoryDb.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+    } else {
+      memoryDb.bookingFormConfig = {
+        ...DEFAULT_BOOKING_FORM_CONFIG,
+        ...memoryDb.bookingFormConfig,
+      };
     }
     return memoryDb;
   }
@@ -635,6 +645,11 @@ export async function getDatabase(): Promise<DatabaseSchema> {
     }
     if (!memoryDb!.bookingFormConfig) {
       memoryDb!.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+    } else {
+      memoryDb!.bookingFormConfig = {
+        ...DEFAULT_BOOKING_FORM_CONFIG,
+        ...memoryDb!.bookingFormConfig,
+      };
     }
     return memoryDb as DatabaseSchema;
   } catch {
@@ -670,6 +685,44 @@ export async function saveDatabase(data: DatabaseSchema): Promise<void> {
     console.error("Error updating local backup:", err);
   }
 }
+
+/**
+ * Specifically persists the bookingFormConfig collection quickly and reliably
+ */
+export async function saveBookingFormConfig(
+  config: Partial<import("./booking-config").BookingFormConfig>
+): Promise<import("./booking-config").BookingFormConfig> {
+  const db = await getDatabase();
+  db.bookingFormConfig = {
+    ...(db.bookingFormConfig || DEFAULT_BOOKING_FORM_CONFIG),
+    ...config,
+    updatedAt: new Date().toISOString(),
+  };
+  memoryDb = db;
+
+  // 1. Primary: Direct single-collection upsert to Supabase
+  try {
+    const { saveCollectionToSupabase } = await import("./supabase-db");
+    await saveCollectionToSupabase("bookingFormConfig", db.bookingFormConfig);
+  } catch (err) {
+    console.error("Failed to direct-save bookingFormConfig to Supabase, falling back to full save:", err);
+    await saveDatabase(db);
+  }
+
+  // 2. Local file backup
+  try {
+    await ensureDataDirectory();
+    const tempFile = `${DB_FILE}.${Date.now()}.tmp`;
+    const serialized = JSON.stringify(db, null, 2);
+    await fs.writeFile(tempFile, serialized, "utf8");
+    await fs.rename(tempFile, DB_FILE);
+  } catch {
+    // Non-fatal
+  }
+
+  return db.bookingFormConfig;
+}
+
 
 /**
  * Returns privacy-safe booked slot timestamps ({ date, time }) for active bookings.

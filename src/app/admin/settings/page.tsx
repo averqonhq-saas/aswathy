@@ -22,6 +22,7 @@ import {
   Copy,
   Check,
   Sparkles,
+  CreditCard,
 } from "lucide-react";
 import { useToast } from "@/components/admin/Toast";
 import type { PracticeSettings } from "@/lib/types";
@@ -414,6 +415,30 @@ export default function AdminSettingsPage() {
               className="shrink-0 px-3.5 py-1.5 rounded-lg bg-[#1A3828] text-[#F4D242] text-xs font-semibold hover:bg-[#142C1F] transition-all flex items-center gap-1.5 shadow-xs"
             >
               <span>Booking Form Controls</span>
+              <span>→</span>
+            </a>
+          </div>
+
+          {/* Payment & Checkout Mode Card */}
+          <div className="rounded-xl bg-[#FAF9F5] border border-[#1A3828]/15 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg bg-[#1A3828]/10 flex items-center justify-center shrink-0 text-[#1A3828] mt-0.5">
+                <CreditCard className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-xs font-bold text-[#1A3828]">Razorpay Online Payments vs Pay Later</span>
+                </div>
+                <p className="text-[11px] text-[#7B7368]">
+                  Require online payment via Razorpay (UPI, Cards, NetBanking) before appointments are secured, or enable direct bookings with manual settlement later at the clinic.
+                </p>
+              </div>
+            </div>
+            <a
+              href="/admin/content/booking-form"
+              className="shrink-0 px-3.5 py-1.5 rounded-lg border border-[#1A3828]/30 bg-white text-[#1A3828] hover:bg-[#1A3828] hover:text-white text-xs font-semibold transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            >
+              <span>Payment Controls</span>
               <span>→</span>
             </a>
           </div>

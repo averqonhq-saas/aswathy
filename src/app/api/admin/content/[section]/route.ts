@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { getDatabase, saveDatabase } from "@/lib/db";
 import { getCurrentAdmin } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ section: string }> }
@@ -175,6 +178,10 @@ export async function PUT(
           db.bookingFormConfig = {
             ...(db.bookingFormConfig || {}),
             ...body.config,
+            enablePayment:
+              body.config.enablePayment !== undefined
+                ? Boolean(body.config.enablePayment)
+                : db.bookingFormConfig?.enablePayment ?? true,
             updatedAt: now,
           };
         }
@@ -197,6 +204,20 @@ export async function PUT(
           }));
         }
         await saveDatabase(db);
+
+        // Also ensure direct single-collection persistence to Supabase
+        try {
+          const { saveCollectionToSupabase } = await import("@/lib/supabase-db");
+          if (db.bookingFormConfig) {
+            await saveCollectionToSupabase("bookingFormConfig", db.bookingFormConfig);
+          }
+          if (db.sessionFormats) {
+            await saveCollectionToSupabase("sessionFormats", db.sessionFormats);
+          }
+        } catch (colErr) {
+          console.error("Direct Supabase collection sync notice:", colErr);
+        }
+
         return NextResponse.json({
           success: true,
           data: {

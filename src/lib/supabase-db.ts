@@ -11,19 +11,25 @@ export function getPgPool(): Pool {
     return globalForPg.supabasePgPool;
   }
 
-  const connectionString =
-    process.env.DATABASE_URL ||
+  // Prioritize POOLED_DATABASE_URL (port 6543 Transaction mode) to avoid EMAXCONNSESSION (max 15 session limit)
+  const rawUrl =
     process.env.POOLED_DATABASE_URL ||
-    "postgresql://postgres.ncvtgsugunvbrjiautkd:6QDS%3Fc%21eA-cq%2Ba_@aws-0-ap-south-1.pooler.supabase.com:5432/postgres";
+    process.env.DATABASE_URL ||
+    "postgresql://postgres.ncvtgsugunvbrjiautkd:6QDS%3Fc%21eA-cq%2Ba_@aws-0-ap-south-1.pooler.supabase.com:6543/postgres";
+
+  const connectionString = rawUrl.replace(
+    ".pooler.supabase.com:5432",
+    ".pooler.supabase.com:6543"
+  );
 
   const pool = new Pool({
     connectionString,
     ssl: {
       rejectUnauthorized: false,
     },
-    max: 10,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    max: 5,
+    idleTimeoutMillis: 20000,
+    connectionTimeoutMillis: 8000,
   });
 
   pool.on("error", (err) => {
@@ -207,3 +213,23 @@ export async function saveDatabaseToSupabase(data: DatabaseSchema): Promise<void
     }
   }
 }
+
+/**
+ * Persists a single collection directly to practice_collections
+ */
+export async function saveCollectionToSupabase(
+  collectionName: string,
+  data: any
+): Promise<void> {
+  const pool = getPgPool();
+  await pool.query(
+    `
+    INSERT INTO practice_collections (collection_name, data, updated_at)
+    VALUES ($1, $2, NOW())
+    ON CONFLICT (collection_name) 
+    DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()
+    `,
+    [collectionName, JSON.stringify(data)]
+  );
+}
+

@@ -111,7 +111,7 @@ export default function AdminBookingFormControlPage() {
   const loadData = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/admin/content/booking-form");
+      const res = await fetch("/api/admin/content/booking-form", { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to load booking form controls");
       const result = await res.json();
       if (result.data) {
@@ -377,20 +377,27 @@ export default function AdminBookingFormControlPage() {
   // ----------------------------------------------------
   // SAVE ALL CHANGES
   // ----------------------------------------------------
-  const handleSave = async () => {
+  const handleSave = async (overrideConfig?: BookingFormConfig) => {
     setIsSaving(true);
+    const configToSave = overrideConfig || config;
     try {
       const res = await fetch("/api/admin/content/booking-form", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          config: config,
+          config: configToSave,
           formats: formats,
         }),
       });
       if (!res.ok) throw new Error("Failed to save booking form configuration");
+      const result = await res.json();
+      if (result.data?.config) {
+        setConfig(result.data.config);
+      }
+      if (Array.isArray(result.data?.formats)) {
+        setFormats(result.data.formats);
+      }
       success("Booking form controls published to live website.");
-      loadData();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to save.";
       error(msg);
@@ -436,7 +443,7 @@ export default function AdminBookingFormControlPage() {
           </Link>
 
           <button
-            onClick={handleSave}
+            onClick={() => handleSave()}
             disabled={isSaving}
             className="px-5 py-2.5 text-xs font-semibold rounded-xl bg-[#1A3828] text-white hover:bg-[#142C1F] transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
           >
@@ -1709,13 +1716,15 @@ export default function AdminBookingFormControlPage() {
                   checked={config.enablePayment !== false}
                   onChange={(e) => {
                     const enabled = e.target.checked;
-                    setConfig({
+                    const updated = {
                       ...config,
                       enablePayment: enabled,
                       submitButtonText: enabled
                         ? "Pay via Razorpay & Book Session"
                         : "Confirm & Book Session (Pay Later)",
-                    });
+                    };
+                    setConfig(updated);
+                    handleSave(updated);
                   }}
                   className="sr-only peer"
                 />
@@ -1820,6 +1829,22 @@ export default function AdminBookingFormControlPage() {
               <p className="text-[11px] text-[#7B7368] mt-1">
                 The call-to-action text on the final booking button.
               </p>
+            </div>
+
+            {/* Dedicated in-tab Save button */}
+            <div className="pt-4 border-t border-[#1A3828]/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-xs text-[#7B7368]">
+                Changes to payment mode, instructions, and notes publish directly to the live website.
+              </span>
+              <button
+                type="button"
+                onClick={() => handleSave()}
+                disabled={isSaving}
+                className="w-full sm:w-auto px-5 py-2.5 text-xs font-semibold rounded-xl bg-[#1A3828] text-white hover:bg-[#142C1F] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+              >
+                <Save className="w-3.5 h-3.5" />
+                <span>{isSaving ? "Publishing..." : "Save Payment Settings"}</span>
+              </button>
             </div>
           </div>
         </div>

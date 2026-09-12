@@ -13,6 +13,17 @@ export async function POST(request: Request) {
       );
     }
 
+    const db = await getDatabase();
+    if (db.bookingFormConfig?.enablePayment === false) {
+      return NextResponse.json(
+        {
+          error: "Online payment is currently disabled by practice policy. Please complete your appointment booking directly.",
+          isPaymentDisabled: true,
+        },
+        { status: 400 }
+      );
+    }
+
     const receiptId = (bookingId || `rcpt_${Date.now()}`).slice(-40);
 
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID;

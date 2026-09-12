@@ -146,7 +146,7 @@ export default function BookingForm({
   useEffect(() => {
     async function loadLiveConfig() {
       try {
-        const res = await fetch("/api/content");
+        const res = await fetch("/api/content", { cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
         if (Array.isArray(data.bookedSlots)) {
@@ -177,7 +177,7 @@ export default function BookingForm({
   useEffect(() => {
     async function loadLiveServices() {
       try {
-        const res = await fetch("/api/services");
+        const res = await fetch("/api/services", { cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
         if (Array.isArray(data.services) && data.services.length > 0) {
@@ -187,7 +187,7 @@ export default function BookingForm({
               const byProp = data.services.find((s: Service) => s.id === initialServiceId);
               if (byProp) return byProp;
             }
-            const matched = data.services.find((s: Service) => s.id === prev.id);
+            const matched = prev ? data.services.find((s: Service) => s.id === prev.id) : null;
             return matched || data.services[0];
           });
         }
@@ -1643,8 +1643,23 @@ END:VCALENDAR`;
               </span>
             </div>
 
-            {/* Offline / Pay Later Notice when online payments disabled */}
-            {config.enablePayment === false && (
+            {/* Payment Mode Notice */}
+            {config.enablePayment !== false ? (
+              <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-[#1A3828] text-xs flex items-start gap-3 mt-3">
+                <CreditCard className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                <div className="space-y-1 w-full">
+                  <div className="flex flex-wrap items-center justify-between gap-1">
+                    <p className="font-semibold text-emerald-950">Secure Razorpay Online Checkout</p>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                      ₹{(selectedService?.price || 1800).toLocaleString("en-IN")} · Instant Confirmation
+                    </span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-[#5a4033]">
+                    Seamless payment via UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, or NetBanking. You will complete payment via Razorpay upon clicking submit.
+                  </p>
+                </div>
+              </div>
+            ) : (
               <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-[#5a4033] text-xs flex items-start gap-3 mt-3">
                 <CreditCard className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                 <div className="space-y-1 w-full">
@@ -1763,11 +1778,14 @@ END:VCALENDAR`;
               <>
                 <span>
                   {config.enablePayment === false
-                    ? config.submitButtonText || "Confirm & Book Session (Pay Later)"
-                    : config.submitButtonText &&
-                      config.submitButtonText !== "Confirm & Request Session"
-                    ? config.submitButtonText
-                    : `Pay via Razorpay & Book Session (₹${selectedService?.price?.toLocaleString("en-IN") || "1,800"})`}
+                    ? (config.submitButtonText && !config.submitButtonText.toLowerCase().includes("razorpay")
+                        ? config.submitButtonText
+                        : "Confirm & Book Session (Pay Later)")
+                    : (config.submitButtonText &&
+                       !config.submitButtonText.toLowerCase().includes("pay later") &&
+                       config.submitButtonText !== "Confirm & Request Session"
+                        ? config.submitButtonText
+                        : `Pay via Razorpay & Book Session (₹${(selectedService?.price || 1800).toLocaleString("en-IN")})`)}
                 </span>
                 <ArrowRight className="w-4 h-4 text-[#F4D242]" />
               </>
