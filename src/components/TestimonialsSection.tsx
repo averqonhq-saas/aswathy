@@ -18,7 +18,7 @@ interface TestimonialItem {
   context: string;
 }
 
-const CHAR_LIMIT = 210;
+const CHAR_LIMIT = 160;
 
 function truncateQuote(text: string, limit: number = CHAR_LIMIT): string {
   if (!text) return "";
@@ -218,15 +218,15 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
               return (
                 <div
                   key={cardKey}
-                  className="w-[85vw] sm:w-[380px] md:w-[420px] shrink-0 snap-start p-space-xl rounded-3xl bg-surface shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-between border border-parchment-border/50 min-h-[300px]"
+                  className="w-[75vw] sm:w-[300px] md:w-[330px] shrink-0 snap-start p-space-md sm:p-space-lg rounded-2xl bg-surface shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-between border border-parchment-border/50 min-h-[220px]"
                 >
                   {/* Content Block */}
                   <div className="flex-1 flex flex-col items-start">
-                    <span className="font-headline-xl text-headline-xl text-secondary-fixed-dim leading-none font-serif block select-none mb-space-xs">
+                    <span className="font-headline-xl text-2xl text-secondary-fixed-dim leading-none font-serif block select-none mb-1">
                       “
                     </span>
                     <p
-                      className={`font-quote-editorial text-quote-editorial italic text-primary leading-relaxed text-base lg:text-lg ${
+                      className={`font-headline-xl !text-[15px] sm:!text-base italic text-primary !leading-relaxed ${
                         isExpanded ? "whitespace-pre-line" : ""
                       }`}
                     >
@@ -237,7 +237,7 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
                       <button
                         type="button"
                         onClick={() => toggleExpand(cardKey)}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-secondary hover:text-primary transition-colors cursor-pointer group mt-3 self-start"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-secondary hover:text-primary transition-colors cursor-pointer group mt-2.5 self-start"
                         aria-expanded={isExpanded}
                       >
                         <span className="underline underline-offset-4 decoration-secondary-fixed-dim/70 group-hover:decoration-primary">
@@ -253,7 +253,7 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
                   </div>
 
                   {/* Card footer pinned to bottom */}
-                  <div className="pt-space-md border-t border-surface-container mt-space-lg w-full">
+                  <div className="pt-space-xs border-t border-surface-container mt-space-md w-full">
                     <span className="font-body-sm text-body-sm font-semibold text-primary block">
                       {item.client}
                     </span>
