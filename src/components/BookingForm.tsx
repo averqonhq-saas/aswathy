@@ -262,6 +262,7 @@ export default function BookingForm({
     clientEmail: string;
     paymentStatus?: "pending" | "paid" | "refunded";
     razorpayPaymentId?: string;
+    meetingLink?: string;
   } | null>(null);
 
   // Razorpay Payment state
@@ -550,6 +551,7 @@ export default function BookingForm({
           clientName: fullName.trim(),
           clientEmail: email.trim().toLowerCase(),
           paymentStatus: (data.booking?.paymentStatus || config.defaultPaymentStatus || "pending") as "pending" | "paid" | "refunded",
+          meetingLink: data.booking?.meetingLink,
         };
 
         setConfirmedBooking(confirmed);
@@ -854,6 +856,7 @@ END:VCALENDAR`;
                   ...prev,
                   paymentStatus: "paid",
                   razorpayPaymentId: verifyData.booking?.razorpayPaymentId || "pay_demo_verified",
+                  meetingLink: verifyData.booking?.meetingLink || prev.meetingLink,
                 }
               : null
           );
@@ -912,6 +915,7 @@ END:VCALENDAR`;
                     ...prev,
                     paymentStatus: "paid",
                     razorpayPaymentId: response.razorpay_payment_id,
+                    meetingLink: verifyData.booking?.meetingLink || prev.meetingLink,
                   }
                 : null
             );
@@ -994,8 +998,22 @@ END:VCALENDAR`;
                 <span className="font-medium text-[#412a1e]">
                   100% Online Telehealth (Google Meet)
                 </span>
+                {confirmedBooking.paymentStatus === "paid" && confirmedBooking.meetingLink ? (
+                  <a
+                    href={confirmedBooking.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#1B5E20] font-semibold underline block mt-0.5"
+                  >
+                    Join Google Meet →
+                  </a>
+                ) : (
+                  <span className="text-[11px] text-[#705d00] block mt-0.5 font-medium">
+                    Meeting details will be shared after payment confirmation
+                  </span>
+                )}
                 {confirmedBooking.price && (
-                  <span className="text-[11px] text-[#82746f] block">
+                  <span className="text-[11px] text-[#82746f] block mt-0.5">
                     ₹{confirmedBooking.price.toLocaleString("en-IN")} · {confirmedBooking.durationMinutes || 50} mins
                   </span>
                 )}
@@ -1768,7 +1786,7 @@ END:VCALENDAR`;
         <div className="pt-6 border-t border-[#e2d9ce] flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-[#5a4033]">
             <span className="w-2 h-2 rounded-full bg-[#F4D242] inline-block animate-pulse"></span>
-            <span>{config.instantConfirmationText || "Instant booking confirmation & Google Meet invitation"}</span>
+            <span>{config.instantConfirmationText || "Meeting details will be shared after payment confirmation"}</span>
           </div>
 
           <button

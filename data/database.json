@@ -159,229 +159,53 @@
       "clientDisplayName": "Client M"
     }
   ],
-  "bookings": [
-    {
-      "id": "ASW-376278",
-      "price": 800,
-      "format": "online",
-      "history": [
-        {
-          "timestamp": "2026-09-14T04:42:11.484Z",
-          "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
-          "note": "Marked as paid manually (Cash / UPI / Reception)"
-        },
-        {
-          "note": "Reverted to pending manually",
-          "action": "Payment status manually updated from PAID to PENDING (Reverted to pending manually)",
-          "timestamp": "2026-09-14T04:42:02.562Z"
-        },
-        {
-          "note": "Quick manual settlement",
-          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
-          "timestamp": "2026-09-14T04:37:08.950Z"
-        },
-        {
-          "action": "Google Calendar invitation dispatched & Google Meet generated (p291v19vmp4jpjf4brg9mpbrv4)",
-          "timestamp": "2026-09-14T04:33:02.640Z"
-        },
-        {
-          "action": "Booking request submitted via website",
-          "timestamp": "2026-09-14T04:33:02.640Z"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-14T04:33:02.640Z",
-      "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-14T04:42:11.484Z",
-      "clientName": "Muneeswaran P",
-      "clientEmail": "muneeswaranmd2004@gmail.com",
-      "clientPhone": "+918300864083",
-      "meetingLink": "https://meet.google.com/epa-mqev-wvz",
-      "serviceName": "Individual Session ",
-      "bookingStatus": "confirmed",
-      "clientMessage": "",
-      "googleEventId": "p291v19vmp4jpjf4brg9mpbrv4",
-      "paymentStatus": "paid",
-      "appointmentDate": "2026-09-15",
-      "appointmentTime": "7:00",
-      "calendarEventId": "p291v19vmp4jpjf4brg9mpbrv4",
-      "durationMinutes": 60
+  "bookings": [],
+  "settings": {
+    "account": {
+      "email": "roottherapyonline@gmail.com",
+      "adminName": "Aswathy Jeyarajasekar",
+      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
     },
-    {
-      "id": "ASW-229135",
-      "price": 1800,
-      "format": "online",
-      "history": [
-        {
-          "action": "Payment of ₹1800 verified via Razorpay (Payment ID: pay_test_1789195327980). Appointment confirmed. Google Meet room ready.",
-          "timestamp": "2026-09-12T06:42:08.361Z"
-        },
-        {
-          "action": "Pending appointment slot reserved (Awaiting Razorpay payment of ₹1800)",
-          "timestamp": "2026-09-12T06:42:05.343Z"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-12T06:42:05.343Z",
-      "serviceId": "serv_1",
-      "updatedAt": "2026-09-12T06:42:08.361Z",
-      "clientName": "Aswathy Test Client 25184",
-      "clientEmail": "test.client.25184@example.com",
-      "clientPhone": "+91 98765 43210",
-      "meetingLink": "https://meet.google.com/uzz-ozjn-wfa",
-      "serviceName": "Emotional Wellbeing & Stress Management",
-      "bookingStatus": "confirmed",
-      "clientMessage": "Architecture verification test",
-      "googleEventId": "m0i3ljvdk4p85dfl3nd6pmlnfg",
-      "paymentStatus": "paid",
-      "appointmentDate": "2026-09-22",
-      "appointmentTime": "10:00 AM",
-      "calendarEventId": "m0i3ljvdk4p85dfl3nd6pmlnfg",
-      "durationMinutes": 50,
-      "razorpayOrderId": "order_1789195326936_xb362",
-      "razorpayPaymentId": "pay_test_1789195327980",
-      "razorpaySignature": "mock_verified_signature"
+    "booking": {
+      "zohoUrl": "https://averqon.zohobookings.in/portal-embed#/averqon",
+      "provider": "zoho",
+      "bufferTime": 15,
+      "defaultFormat": "online",
+      "maxAdvanceDays": 60,
+      "zohoRefreshToken": "1000.21bce53ad70393c6ea84f2f19e11dcab.81086e3d20d0573cd86388eeca63bdd9",
+      "bufferTimeMinutes": 15,
+      "advanceNoticeHours": 24,
+      "confirmationMessage": "Thank you for reaching out. Your confidential session has been reserved. A confirmation email with telehealth instructions has been dispatched.",
+      "slotDurationMinutes": 50,
+      "defaultSessionDuration": 50,
+      "cancellationNoticeHours": 24,
+      "cancellationPolicyHours": 24
     },
-    {
-      "id": "ASW-326447",
-      "price": 1800,
-      "format": "online",
-      "history": [
-        {
-          "action": "Google Calendar invitation dispatched & Google Meet generated (gpukh49mgrev6csmmar7853kl0)",
-          "timestamp": "2026-09-12T06:38:21.784Z"
-        },
-        {
-          "action": "Booking request submitted via website",
-          "timestamp": "2026-09-12T06:38:21.784Z"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-12T06:38:21.784Z",
-      "serviceId": "serv_1",
-      "updatedAt": "2026-09-12T06:38:21.784Z",
-      "clientName": "Aswathy Test Client",
-      "clientEmail": "test.booking@example.com",
-      "clientPhone": "+91 98765 43210",
-      "meetingLink": "https://meet.google.com/nwu-wkti-hmh",
-      "serviceName": "Emotional Wellbeing & Stress Management",
-      "bookingStatus": "pending",
-      "clientMessage": "Architecture verification test",
-      "googleEventId": "gpukh49mgrev6csmmar7853kl0",
-      "paymentStatus": "pending",
-      "appointmentDate": "2026-09-17",
-      "appointmentTime": "11:30 AM",
-      "calendarEventId": "gpukh49mgrev6csmmar7853kl0",
-      "durationMinutes": 50
+    "general": {
+      "email": "roottherapyonline@gmail.com",
+      "phone": "+91 755 0002973",
+      "tagline": "Gentle, non-judgmental space for emotional healing",
+      "currency": "INR (₹)",
+      "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
+      "timezone": "Asia/Kolkata (IST)",
+      "whatsapp": "https://wa.me/919876543210",
+      "instagram": "https://instagram.com/aswathy.psychology",
+      "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
+      "contactEmail": "roottherapyonline@gmail.com",
+      "contactPhone": "+91 755 0002973",
+      "practiceName": "The Safe Sanctuary | Aswathy Counselling",
+      "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
     },
-    {
-      "id": "ASW-676483",
-      "price": 800,
-      "format": "online",
-      "history": [
-        {
-          "note": "Marked as paid manually (Cash / UPI / Reception)",
-          "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
-          "timestamp": "2026-09-11T11:42:02.900Z"
-        },
-        {
-          "action": "Google Calendar invitation dispatched & Google Meet generated (mvchtt18a36pjvnhbs5rtj2fa4)",
-          "timestamp": "2026-09-11T11:41:11.562Z"
-        },
-        {
-          "action": "Booking request submitted via website",
-          "timestamp": "2026-09-11T11:41:11.562Z"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-11T11:41:11.562Z",
-      "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-11T11:42:02.900Z",
-      "clientName": "Aswathy J",
-      "clientEmail": "aswathyjeyarajasekar21@gmail.com",
-      "clientPhone": "7550002973",
-      "meetingLink": "https://meet.google.com/nbf-bjfj-cfz",
-      "serviceName": "Individual Session ",
-      "bookingStatus": "confirmed",
-      "clientMessage": "nil",
-      "paymentStatus": "paid",
-      "appointmentDate": "2026-09-14",
-      "appointmentTime": "7:00",
-      "calendarEventId": "mvchtt18a36pjvnhbs5rtj2fa4",
-      "durationMinutes": 60
-    },
-    {
-      "id": "ASW-857250",
-      "price": 800,
-      "format": "online",
-      "history": [
-        {
-          "action": "Google Calendar invitation dispatched & Google Meet generated (8h28t9mbivlu3iftapjsvda21o)",
-          "timestamp": "2026-09-11T06:48:39.623Z"
-        },
-        {
-          "action": "Booking request submitted via website",
-          "timestamp": "2026-09-11T06:48:39.623Z"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-11T06:48:39.623Z",
-      "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-11T06:48:39.623Z",
-      "clientName": "Aswathy J",
-      "clientEmail": "aswathyjeyarajasekar21@gmail.com",
-      "clientPhone": "7550002973",
-      "meetingLink": "https://meet.google.com/hdz-osni-dww",
-      "serviceName": "Individual Session ",
-      "bookingStatus": "confirmed",
-      "clientMessage": "",
-      "paymentStatus": "pending",
-      "appointmentDate": "2026-09-12",
-      "appointmentTime": "7:00",
-      "calendarEventId": "8h28t9mbivlu3iftapjsvda21o",
-      "durationMinutes": 60
-    },
-    {
-      "id": "ASW-493384",
-      "price": 600,
-      "format": "online",
-      "history": [
-        {
-          "action": "Google Meet link generated & calendar invitation dispatched",
-          "timestamp": "2026-09-10T15:57:59.948Z"
-        },
-        {
-          "note": "Marked as paid manually (Cash / UPI / Reception)",
-          "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
-          "timestamp": "2026-09-10T15:57:16.792Z"
-        },
-        {
-          "action": "Google Calendar invitation dispatched & Google Meet generated (2c5q7fnkcqj7jku4kn96dc46vc)",
-          "timestamp": "2026-09-10T15:55:54.566Z"
-        },
-        {
-          "action": "Booking request submitted via website",
-          "timestamp": "2026-09-10T15:55:54.566Z"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-10T15:55:54.566Z",
-      "serviceId": "svc_relationships",
-      "updatedAt": "2026-09-10T15:57:59.948Z",
-      "clientName": "Muneeswaran P",
-      "clientEmail": "muneeswaranmd2004@gmail.com",
-      "clientPhone": "+918300864083",
-      "meetingLink": "https://meet.google.com/dyn-kbsy-ndn",
-      "serviceName": "Individual Counselling for Students",
-      "bookingStatus": "confirmed",
-      "clientMessage": "Test",
-      "paymentStatus": "paid",
-      "appointmentDate": "2026-09-11",
-      "appointmentTime": "10:00 AM",
-      "calendarEventId": "54nh2dlvs1g4poj2a4425ce0og",
-      "durationMinutes": 50
+    "notifications": {
+      "bookingAlerts": true,
+      "enquiryAlerts": true,
+      "emailOnBooking": true,
+      "emailOnEnquiry": true,
+      "feedbackAlerts": true,
+      "dailySummaryDigest": false,
+      "emailNotifications": true
     }
-  ],
+  },
   "clientTypes": [
     {
       "id": "ct_1",
@@ -463,52 +287,26 @@
       "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
     }
   ],
-  "settings": {
-    "account": {
-      "email": "roottherapyonline@gmail.com",
-      "adminName": "Aswathy Jeyarajasekar",
-      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+  "notifications": [
+    {
+      "id": "notif_1789364106282",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "message": "Muneeswaran P: Payment Issue / Billing Assistance",
+      "link": "/admin/enquiries",
+      "isRead": false,
+      "createdAt": "2026-09-14T05:35:06.282Z"
     },
-    "booking": {
-      "zohoUrl": "https://averqon.zohobookings.in/portal-embed#/averqon",
-      "provider": "zoho",
-      "bufferTime": 15,
-      "defaultFormat": "online",
-      "maxAdvanceDays": 60,
-      "zohoRefreshToken": "1000.21bce53ad70393c6ea84f2f19e11dcab.81086e3d20d0573cd86388eeca63bdd9",
-      "bufferTimeMinutes": 15,
-      "advanceNoticeHours": 24,
-      "confirmationMessage": "Thank you for reaching out. Your confidential session has been reserved. A confirmation email with telehealth instructions has been dispatched.",
-      "slotDurationMinutes": 50,
-      "defaultSessionDuration": 50,
-      "cancellationNoticeHours": 24,
-      "cancellationPolicyHours": 24
-    },
-    "general": {
-      "email": "roottherapyonline@gmail.com",
-      "phone": "+91 755 0002973",
-      "tagline": "Gentle, non-judgmental space for emotional healing",
-      "currency": "INR (₹)",
-      "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
-      "timezone": "Asia/Kolkata (IST)",
-      "whatsapp": "https://wa.me/919876543210",
-      "instagram": "https://instagram.com/aswathy.psychology",
-      "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
-      "contactEmail": "roottherapyonline@gmail.com",
-      "contactPhone": "+91 755 0002973",
-      "practiceName": "The Safe Sanctuary | Aswathy Counselling",
-      "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
-    },
-    "notifications": {
-      "bookingAlerts": true,
-      "enquiryAlerts": true,
-      "emailOnBooking": true,
-      "emailOnEnquiry": true,
-      "feedbackAlerts": true,
-      "dailySummaryDigest": false,
-      "emailNotifications": true
+    {
+      "id": "notif_1788871456203",
+      "link": "/admin/enquiries",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "isRead": true,
+      "message": "Muneeswaran P: Emotional Wellbeing & Stress",
+      "createdAt": "2026-09-08T12:44:16.202Z"
     }
-  },
+  ],
   "media": [
     {
       "id": "med_1",
@@ -531,136 +329,18 @@
       "createdAt": "2026-09-06T13:18:50.470Z",
       "sizeBytes": 210000,
       "updatedAt": "2026-09-06T13:18:50.470Z"
-    },
-    {
-      "id": "med_3",
-      "url": "/logo.svg",
-      "title": "Botanical Therapy Emblem",
-      "category": "website",
-      "filename": "logo-emblem.svg",
-      "mimeType": "image/svg+xml",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 8400,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
     }
   ],
-  "notifications": [
+  "admins": [
     {
-      "id": "notif_1789360931512",
-      "type": "status_change",
-      "title": "Payment PAID",
-      "message": "Payment status for Muneeswaran P (#ASW-376278) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
-      "link": "/admin/bookings",
-      "isRead": false,
-      "createdAt": "2026-09-14T04:42:11.484Z"
-    },
-    {
-      "id": "notif_1789360922598",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Payment PENDING",
-      "isRead": false,
-      "message": "Payment status for Muneeswaran P (#ASW-376278) manually marked as PENDING (Reverted to pending manually).",
-      "createdAt": "2026-09-14T04:42:02.562Z"
-    },
-    {
-      "id": "notif_1789360628986",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Payment PAID",
-      "isRead": false,
-      "message": "Payment status for Muneeswaran P (#ASW-376278) manually marked as PAID (Quick manual settlement).",
-      "createdAt": "2026-09-14T04:37:08.950Z"
-    },
-    {
-      "id": "notif_1789360383804",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-15 at 7:00. Google Meet room ready.",
-      "createdAt": "2026-09-14T04:33:02.640Z"
-    },
-    {
-      "id": "notif_1789195329541",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "Payment Verified & Consultation Confirmed",
-      "isRead": false,
-      "message": "Payment of ₹1800 verified from Aswathy Test Client 25184 for Emotional Wellbeing & Stress Management (2026-09-22 at 10:00 AM). Google Meet room scheduled.",
-      "createdAt": "2026-09-12T06:42:08.361Z"
-    },
-    {
-      "id": "notif_1789195325442",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Slot Reserved (Pending Payment)",
-      "isRead": false,
-      "message": "Aswathy Test Client 25184 booked \"Emotional Wellbeing & Stress Management\" for 2026-09-22 at 10:00 AM (Payment Pending).",
-      "createdAt": "2026-09-12T06:42:05.343Z"
-    },
-    {
-      "id": "notif_1789195103383",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Aswathy Test Client booked \"Emotional Wellbeing & Stress Management\" for 2026-09-17 at 11:30 AM. Google Meet room ready.",
-      "createdAt": "2026-09-12T06:38:21.784Z"
-    },
-    {
-      "id": "notif_1789126924343",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Payment PAID",
-      "isRead": false,
-      "message": "Payment status for Aswathy J (#ASW-676483) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
-      "createdAt": "2026-09-11T11:42:02.900Z"
-    },
-    {
-      "id": "notif_1789126872280",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Aswathy J booked \"Individual Session \" for 2026-09-14 at 7:00. Google Meet room ready.",
-      "createdAt": "2026-09-11T11:41:11.562Z"
-    },
-    {
-      "id": "notif_1789109320434",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": true,
-      "message": "Aswathy J booked \"Individual Session \" for 2026-09-12 at 7:00. Google Meet room ready.",
-      "createdAt": "2026-09-11T06:48:39.623Z"
-    },
-    {
-      "id": "notif_1789055838107",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Payment PAID",
-      "isRead": false,
-      "message": "Payment status for Muneeswaran P (#ASW-493384) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
-      "createdAt": "2026-09-10T15:57:16.792Z"
-    },
-    {
-      "id": "notif_1789055755349",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Muneeswaran P booked \"Individual Counselling for Students\" for 2026-09-11 at 10:00 AM. Google Meet room ready.",
-      "createdAt": "2026-09-10T15:55:54.566Z"
-    },
-    {
-      "id": "notif_1788871456203",
-      "link": "/admin/enquiries",
-      "type": "enquiry_new",
-      "title": "New Client Enquiry",
-      "isRead": true,
-      "message": "Muneeswaran P: Emotional Wellbeing & Stress",
-      "createdAt": "2026-09-08T12:44:16.202Z"
+      "id": "admin_aswathy_1",
+      "name": "Aswathy Jeyarajasekar",
+      "role": "superadmin",
+      "email": "roottherapyonline@gmail.com",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "passwordHash": "9dc5b1993a171283196e2527c78c8ba7:54c404b541a11dcb4a85f78131f0dfb70dbf58d5cc25243c454dffbb264a9fad186a6b24b6606c802e6f2707c8373a79664b8ca255d9c1095525b9555c76f85f",
+      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
     }
   ],
   "journeyEntries": [
@@ -699,18 +379,6 @@
       "createdAt": "2026-09-06T13:18:50.470Z",
       "updatedAt": "2026-09-09T09:47:39.688Z",
       "description": "Today, I approach counselling with empathy, genuineness, and respect for each person’s individuality. I primarily follow a client-centred approach, creating a safe and non-judgmental space where individuals can explore their thoughts, emotions, relationships, and life experiences at their own pace.\n\nI see becoming a psychologist not as a destination, but as an ongoing journey of learning, reflection, and growth. I am grateful for the experiences that brought me here and for the opportunity to continue learning alongside the people I work with. Therapy is not about having all the answers. Sometimes, it is about creating a space where someone feels safe enough to discover their own."
-    }
-  ],
-  "admins": [
-    {
-      "id": "admin_aswathy_1",
-      "name": "Aswathy Jeyarajasekar",
-      "role": "superadmin",
-      "email": "roottherapyonline@gmail.com",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "passwordHash": "9dc5b1993a171283196e2527c78c8ba7:54c404b541a11dcb4a85f78131f0dfb70dbf58d5cc25243c454dffbb264a9fad186a6b24b6606c802e6f2707c8373a79664b8ca255d9c1095525b9555c76f85f",
-      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
     }
   ],
   "websiteAbout": {
@@ -777,6 +445,18 @@
   ],
   "blockedSlots": [],
   "enquiries": [
+    {
+      "id": "enq_1789364106282",
+      "name": "Muneeswaran P",
+      "email": "muneeswaranmd2004@gmail.com",
+      "phone": "08300864083",
+      "subject": "Payment Issue / Billing Assistance",
+      "message": "hi",
+      "status": "new",
+      "internalNotes": "",
+      "createdAt": "2026-09-14T05:35:06.282Z",
+      "updatedAt": "2026-09-14T05:35:06.282Z"
+    },
     {
       "id": "enq_1788871456202",
       "name": "Muneeswaran P",

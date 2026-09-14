@@ -51,6 +51,64 @@ export async function PATCH(
 
     let updated = null;
 
+    const ensureMeetGenerated = async (targetId: string) => {
+      try {
+        const b = await bookingService.getBooking(targetId);
+        if (
+          !b ||
+          (b.format || "online").toLowerCase() === "in-person" ||
+          (b.meetingLink && b.meetingLink.startsWith("http"))
+        ) {
+          return;
+        }
+
+        const calResult = await createCalendarEventWithMeet({
+          bookingId: b.id,
+          clientName: b.clientName,
+          clientEmail: b.clientEmail,
+          clientPhone: b.clientPhone,
+          serviceName: b.serviceName,
+          appointmentDate: b.appointmentDate,
+          appointmentTime: b.appointmentTime,
+          durationMinutes: b.durationMinutes,
+          format: b.format,
+          clientMessage: b.clientMessage,
+        });
+
+        if (calResult.success && calResult.meetingLink) {
+          const db = await getDatabase();
+          const target = db.bookings.find(
+            (item) => item.id === b.id || item.id.toLowerCase() === b.id.toLowerCase()
+          );
+          const now = new Date().toISOString();
+
+          if (target) {
+            target.meetingLink = calResult.meetingLink;
+            target.calendarEventId = calResult.eventId;
+            target.updatedAt = now;
+            if (!target.history) target.history = [];
+            target.history.unshift({
+              timestamp: now,
+              action: `Google Meet link generated automatically upon payment verification & calendar invitation dispatched`,
+            });
+            await saveDatabase(db);
+          }
+
+          try {
+            const pool = getPgPool();
+            await pool.query(
+              `UPDATE bookings SET meeting_link = $1, updated_at = $2 WHERE id = $3 OR LOWER(id) = LOWER($3)`,
+              [calResult.meetingLink, now, b.id]
+            );
+          } catch (sqlErr) {
+            console.warn("[PATCH Booking] Error updating relational meeting_link:", sqlErr);
+          }
+        }
+      } catch (err) {
+        console.error("[ensureMeetGenerated Error]:", err);
+      }
+    };
+
     if (action === "generate_meet" || action === "sync_calendar") {
       const b = await bookingService.getBooking(id);
       if (!b) {
@@ -112,11 +170,17 @@ export async function PATCH(
 
       updated = await bookingService.getBooking(id);
     } else if (action === "send_payment_receipt") {
+      if (paymentStatus === "paid") {
+        await ensureMeetGenerated(id);
+      }
       updated = await bookingService.getBooking(id);
       if (updated && paymentStatus && updated.paymentStatus !== paymentStatus) {
         updated = await bookingService.updatePaymentStatus(id, paymentStatus, note);
       }
     } else if (action === "update_payment_status" && paymentStatus) {
+      if (paymentStatus === "paid") {
+        await ensureMeetGenerated(id);
+      }
       updated = await bookingService.updatePaymentStatus(id, paymentStatus, note);
     } else if (action === "update_status" && status) {
       updated = await bookingService.updateBookingStatus(id, status, note);
@@ -125,6 +189,9 @@ export async function PATCH(
     } else if (action === "reschedule" && date && time) {
       updated = await bookingService.rescheduleBooking(id, date, time, note);
     } else if (paymentStatus && !status) {
+      if (paymentStatus === "paid") {
+        await ensureMeetGenerated(id);
+      }
       updated = await bookingService.updatePaymentStatus(id, paymentStatus, note);
     } else if (status) {
       updated = await bookingService.updateBookingStatus(id, status, note);

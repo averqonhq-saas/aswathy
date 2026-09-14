@@ -239,6 +239,133 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
 }
 
 /**
+ * Send welcome / booking received email to client when payment is pending
+ * Explicitly notes: "Meeting details will be shared after payment confirmation"
+ */
+export async function sendBookingWelcomeEmailToClient(data: BookingEmailData): Promise<boolean> {
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.warn("[Email Service] EMAIL_USER or EMAIL_APP_PASSWORD is not set. Skipping client welcome email.");
+    return false;
+  }
+
+  const senderEmail = process.env.EMAIL_USER;
+  const isOnline = (data.format || "online").toLowerCase() !== "in-person";
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Received - Aswathy Counselling</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;">
+  <table role="presentation" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; border-spacing: 0;">
+    <!-- Header -->
+    <tr>
+      <td style="background-color: #2f4f4f; padding: 28px 24px; text-align: center; color: #ffffff;">
+        <h1 style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.5px;">Aswathy</h1>
+        <p style="margin: 6px 0 0; font-size: 13px; color: #d1fae5; text-transform: uppercase; letter-spacing: 1px;">Counselling Psychologist &amp; Psychotherapist</p>
+      </td>
+    </tr>
+
+    <!-- Body -->
+    <tr>
+      <td style="padding: 32px 24px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <span style="display: inline-block; background-color: #fefce8; color: #854d0e; font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 9999px; border: 1px solid #fef08a;">
+            ⏳ Appointment Slot Reserved • Payment Pending
+          </span>
+          <h2 style="color: #0f172a; margin: 12px 0 6px; font-size: 22px;">We Have Received Your Booking</h2>
+          <p style="margin: 0; color: #64748b; font-size: 14px;">Booking Reference: <strong>${data.bookingId || "Pending"}</strong></p>
+        </div>
+
+        <p style="font-size: 15px; line-height: 1.6; color: #334155;">
+          Dear <strong>${data.clientName}</strong>,<br><br>
+          Thank you for choosing to begin your therapy journey with Aswathy. We have received your booking request and your consultation slot is reserved.
+        </p>
+
+        <!-- Meeting Details Shared After Payment Notice Box -->
+        <div style="background-color: #fffbeb; border: 1.5px dashed #d97706; border-radius: 10px; padding: 18px 20px; margin: 24px 0; text-align: left;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span style="font-size: 16px;">📌</span>
+            <strong style="color: #92400e; font-size: 14px;">Meeting details will be shared after payment confirmation</strong>
+          </div>
+          <p style="margin: 0; font-size: 13px; color: #78350f; line-height: 1.5;">
+            ${isOnline 
+              ? "For your online session, your private Google Meet video link and Google Calendar invitation will be generated automatically and sent to you once payment is confirmed." 
+              : "Clinic arrival directions and in-person consultation details will be confirmed with you upon payment confirmation."}
+          </p>
+        </div>
+
+        <h3 style="font-size: 15px; color: #0f172a; margin: 20px 0 10px 0;">Appointment Summary</h3>
+
+        <table style="width: 100%; margin: 0 0 20px 0; border-collapse: collapse; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0; width: 35%;"><strong>Service</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.serviceName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Date</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.appointmentDate}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Time</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.appointmentTime} IST</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Duration</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.durationMinutes || 50} minutes</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Modality</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${isOnline ? "100% Online Telehealth (Google Meet)" : "In-Person Consultation"}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b;"><strong>Payment Status</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #b45309; font-weight: 600;">
+              ⏳ Pending${data.price ? ` (₹${data.price})` : ""}
+            </td>
+          </tr>
+        </table>
+
+        <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">
+          If you have questions or wish to complete your payment, please reply directly to this email or connect with us on WhatsApp.<br><br>
+          We look forward to supporting you.
+        </p>
+
+        <p style="margin-top: 28px; font-size: 14px; color: #334155; line-height: 1.5;">
+          Warm regards,<br>
+          <strong>Aswathy</strong><br>
+          <span style="font-size: 12px; color: #64748b;">Counselling Psychologist &amp; Psychotherapist | roottherapyonline.com</span>
+        </p>
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td style="background-color: #f8fafc; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8;">
+        Confidential Medical &amp; Counselling Communication. If received in error, please notify the sender immediately.
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
+  await transporter.sendMail({
+    from: `"Aswathy Jeyarajasekar" <${senderEmail}>`,
+    to: data.clientEmail,
+    replyTo: senderEmail,
+    subject: `Booking Received: ${data.serviceName} on ${data.appointmentDate} — Aswathy Counselling`,
+    html,
+  });
+
+  return true;
+}
+
+/**
  * Send booking notification to Aswathy (Admin)
  */
 export async function sendBookingAlertToAdmin(data: BookingEmailData): Promise<boolean> {
@@ -725,6 +852,21 @@ export async function sendPaymentReceiptEmailToClient(
             </td>
           </tr>
         </table>
+
+        ${isPaid && data.meetingLink && data.meetingLink.startsWith("http") ? `
+        <!-- Google Meet Video Room Card -->
+        <div style="background-color: #f0fdf4; border: 2px dashed #059669; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
+          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">Your Google Meet Session</p>
+          <p style="margin: 0 0 16px; font-size: 14px; color: #334155;">Your payment has been verified. You can join your confidential consultation directly via the Google Meet link below:</p>
+          <a href="${data.meetingLink}" target="_blank" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 15px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            📹 Join Google Meet Session
+          </a>
+          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">Direct link: <a href="${data.meetingLink}" style="color: #059669;">${data.meetingLink}</a></p>
+        </div>` : !isPaid ? `
+        <div style="background-color: #fffbeb; border: 1px dashed #d97706; border-radius: 8px; padding: 14px 16px; margin: 20px 0; text-align: left;">
+          <strong style="color: #92400e; font-size: 13px;">📌 Meeting details will be shared after payment confirmation</strong>
+          <p style="margin: 4px 0 0; font-size: 12px; color: #78350f;">Your private Google Meet link will be generated and emailed to you once your payment is confirmed.</p>
+        </div>` : ""}
 
         ${note ? `
         <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #166534; margin: 16px 0;">

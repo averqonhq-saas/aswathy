@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { getDatabase, saveDatabase, getBookedSlots, Booking } from "@/lib/db";
 import { areSlotsMatching } from "@/lib/booking-config";
-import { sendBookingConfirmationToClient, sendBookingAlertToAdmin } from "@/lib/email";
+import {
+  sendBookingConfirmationToClient,
+  sendBookingAlertToAdmin,
+  sendBookingWelcomeEmailToClient,
+} from "@/lib/email";
 import { createCalendarEventWithMeet } from "@/lib/google-calendar";
 import { getPgPool } from "@/lib/supabase-db";
 
@@ -206,8 +210,8 @@ export async function POST(request: Request) {
     let meetingLink: string | undefined = undefined;
     let calendarEventId: string | undefined = undefined;
 
-    // Only generate Google Calendar Event & Meet link if booking is already confirmed (e.g. payment disabled or already verified)
-    if (!requiresPayment) {
+    // Only generate Google Calendar Event & Google Meet link if booking is ALREADY PAID
+    if (isPaid) {
       if (format === "in-person") {
         meetingLink = "In-Person Consultation at Clinic";
       }
@@ -348,8 +352,8 @@ export async function POST(request: Request) {
       console.warn("[PostgreSQL Booking Insert Error]:", sqlErr);
     }
 
-    // Only dispatch confirmation emails if booking is confirmed (not pending payment)
-    if (!requiresPayment) {
+    // Dispatch emails: Confirmation with Meet link if Paid, or Welcome email if Payment Pending
+    if (isPaid) {
       try {
         await Promise.allSettled([
           sendBookingConfirmationToClient({
@@ -382,7 +386,43 @@ export async function POST(request: Request) {
           }),
         ]);
       } catch (emailErr) {
-        console.error("[Email Notification Error - Booking]:", emailErr);
+        console.error("[Email Notification Error - Paid Booking]:", emailErr);
+      }
+    } else {
+      // Payment pending: send Welcome email explicitly noting meeting details will be shared after payment confirmation
+      try {
+        await Promise.allSettled([
+          sendBookingWelcomeEmailToClient({
+            bookingId: newBooking.id,
+            clientName: newBooking.clientName,
+            clientEmail: newBooking.clientEmail,
+            clientPhone: newBooking.clientPhone,
+            serviceName: newBooking.serviceName,
+            appointmentDate: newBooking.appointmentDate,
+            appointmentTime: newBooking.appointmentTime,
+            durationMinutes: newBooking.durationMinutes,
+            format: newBooking.format,
+            price: newBooking.price,
+            paymentStatus: newBooking.paymentStatus,
+            clientMessage: newBooking.clientMessage,
+          }),
+          sendBookingAlertToAdmin({
+            bookingId: newBooking.id,
+            clientName: newBooking.clientName,
+            clientEmail: newBooking.clientEmail,
+            clientPhone: newBooking.clientPhone,
+            serviceName: newBooking.serviceName,
+            appointmentDate: newBooking.appointmentDate,
+            appointmentTime: newBooking.appointmentTime,
+            format: newBooking.format,
+            price: newBooking.price,
+            paymentStatus: newBooking.paymentStatus,
+            meetingLink: undefined,
+            clientMessage: newBooking.clientMessage,
+          }),
+        ]);
+      } catch (emailErr) {
+        console.error("[Email Notification Error - Welcome Booking]:", emailErr);
       }
     }
 

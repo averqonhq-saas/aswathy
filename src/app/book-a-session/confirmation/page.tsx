@@ -111,6 +111,9 @@ END:VCALENDAR`;
                 <Video className="w-3.5 h-3.5" />
                 <span>100% Online Telehealth</span>
               </span>
+              <span className="text-[11px] text-[#705d00] font-medium block">
+                Meeting details will be shared after payment confirmation
+              </span>
             </div>
 
             <div className="space-y-1">
@@ -130,15 +133,23 @@ END:VCALENDAR`;
             </div>
           </div>
 
-          {bookingDetails.clientEmail && (
-            <div className="pt-2 border-t border-surface-container flex items-center gap-2 text-xs text-[#7B7368]">
+          <div className="pt-2 border-t border-surface-container space-y-1 text-xs text-[#7B7368]">
+            <div className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5 shrink-0 text-primary" />
               <span>
-                Confirmation details &amp; meeting access instructions sent to{" "}
-                <strong className="text-primary">{bookingDetails.clientEmail}</strong>
+                Booking acknowledgement dispatched
+                {bookingDetails.clientEmail && (
+                  <>
+                    {" "}to <strong className="text-primary">{bookingDetails.clientEmail}</strong>
+                  </>
+                )}
+                .
               </span>
             </div>
-          )}
+            <p className="text-[11px] text-[#705d00] font-medium pl-5.5">
+              * Meeting details and Google Meet link will be shared after payment confirmation.
+            </p>
+          </div>
         </div>
 
         {/* Action Buttons */}

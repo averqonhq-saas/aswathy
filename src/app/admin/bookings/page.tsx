@@ -916,10 +916,22 @@ export default function BookingsManagementPage() {
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <span className="text-[11px] text-emerald-700 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                          Google Meet Active
-                        </span>
+                        {selectedBooking.paymentStatus === "paid" ? (
+                          <span className="text-[11px] text-emerald-700 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Google Meet Active (Payment Verified)
+                          </span>
+                        ) : (
+                          <div className="space-y-1">
+                            <span className="text-[11px] text-amber-700 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                              Payment Pending • Link Withheld From Client
+                            </span>
+                            <p className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200/80 rounded-lg px-2.5 py-1">
+                              📌 Meeting details will be shared after payment confirmation.
+                            </p>
+                          </div>
+                        )}
                         <a
                           href={selectedBooking.meetingLink}
                           target="_blank"
@@ -955,9 +967,21 @@ export default function BookingsManagementPage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <p className="text-xs text-on-surface-variant">
-                      No Google Meet link has been generated for this booking yet.
-                    </p>
+                    {selectedBooking.paymentStatus !== "paid" ? (
+                      <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200/70 text-amber-900 text-xs space-y-1">
+                        <div className="flex items-center gap-1.5 font-semibold text-[11px] uppercase tracking-wider text-amber-800">
+                          <span>⏳</span>
+                          <span>Payment Pending</span>
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-amber-800/90">
+                          Meeting details will be shared after payment confirmation. Google Meet will be generated and dispatched automatically when payment is verified (or when you click <strong>Mark as Paid</strong>).
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-on-surface-variant">
+                        No Google Meet link has been generated for this booking yet.
+                      </p>
+                    )}
                     <button
                       type="button"
                       onClick={() => handleGenerateMeet(selectedBooking.id)}

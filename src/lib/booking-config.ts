@@ -163,7 +163,7 @@ export const DEFAULT_BOOKING_FORM_CONFIG: BookingFormConfig = {
   ethicsNotice:
     "All communications are bound by strict psychological ethics and confidential data protocols.",
   instantConfirmationText:
-    "Instant booking confirmation & Google Meet invitation",
+    "Meeting details will be shared after payment confirmation",
   submitButtonText: "Confirm & Request Session",
   whatsappNumber: "+91 755 000 2973",
   confirmationTitle: "Your Sanctuary Awaits",
