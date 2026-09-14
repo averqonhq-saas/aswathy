@@ -70,29 +70,29 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
   return (
     <section
       id="about"
-      className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop scroll-mt-20"
+      className="py-space-2xl lg:py-space-3xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop scroll-mt-20"
     >
-      <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-2xl lg:gap-space-3xl items-center">
+      <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-lg lg:gap-space-xl items-center">
         {/* Left Column: Heading & Premise */}
-        <div className="lg:col-span-5 space-y-space-md">
+        <div className="lg:col-span-5 space-y-space-sm">
           <div className="flex items-center gap-space-xs">
             <span className="w-2 h-2 rounded-full bg-secondary"></span>
-            <span className="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant">
+            <span className="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant text-[11px]">
               A Little About Me
             </span>
           </div>
 
-          <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
+          <h2 className="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-primary tracking-tight">
             Someone to listen,{" "}
             <span className="italic text-primary/85">without judgement.</span>
           </h2>
 
-          <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          <p className="font-body-sm text-body-sm sm:text-body-md text-on-surface-variant leading-relaxed">
             {about?.shortIntro ||
               "Therapy is a sanctuary where vulnerability meets safety. You will never be rushed to explain what you are not yet ready to articulate."}
           </p>
 
-          <div className="pt-space-sm">
+          <div className="pt-space-xs">
             <button
               type="button"
               onClick={handleToggleJourney}
@@ -116,8 +116,8 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
         </div>
 
         {/* Right Column: Portrait & Biographical Card */}
-        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-12 gap-space-lg items-center">
-          <div className="sm:col-span-6 relative aspect-[3/4] rounded-3xl overflow-hidden shadow-lg bg-surface-container group">
+        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-12 gap-space-md sm:gap-space-lg items-center">
+          <div className="sm:col-span-5 relative aspect-[4/5] max-h-[350px] rounded-2xl overflow-hidden shadow-md bg-surface-container group">
             <Image
               alt={
                 about?.name
@@ -127,17 +127,17 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
               src={about?.profileImage || "/aswathy-photo2.jpg"}
               fill
               loading="lazy"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
 
-          <div className="sm:col-span-6 flex flex-col justify-between space-y-space-md p-space-lg rounded-3xl bg-surface shadow-sm">
-            <div className="space-y-space-sm">
-              <span className="font-label-caps text-label-caps text-secondary uppercase tracking-widest block">
+          <div className="sm:col-span-7 flex flex-col justify-between space-y-space-sm p-space-md sm:p-space-lg rounded-2xl bg-surface shadow-xs border border-parchment-border/50">
+            <div className="space-y-space-xs">
+              <span className="font-label-caps text-label-caps text-secondary uppercase tracking-widest text-[11px] block">
                 Credentials &amp; Core Belief
               </span>
-              <p className="font-body-md text-body-md font-medium text-primary">
+              <p className="font-body-md text-body-md font-semibold text-primary leading-snug">
                 {about?.name
                   ? `I’m ${about.name}, a ${about.title || "Counselling Psychologist"}${
                       about.qualifications && about.qualifications.length > 0
@@ -146,23 +146,23 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
                     }`
                   : "I’m Aswathy Jeyarajasekar, a Counselling Psychologist with a B.Sc. in Psychology and an M.Sc. in Counselling Psychology."}
               </p>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              <p className="font-body-sm text-xs sm:text-[13px] text-on-surface-variant leading-relaxed">
                 {about?.fullBio ||
                   "I believe therapy is not about telling someone what they should do or how they should feel. Instead, it is a collaborative process of understanding yourself, exploring your experiences, recognising your strengths, and working towards changes that feel meaningful to you."}
               </p>
             </div>
 
-            <div className="pt-space-xs flex items-center gap-space-sm">
-              <div className="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed shrink-0">
-                <span className="material-symbols-outlined text-[20px] text-primary">
+            <div className="pt-space-xs flex items-center gap-space-xs border-t border-surface-container-high/70">
+              <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed shrink-0">
+                <span className="material-symbols-outlined text-[18px] text-primary">
                   psychology_alt
                 </span>
               </div>
               <div>
-                <div className="font-label-md text-label-md font-semibold text-primary">
+                <div className="font-label-md text-xs font-semibold text-primary">
                   Person-Centered Practice
                 </div>
-                <div className="font-body-sm text-body-sm text-on-surface-variant text-[12px]">
+                <div className="font-body-sm text-[11px] text-on-surface-variant">
                   {about?.experienceYears || "Rooted in mutual trust & patience"}
                 </div>
               </div>

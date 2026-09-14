@@ -31,11 +31,11 @@ export default function Footer({ onOpenBooking }: FooterProps) {
 
             <div className="flex flex-col space-y-space-xxs text-on-tertiary-container">
               <span className="font-body-sm text-body-sm font-medium text-surface-bright">
-                Registered Counselling Psychologist
+                Registered Qualified Psychologist
               </span>
-              <span className="font-body-sm text-body-sm text-on-tertiary-container">
+              {/* <span className="font-body-sm text-body-sm text-on-tertiary-container">
                 Specialized in Anxiety, Relational Dynamics, and Somatic Grounding
-              </span>
+              </span> */}
               <div className="pt-space-xs flex flex-col sm:flex-row sm:items-center gap-y-1 sm:gap-x-4">
                 <a
                   href="mailto:roottherapyonline@gmail.com"
@@ -130,7 +130,7 @@ export default function Footer({ onOpenBooking }: FooterProps) {
         {/* Bottom copyright and accreditation bar */}
         <div className="pt-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-tertiary-container">
           <p>
-            © 2025 Aswathy Jeyarajasekar. All rights reserved. Confidential
+            © 2026 Aswathy Jeyarajasekar. All rights reserved. Confidential
             &amp; Person-Centered Care.
           </p>
           <div className="flex items-center gap-space-lg">
@@ -139,8 +139,12 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             </span>
             <span className="w-1 h-1 rounded-full bg-on-tertiary-container"></span>
             <span className="hover:text-surface transition-colors duration-200">
-              Privacy Sanctuary
+              Privacy
             </span>
+            <a href="https://www.averqon.in/" target="blank" >
+            <span className="hover:text-surface transition-colors duration-200">
+              by Averqon
+            </span></a>
           </div>
         </div>
       </div>
