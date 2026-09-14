@@ -135,10 +135,22 @@ export default function ServicesSection({
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between md:justify-end gap-4 md:gap-6 w-full md:w-auto pt-1 md:pt-0">
+            <Link
+              href="/book-a-session#booking-form"
+              className="inline-flex items-center gap-space-xs font-label-md text-xs sm:text-label-md font-semibold text-primary uppercase tracking-wider group shrink-0"
+            >
+              <span className="underline underline-offset-8 decoration-secondary-fixed-dim decoration-2 group-hover:decoration-primary">
+                Book a Consultation
+              </span>
+              <span className="text-secondary transition-transform duration-200 group-hover:translate-x-1">
+                →
+              </span>
+            </Link>
+
             {/* Carousel Arrow Controls */}
             {services.length > 1 && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={scrollPrev}
@@ -157,18 +169,6 @@ export default function ServicesSection({
                 </button>
               </div>
             )}
-
-            <Link
-              href="/book-a-session#booking-form"
-              className="inline-flex items-center gap-space-xs font-label-md text-label-md font-semibold text-primary uppercase tracking-wider group"
-            >
-              <span className="underline underline-offset-8 decoration-secondary-fixed-dim decoration-2 group-hover:decoration-primary">
-                Book a Consultation
-              </span>
-              <span className="text-secondary transition-transform duration-200 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
           </div>
         </div>
 

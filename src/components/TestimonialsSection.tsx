@@ -173,23 +173,25 @@ export default function TestimonialsSection({ initialTestimonials }: Testimonial
 
           {/* Carousel Arrow Controls */}
           {testimonials.length > 1 && (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={scrollPrev}
-                aria-label="Previous testimonial"
-                className="w-10 h-10 rounded-full border border-parchment-border bg-surface hover:bg-surface-container text-primary flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                onClick={scrollNext}
-                aria-label="Next testimonial"
-                className="w-10 h-10 rounded-full border border-parchment-border bg-surface hover:bg-surface-container text-primary flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+            <div className="flex items-center justify-end w-full md:w-auto pt-1 md:pt-0">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={scrollPrev}
+                  aria-label="Previous testimonial"
+                  className="w-10 h-10 rounded-full border border-parchment-border bg-surface hover:bg-surface-container text-primary flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={scrollNext}
+                  aria-label="Next testimonial"
+                  className="w-10 h-10 rounded-full border border-parchment-border bg-surface hover:bg-surface-container text-primary flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           )}
         </div>
