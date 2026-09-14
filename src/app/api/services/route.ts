@@ -10,11 +10,18 @@ export async function GET() {
       .filter((s) => s.status === "active" && !s.deletedAt)
       .sort((a, b) => a.order - b.order);
 
-    return NextResponse.json({
-      success: true,
-      services: activeServices,
-      categories: db.serviceCategories || [],
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        services: activeServices,
+        categories: db.serviceCategories || [],
+      },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
+        },
+      }
+    );
   } catch (error) {
     console.error("Public services GET error:", error);
     return NextResponse.json(

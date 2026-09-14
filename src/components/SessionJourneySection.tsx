@@ -36,14 +36,20 @@ const defaultSteps: StepItem[] = [
   },
 ];
 
-export default function SessionJourneySection() {
-  const [steps, setSteps] = useState<StepItem[]>(defaultSteps);
+export interface SessionJourneySectionProps {
+  initialSteps?: StepItem[];
+}
+
+export default function SessionJourneySection({ initialSteps }: SessionJourneySectionProps = {}) {
+  const [steps, setSteps] = useState<StepItem[]>(initialSteps || defaultSteps);
 
   useEffect(() => {
+    if (initialSteps && initialSteps.length > 0) return;
+
     let isMounted = true;
     async function loadSteps() {
       try {
-        const res = await fetch("/api/content", { cache: "no-store" });
+        const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
         if (
@@ -71,7 +77,7 @@ export default function SessionJourneySection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialSteps]);
 
   return (
     <section

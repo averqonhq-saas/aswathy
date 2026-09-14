@@ -31,11 +31,30 @@ export const metadata: Metadata = {
     "Student counselling",
     "Aswathy Jeyarajasekar",
   ],
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://aswathypsychologist.com/"
+  ),
   authors: [{ name: "Aswathy Jeyarajasekar" }],
   openGraph: {
     title: "Aswathy Jeyarajasekar | Counselling Psychologist",
     description: "A space to understand yourself, at your own pace.",
     type: "website",
+    siteName: "Aswathy Jeyarajasekar Therapy",
+    images: [
+      {
+        url: "/aswathy-photo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Aswathy Jeyarajasekar, Counselling Psychologist",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aswathy Jeyarajasekar | Counselling Psychologist",
+    description:
+      "An empathetic, collaborative space to explore your thoughts, emotions, and life challenges.",
+    images: ["/aswathy-photo.jpg"],
   },
 };
 

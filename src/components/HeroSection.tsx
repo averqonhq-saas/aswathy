@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import Image from "next/image";
 
 interface HeroSectionProps {
   onOpenBooking?: () => void;
@@ -88,14 +87,16 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
 
           {/* Frame containing the serene therapy atmosphere */}
           <div className="relative w-full max-w-md aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-xl bg-surface-container-low group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              alt="Aswathy Jeyarajasekar, Counselling Psychologist"
+            <Image
               src="/aswathy-photo.jpg"
+              alt="Aswathy Jeyarajasekar, Counselling Psychologist"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 450px"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-tertiary/40 via-transparent to-transparent"></div>
-            <div className="absolute bottom-space-lg left-space-lg right-space-lg p-space-md rounded-2xl bg-surface/90 backdrop-blur-md shadow-md">
+            <div className="absolute inset-0 bg-gradient-to-t from-tertiary/40 via-transparent to-transparent pointer-events-none"></div>
+            <div className="absolute bottom-space-lg left-space-lg right-space-lg p-space-md rounded-2xl bg-surface/90 backdrop-blur-md shadow-md pointer-events-none">
               <p className="font-quote-editorial text-quote-editorial italic text-primary leading-snug">
                 &ldquo;Nothing has to be solved all at once.&rdquo;
               </p>

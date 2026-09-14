@@ -36,14 +36,20 @@ const defaultJourneyEntries: JourneyEntry[] = [
   },
 ];
 
-export default function MyJourneySection() {
-  const [entries, setEntries] = useState<JourneyEntry[]>(defaultJourneyEntries);
+export interface MyJourneySectionProps {
+  initialJourney?: JourneyEntry[];
+}
+
+export default function MyJourneySection({ initialJourney }: MyJourneySectionProps = {}) {
+  const [entries, setEntries] = useState<JourneyEntry[]>(initialJourney || defaultJourneyEntries);
 
   useEffect(() => {
+    if (initialJourney && initialJourney.length > 0) return;
+
     let isMounted = true;
     async function loadJourney() {
       try {
-        const res = await fetch("/api/content", { cache: "no-store" });
+        const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
         if (
@@ -62,7 +68,7 @@ export default function MyJourneySection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialJourney]);
 
   return (
     <section

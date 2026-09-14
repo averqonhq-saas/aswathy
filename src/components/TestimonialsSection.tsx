@@ -50,8 +50,12 @@ const defaultTestimonials: TestimonialItem[] = [
   },
 ];
 
-export default function TestimonialsSection() {
-  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(defaultTestimonials);
+export interface TestimonialsSectionProps {
+  initialTestimonials?: TestimonialItem[];
+}
+
+export default function TestimonialsSection({ initialTestimonials }: TestimonialsSectionProps = {}) {
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials || defaultTestimonials);
   const [expandedMap, setExpandedMap] = useState<Record<string, boolean>>({});
 
   const toggleExpand = (key: string) => {
@@ -62,10 +66,12 @@ export default function TestimonialsSection() {
   };
 
   useEffect(() => {
+    if (initialTestimonials && initialTestimonials.length > 0) return;
+
     let isMounted = true;
     async function loadTestimonials() {
       try {
-        const res = await fetch("/api/content", { cache: "no-store" });
+        const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
         if (isMounted && data.testimonials && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
@@ -85,7 +91,7 @@ export default function TestimonialsSection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialTestimonials]);
 
   return (
     <section className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop">

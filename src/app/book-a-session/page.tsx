@@ -2,7 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import BookingForm from "@/components/BookingForm";
+import dynamic from "next/dynamic";
+
+const BookingForm = dynamic(() => import("@/components/BookingForm"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full max-w-4xl mx-auto p-8 rounded-3xl bg-surface border border-parchment-border/40 shadow-sm animate-pulse space-y-6">
+      <div className="h-6 w-48 bg-surface-container rounded-full" />
+      <div className="h-10 w-3/4 bg-surface-container rounded-xl" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+        <div className="h-32 bg-surface-container rounded-2xl" />
+        <div className="h-32 bg-surface-container rounded-2xl" />
+      </div>
+      <div className="h-12 w-full bg-surface-container rounded-xl mt-6" />
+    </div>
+  ),
+});
 import {
   Menu,
   X,

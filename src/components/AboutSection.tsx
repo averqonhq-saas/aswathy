@@ -1,16 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import type { WebsiteAboutContent } from "@/lib/types";
 
-export default function AboutSection() {
-  const [about, setAbout] = useState<WebsiteAboutContent | null>(null);
+interface AboutSectionProps {
+  initialAbout?: WebsiteAboutContent | null;
+}
+
+export default function AboutSection({ initialAbout }: AboutSectionProps) {
+  const [about, setAbout] = useState<WebsiteAboutContent | null>(initialAbout || null);
 
   useEffect(() => {
+    // Only fetch client-side if not pre-populated via Server Component
+    if (initialAbout) return;
+
     let isMounted = true;
     async function loadAbout() {
       try {
-        const res = await fetch("/api/content", { cache: "no-store" });
+        const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
         if (isMounted && data.about) {
@@ -24,7 +32,7 @@ export default function AboutSection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialAbout]);
 
   return (
     <section
@@ -69,17 +77,17 @@ export default function AboutSection() {
         {/* Right Column: Portrait & Biographical Card */}
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-12 gap-space-lg items-center">
           <div className="sm:col-span-6 relative aspect-[3/4] rounded-3xl overflow-hidden shadow-lg bg-surface-container group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               alt={
                 about?.name
                   ? `${about.name}, ${about.title || "Counselling Psychologist"}`
                   : "Aswathy Jeyarajasekar, Counselling Psychologist"
               }
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               src={about?.profileImage || "/aswathy-photo2.jpg"}
+              fill
               loading="lazy"
-              decoding="async"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 350px"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
 

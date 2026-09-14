@@ -57,15 +57,21 @@ function getIconForTitle(title: string): string {
   return "person";
 }
 
-export default function WhoIWorkWithSection() {
-  const [groups, setGroups] = useState<ClientGroup[]>(defaultGroups);
+export interface WhoIWorkWithSectionProps {
+  initialGroups?: ClientGroup[];
+}
+
+export default function WhoIWorkWithSection({ initialGroups }: WhoIWorkWithSectionProps = {}) {
+  const [groups, setGroups] = useState<ClientGroup[]>(initialGroups || defaultGroups);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
   useEffect(() => {
+    if (initialGroups && initialGroups.length > 0) return;
+
     let isMounted = true;
     async function loadClientTypes() {
       try {
-        const res = await fetch("/api/content", { cache: "no-store" });
+        const res = await fetch("/api/content");
         if (!res.ok) return;
         const data = await res.json();
         if (
@@ -90,7 +96,7 @@ export default function WhoIWorkWithSection() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialGroups]);
 
   return (
     <section className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop">
