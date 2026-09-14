@@ -9,6 +9,7 @@ import {
   sendPaymentReceiptEmailToClient,
 } from "@/lib/email";
 import { createCalendarEventWithMeet } from "@/lib/google-calendar";
+import { sendWhatsAppConfirmation } from "@/lib/whatsapp";
 
 export async function GET(
   request: Request,
@@ -198,6 +199,7 @@ export async function PATCH(
             serviceName: updated.serviceName,
             appointmentDate: updated.appointmentDate,
             appointmentTime: updated.appointmentTime,
+            durationMinutes: updated.durationMinutes,
             format: updated.format,
             price: updated.price,
             paymentStatus: updated.paymentStatus,
@@ -209,6 +211,50 @@ export async function PATCH(
         );
       } catch (emailErr) {
         console.error("[Email Notification Error - Payment Receipt]:", emailErr);
+      }
+
+      // Send WhatsApp confirmation when manually marked as paid — only if Meet link exists
+      if (
+        (paymentStatus === "paid" || updated.paymentStatus === "paid") &&
+        updated.meetingLink &&
+        updated.meetingLink.startsWith("http")
+      ) {
+        try {
+          const waResult = await sendWhatsAppConfirmation({
+            phone: updated.clientPhone,
+            customerName: updated.clientName,
+            serviceName: updated.serviceName,
+            appointmentDate: updated.appointmentDate,
+            appointmentTime: updated.appointmentTime,
+            duration: `${updated.durationMinutes || 50} minutes`,
+            meetingLink: updated.meetingLink,
+            psychologistName:
+              process.env.WHATSAPP_PSYCHOLOGIST_NAME || "Aswathy | roottherapyonline.com",
+          });
+
+          if (waResult.success) {
+            try {
+              const pool = getPgPool();
+              await pool.query(
+                `UPDATE bookings SET whatsapp_status = 'sent', whatsapp_sent = TRUE WHERE id = $1`,
+                [updated.id]
+              );
+            } catch {}
+            console.info(
+              `[Admin Manual Pay] WhatsApp confirmation sent to ${updated.clientPhone} for booking ${updated.id}`
+            );
+          } else if (waResult.warning) {
+            console.info(
+              `[Admin Manual Pay] WhatsApp in simulation mode for ${updated.id}: ${waResult.warning}`
+            );
+          }
+        } catch (waErr) {
+          console.error("[Admin Manual Pay - WhatsApp Error]:", waErr);
+        }
+      } else if (paymentStatus === "paid" && !updated.meetingLink) {
+        console.warn(
+          `[Admin Manual Pay] WhatsApp skipped for booking ${updated.id}: no Google Meet link yet. Generate Meet first, then notify.`
+        );
       }
     }
 

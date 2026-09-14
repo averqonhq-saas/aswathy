@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDatabase } from "@/lib/db";
+import { getDatabase, saveDatabase } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
@@ -59,9 +59,29 @@ export async function POST(request: Request) {
           throw new Error(orderData.error?.description || "Failed to create Razorpay order.");
         }
 
+        const finalOrderId = orderData.id;
+        if (bookingId) {
+          const bIdx = db.bookings.findIndex((b) => b.id === bookingId);
+          if (bIdx !== -1) {
+            db.bookings[bIdx].razorpayOrderId = finalOrderId;
+            db.bookings[bIdx].updatedAt = new Date().toISOString();
+            await saveDatabase(db);
+            try {
+              const { getPgPool } = await import("@/lib/supabase-db");
+              const pool = getPgPool();
+              await pool.query(
+                `UPDATE bookings SET razorpay_order_id = $1, updated_at = NOW() WHERE id = $2`,
+                [finalOrderId, bookingId]
+              );
+            } catch (pgErr) {
+              console.warn("[PostgreSQL Order Link Error]:", pgErr);
+            }
+          }
+        }
+
         return NextResponse.json({
           success: true,
-          orderId: orderData.id,
+          orderId: finalOrderId,
           amount: orderData.amount,
           currency: orderData.currency,
           keyId: keyId,
@@ -74,6 +94,15 @@ export async function POST(request: Request) {
 
     // Fallback: Simulated sandbox mode when Razorpay credentials are not yet configured in .env
     const mockOrderId = `order_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    if (bookingId) {
+      const bIdx = db.bookings.findIndex((b) => b.id === bookingId);
+      if (bIdx !== -1) {
+        db.bookings[bIdx].razorpayOrderId = mockOrderId;
+        db.bookings[bIdx].updatedAt = new Date().toISOString();
+        await saveDatabase(db);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       orderId: mockOrderId,

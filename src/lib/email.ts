@@ -8,6 +8,7 @@ export interface BookingEmailData {
   serviceName: string;
   appointmentDate: string;
   appointmentTime: string;
+  durationMinutes?: number; // e.g. 50
   format: string;
   price?: number;
   paymentStatus?: string;
@@ -140,56 +141,46 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
       <td style="padding: 32px 24px;">
         <div style="text-align: center; margin-bottom: 24px;">
           <span style="display: inline-block; background-color: #ecfdf5; color: #047857; font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 9999px; border: 1px solid #a7f3d0;">
-            ✓ Appointment Confirmed • Thank You for Choosing Us
+            ✓ Payment Received • Session Confirmed
           </span>
-          <h2 style="color: #0f172a; margin: 12px 0 6px; font-size: 22px;">Thank You for Choosing Us!</h2>
+          <h2 style="color: #0f172a; margin: 12px 0 6px; font-size: 22px;">Your counselling session is confirmed</h2>
           <p style="margin: 0; color: #64748b; font-size: 14px;">Booking Reference: <strong>${data.bookingId || "Confirmed"}</strong></p>
         </div>
 
         <p style="font-size: 15px; line-height: 1.6; color: #334155;">
           Dear <strong>${data.clientName}</strong>,<br><br>
-          <strong>Thank you so much for choosing us!</strong> We have received your booking and are honoured to accompany you on your journey. <strong>We will contact you soon</strong> with all necessary details and instructions before your session.
+          Your counselling session has been successfully booked and your payment has been received.
         </p>
 
-        <!-- What Happens Next Highlight Card -->
-        <div style="background-color: #ecfdf5; border: 1px solid #a7f3d0; border-left: 4px solid #059669; padding: 14px 16px; border-radius: 8px; margin: 20px 0;">
-          <p style="margin: 0; font-size: 14px; font-weight: 600; color: #065f46;">
-            ✨ We will contact you soon
-          </p>
-          <p style="margin: 6px 0 0; font-size: 13px; color: #047857; line-height: 1.5;">
-            Our team will reach out to you via Email or WhatsApp shortly before your scheduled appointment time to confirm your slot and share your private Google Meet link.
-          </p>
-        </div>
-
-        <h3 style="font-size: 15px; color: #0f172a; margin: 20px 0 10px 0;">Summary of Your Session:</h3>
+        <h3 style="font-size: 15px; color: #0f172a; margin: 20px 0 10px 0;">Booking Details</h3>
 
         <table style="width: 100%; margin: 0 0 20px 0; border-collapse: collapse; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
           <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0; width: 35%;">Service</td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0; width: 35%;"><strong>Service</strong></td>
             <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.serviceName}</td>
           </tr>
           <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;">Date</td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Date</strong></td>
             <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.appointmentDate}</td>
           </tr>
           <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;">Time</td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Time</strong></td>
             <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.appointmentTime}</td>
           </tr>
           <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;">Format</td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Duration</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.durationMinutes || 50} minutes</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;"><strong>Payment Status</strong></td>
             <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">
-              ${isOnline ? "Online Consultation (Telehealth / Google Meet)" : "In-Person Consultation"}
+              <span style="color: #047857; font-weight: 700;">✓ Paid${data.price ? ` (₹${data.price})` : ""}</span>
             </td>
           </tr>
-          ${data.price ? `
+          ${data.meetingLink && data.meetingLink.startsWith("http") ? `
           <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b;">Payment Status</td>
-            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600;">
-              ${data.paymentStatus === "paid"
-        ? `<span style="color: #047857; font-weight: 700;">✓ Paid (₹${data.price})</span>`
-        : `<span style="color: #b45309; font-weight: 700;">⏳ Pending (₹${data.price}) - Settle at Session / Clinic</span>`}
-            </td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b;"><strong>Google Meet Link</strong></td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600;"><a href="${data.meetingLink}" style="color: #059669;">${data.meetingLink}</a></td>
           </tr>` : ""}
         </table>
 
@@ -213,13 +204,14 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
         </div>
 
         <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">
-          If you need to reschedule or have any questions prior to our call, simply reply directly to this email at <a href="mailto:roottherapyonline@gmail.com" style="color: #2f4f4f; font-weight: 600;">roottherapyonline@gmail.com</a>.
+          Please join the session using the Google Meet link at the scheduled time.<br><br>
+          If you need to reschedule or cancel your appointment, please contact us in advance at <a href="mailto:roottherapyonline@gmail.com" style="color: #2f4f4f; font-weight: 600;">roottherapyonline@gmail.com</a>.
         </p>
 
         <p style="margin-top: 28px; font-size: 14px; color: #334155; line-height: 1.5;">
-          Warm regards,<br>
+          Thank you,<br>
           <strong>Aswathy</strong><br>
-          <span style="font-size: 12px; color: #64748b;">M.Sc. Counselling Psychology &amp; Psychotherapy | roottherapyonline@gmail.com</span>
+          <span style="font-size: 12px; color: #64748b;">Counselling Psychologist &amp; Psychotherapist | roottherapyonline.com</span>
         </p>
       </td>
     </tr>
@@ -239,7 +231,7 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
     from: `"Aswathy Jeyarajasekar" <${senderEmail}>`,
     to: data.clientEmail,
     replyTo: senderEmail,
-    subject: `Thank you for choosing us! Booking Confirmed: ${data.serviceName} with Aswathy (${data.appointmentDate})`,
+    subject: `Your counselling session is confirmed — ${data.serviceName} on ${data.appointmentDate}`,
     html,
   });
 

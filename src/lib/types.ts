@@ -69,6 +69,8 @@ export interface Booking {
   razorpaySignature?: string;
   meetingLink?: string;
   calendarEventId?: string;
+  googleEventId?: string;
+  whatsappStatus?: string;
   clientMessage?: string;
   clientNotes?: string; // alias for clientMessage
   internalNotes?: string;

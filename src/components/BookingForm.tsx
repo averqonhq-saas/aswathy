@@ -571,13 +571,9 @@ export default function BookingForm({
       return;
     }
 
-    // Helper to finalize and record booking in DB only after payment is verified
-    const finalizeBookingAfterPayment = async (paymentDetails: {
-      orderId: string;
-      paymentId: string;
-      signature?: string;
-    }) => {
-      const res = await fetch("/api/bookings", {
+    try {
+      // 1. Create PENDING booking in Supabase & practice database first (reserving the slot)
+      const bookingRes = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -593,52 +589,24 @@ export default function BookingForm({
           appointmentTime: selectedTime,
           clientMessage: notes.trim() || undefined,
           contactChannel: contactChannel,
-          bookingStatus: "confirmed",
-          paymentStatus: "paid",
-          razorpayOrderId: paymentDetails.orderId,
-          razorpayPaymentId: paymentDetails.paymentId,
-          razorpaySignature: paymentDetails.signature,
+          bookingStatus: "pending",
+          paymentStatus: "pending",
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Payment received, but failed to save booking record. Please contact practice.");
+      const bookingData = await bookingRes.json();
+      if (!bookingRes.ok || !bookingData.success) {
+        throw new Error(bookingData.error || "Failed to reserve appointment slot. Please try another time.");
       }
 
-      const confirmed = {
-        id: data.booking?.id || `ASW-${Math.floor(100000 + Math.random() * 900000)}`,
-        format: "online",
-        serviceName: selectedService?.name || "Clinical Consultation",
-        categoryName: selectedService?.categoryName || "Therapy",
-        price: selectedService?.price || 1800,
-        durationMinutes: selectedService?.durationMinutes || 50,
-        date: formattedIsoDate,
-        time: selectedTime,
-        clientName: fullName.trim(),
-        clientEmail: email.trim().toLowerCase(),
-        paymentStatus: "paid" as const,
-        razorpayPaymentId: paymentDetails.paymentId,
-      };
+      const currentBookingId = bookingData.bookingId || bookingData.booking?.id;
 
-      setConfirmedBooking(confirmed);
-      setBookedSlots((prev) => [...prev, { date: formattedIsoDate, time: selectedTime }]);
-
-      // Trigger celebratory confetti
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.5 },
-        colors: ["#1A3828", "#705d00", "#F4D242", "#ffffff"],
-      });
-    };
-
-    try {
-      // 1. Create Razorpay order on server
+      // 2. Create Razorpay order on server tied to this booking
       const orderRes = await fetch("/api/payments/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          bookingId: currentBookingId,
           amount: selectedService?.price || 1800,
           serviceName: selectedService?.name || "Clinical Consultation",
           clientName: fullName.trim(),
@@ -652,21 +620,76 @@ export default function BookingForm({
         throw new Error(orderData.error || "Failed to initialize payment gateway.");
       }
 
-      // 2. Load Razorpay client script
+      // Helper to verify payment signature on server, generate Google Meet, and confirm appointment
+      const verifyAndConfirmPayment = async (paymentDetails: {
+        orderId: string;
+        paymentId: string;
+        signature?: string;
+        isMock?: boolean;
+      }) => {
+        const verifyRes = await fetch("/api/payments/razorpay/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: currentBookingId,
+            razorpay_order_id: paymentDetails.orderId,
+            razorpay_payment_id: paymentDetails.paymentId,
+            razorpay_signature: paymentDetails.signature,
+            isMock: paymentDetails.isMock,
+          }),
+        });
+
+        const verifyData = await verifyRes.json();
+        if (!verifyRes.ok || !verifyData.success) {
+          throw new Error(
+            verifyData.error || "Payment verification failed. Please reach out to our clinic support."
+          );
+        }
+
+        const confirmed = {
+          id: verifyData.booking?.id || currentBookingId,
+          format: "online",
+          serviceName: selectedService?.name || "Clinical Consultation",
+          categoryName: selectedService?.categoryName || "Therapy",
+          price: selectedService?.price || 1800,
+          durationMinutes: selectedService?.durationMinutes || 50,
+          date: formattedIsoDate,
+          time: selectedTime,
+          clientName: fullName.trim(),
+          clientEmail: email.trim().toLowerCase(),
+          paymentStatus: "paid" as const,
+          razorpayPaymentId: paymentDetails.paymentId,
+          meetingLink: verifyData.booking?.meetingLink,
+        };
+
+        setConfirmedBooking(confirmed);
+        setBookedSlots((prev) => [...prev, { date: formattedIsoDate, time: selectedTime }]);
+
+        // Trigger celebratory soothing confetti
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ["#1A3828", "#705d00", "#F4D242", "#ffffff"],
+        });
+      };
+
+      // 3. Load Razorpay client script
       const scriptLoaded = await loadRazorpayScript();
 
-      // If simulated demo/mock mode without Razorpay credentials
+      // If simulated demo/mock mode without live Razorpay credentials in environment
       if (orderData.isMock && (!(window as any).Razorpay || !scriptLoaded)) {
-        await finalizeBookingAfterPayment({
+        await verifyAndConfirmPayment({
           orderId: orderData.orderId,
           paymentId: `pay_demo_${Date.now()}`,
           signature: "verified_demo",
+          isMock: true,
         });
         setIsSubmitting(false);
         return;
       }
 
-      // 3. Open official Razorpay Checkout popup
+      // 4. Open official Razorpay Checkout popup
       const options = {
         key: orderData.keyId,
         amount: orderData.amount,
@@ -686,19 +709,20 @@ export default function BookingForm({
           ondismiss: () => {
             setIsSubmitting(false);
             setErrorMessage(
-              "Payment was not completed. Your appointment has not been booked yet. Please complete payment to reserve your time slot."
+              "Payment was not completed. Your appointment slot is held temporarily as pending. Please complete payment to confirm your booking."
             );
           },
         },
         handler: async function (response: any) {
           try {
-            await finalizeBookingAfterPayment({
+            await verifyAndConfirmPayment({
               orderId: response.razorpay_order_id,
               paymentId: response.razorpay_payment_id,
               signature: response.razorpay_signature,
+              isMock: false,
             });
-          } catch (finalizeErr: any) {
-            setErrorMessage(finalizeErr.message || "Payment succeeded, but could not record appointment.");
+          } catch (verifyErr: any) {
+            setErrorMessage(verifyErr.message || "Payment verification failed.");
           } finally {
             setIsSubmitting(false);
           }
@@ -708,13 +732,13 @@ export default function BookingForm({
       const rzp = new (window as any).Razorpay(options);
       rzp.on("payment.failed", function (response: any) {
         setErrorMessage(
-          response.error?.description || "Payment was unsuccessful. Your appointment has not been booked."
+          response.error?.description || "Payment was unsuccessful. Your appointment has not been confirmed."
         );
         setIsSubmitting(false);
       });
       rzp.open();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Something went wrong initiating payment.";
+      const msg = err instanceof Error ? err.message : "Something went wrong initiating booking & payment.";
       setErrorMessage(msg);
       setIsSubmitting(false);
     }

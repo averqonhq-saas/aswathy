@@ -71,16 +71,37 @@ export async function initSupabaseSchema(): Promise<void> {
       timezone TEXT DEFAULT 'Asia/Kolkata',
       meeting_format TEXT DEFAULT 'online',
       client_notes TEXT,
-      status TEXT,
-      payment_status TEXT,
-      source TEXT DEFAULT 'zoho',
+      status TEXT DEFAULT 'pending',
+      payment_status TEXT DEFAULT 'pending',
+      price INTEGER DEFAULT 1800,
+      duration_minutes INTEGER DEFAULT 50,
+      meeting_link TEXT,
+      razorpay_order_id TEXT,
+      razorpay_payment_id TEXT,
+      razorpay_signature TEXT,
+      google_event_id TEXT,
+      whatsapp_status TEXT,
+      source TEXT DEFAULT 'internal',
       deleted_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
 
-    CREATE INDEX IF NOT EXISTS idx_bookings_zoho_id ON bookings(zoho_booking_id);
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS price INTEGER DEFAULT 1800;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS duration_minutes INTEGER DEFAULT 50;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS meeting_link TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS razorpay_order_id TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS razorpay_signature TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS google_event_id TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS whatsapp_status TEXT;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS email_sent BOOLEAN DEFAULT FALSE;
+    ALTER TABLE bookings ADD COLUMN IF NOT EXISTS whatsapp_sent BOOLEAN DEFAULT FALSE;
+
     CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(appointment_date);
+    CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
+    CREATE INDEX IF NOT EXISTS idx_bookings_payment ON bookings(payment_status);
+    CREATE INDEX IF NOT EXISTS idx_bookings_order_id ON bookings(razorpay_order_id);
   `;
   try {
     await pool.query(query);

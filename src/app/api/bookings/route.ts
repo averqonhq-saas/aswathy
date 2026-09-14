@@ -198,37 +198,45 @@ export async function POST(request: Request) {
     const finalServiceName = matchedService ? matchedService.name : (serviceName || "Individual Consultation");
     const price = matchedService ? matchedService.price : (body.price || 1800);
     const isPaid = (body.paymentStatus === "paid" || body.razorpayPaymentId || body.razorpay_payment_id);
+    const requiresPayment =
+      db.bookingFormConfig?.enablePayment !== false &&
+      !isPaid &&
+      (body.paymentStatus === "pending" || !body.paymentStatus);
 
-    // Automatically create Google Calendar Event with Google Meet conference
-    let meetingLink = format === "in-person"
-      ? "In-Person Consultation at Clinic"
-      : "Google Meet link will be generated prior to appointment";
+    let meetingLink: string | undefined = undefined;
     let calendarEventId: string | undefined = undefined;
 
-    try {
-      const calendarResult = await createCalendarEventWithMeet({
-        bookingId,
-        clientName,
-        clientEmail,
-        clientPhone,
-        serviceName: finalServiceName,
-        appointmentDate,
-        appointmentTime,
-        durationMinutes,
-        format,
-        clientMessage,
-      });
-
-      if (calendarResult.success) {
-        calendarEventId = calendarResult.eventId;
-        if (calendarResult.meetingLink) {
-          meetingLink = calendarResult.meetingLink;
-        }
-      } else if (calendarResult.warning) {
-        console.warn("[Google Calendar Notice]:", calendarResult.warning);
+    // Only generate Google Calendar Event & Meet link if booking is already confirmed (e.g. payment disabled or already verified)
+    if (!requiresPayment) {
+      if (format === "in-person") {
+        meetingLink = "In-Person Consultation at Clinic";
       }
-    } catch (calErr) {
-      console.error("[Google Calendar Integration Exception]:", calErr);
+
+      try {
+        const calendarResult = await createCalendarEventWithMeet({
+          bookingId,
+          clientName,
+          clientEmail,
+          clientPhone,
+          serviceName: finalServiceName,
+          appointmentDate,
+          appointmentTime,
+          durationMinutes,
+          format,
+          clientMessage,
+        });
+
+        if (calendarResult.success) {
+          calendarEventId = calendarResult.eventId;
+          if (calendarResult.meetingLink) {
+            meetingLink = calendarResult.meetingLink;
+          }
+        } else if (calendarResult.warning) {
+          console.warn("[Google Calendar Notice]:", calendarResult.warning);
+        }
+      } catch (calErr) {
+        console.error("[Google Calendar Integration Exception]:", calErr);
+      }
     }
 
     const historyItems = [
@@ -236,6 +244,8 @@ export async function POST(request: Request) {
         timestamp: now,
         action: isPaid
           ? `Appointment booked & payment of ₹${price} confirmed via Razorpay (ID: ${body.razorpayPaymentId || body.razorpay_payment_id})`
+          : requiresPayment
+          ? `Pending appointment slot reserved (Awaiting Razorpay payment of ₹${price})`
           : "Booking request submitted via website",
       },
     ];
@@ -246,6 +256,9 @@ export async function POST(request: Request) {
         action: `Google Calendar invitation dispatched & Google Meet generated (${calendarEventId})`,
       });
     }
+
+    const finalBookingStatus = requiresPayment ? "pending" : (body.bookingStatus || "confirmed");
+    const finalPaymentStatus = requiresPayment ? "pending" : (body.paymentStatus || (isPaid ? "paid" : "pending"));
 
     const newBooking: Booking = {
       id: bookingId,
@@ -258,14 +271,15 @@ export async function POST(request: Request) {
       appointmentTime,
       durationMinutes,
       format,
-      bookingStatus: body.bookingStatus || "confirmed",
-      paymentStatus: body.paymentStatus || (isPaid ? "paid" : "pending"),
+      bookingStatus: finalBookingStatus,
+      paymentStatus: finalPaymentStatus,
       razorpayOrderId: body.razorpayOrderId || body.razorpay_order_id,
       razorpayPaymentId: body.razorpayPaymentId || body.razorpay_payment_id,
       razorpaySignature: body.razorpaySignature || body.razorpay_signature,
       price,
       meetingLink,
       calendarEventId,
+      googleEventId: calendarEventId,
       clientMessage,
       history: historyItems,
       provider: "internal",
@@ -279,8 +293,12 @@ export async function POST(request: Request) {
     db.notifications.unshift({
       id: `notif_${Date.now()}`,
       type: "booking_new",
-      title: isPaid ? "New Paid Booking Confirmed" : "New Booking Request",
-      message: `${newBooking.clientName} booked "${newBooking.serviceName}" for ${newBooking.appointmentDate} at ${newBooking.appointmentTime}${isPaid ? " (Payment Paid via Razorpay)" : ""}.${calendarEventId ? " Google Meet room ready." : ""}`,
+      title: isPaid
+        ? "New Paid Booking Confirmed"
+        : requiresPayment
+        ? "New Booking Slot Reserved (Pending Payment)"
+        : "New Booking Request",
+      message: `${newBooking.clientName} booked "${newBooking.serviceName}" for ${newBooking.appointmentDate} at ${newBooking.appointmentTime}${isPaid ? " (Payment Paid via Razorpay)" : requiresPayment ? " (Payment Pending)" : ""}.${calendarEventId ? " Google Meet room ready." : ""}`,
       link: "/admin/bookings",
       isRead: false,
       createdAt: now,
@@ -295,13 +313,15 @@ export async function POST(request: Request) {
         `INSERT INTO bookings (
           id, client_name, client_email, client_phone, service_id,
           appointment_date, appointment_time, duration_minutes, meeting_format,
-          status, payment_status, price, meeting_link, client_notes,
-          created_at, updated_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+          status, payment_status, price, meeting_link, razorpay_order_id, razorpay_payment_id,
+          client_notes, created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
         ON CONFLICT (id) DO UPDATE SET
           meeting_link = EXCLUDED.meeting_link,
           status = EXCLUDED.status,
           payment_status = EXCLUDED.payment_status,
+          razorpay_order_id = EXCLUDED.razorpay_order_id,
+          razorpay_payment_id = EXCLUDED.razorpay_payment_id,
           updated_at = EXCLUDED.updated_at`,
         [
           newBooking.id,
@@ -316,7 +336,9 @@ export async function POST(request: Request) {
           newBooking.bookingStatus,
           newBooking.paymentStatus,
           newBooking.price,
-          newBooking.meetingLink,
+          newBooking.meetingLink || null,
+          newBooking.razorpayOrderId || null,
+          newBooking.razorpayPaymentId || null,
           newBooking.clientMessage,
           now,
           now,
@@ -326,47 +348,53 @@ export async function POST(request: Request) {
       console.warn("[PostgreSQL Booking Insert Error]:", sqlErr);
     }
 
-    // Dispatch email notifications (non-blocking for client response reliability)
-    try {
-      await Promise.allSettled([
-        sendBookingConfirmationToClient({
-          bookingId: newBooking.id,
-          clientName: newBooking.clientName,
-          clientEmail: newBooking.clientEmail,
-          clientPhone: newBooking.clientPhone,
-          serviceName: newBooking.serviceName,
-          appointmentDate: newBooking.appointmentDate,
-          appointmentTime: newBooking.appointmentTime,
-          format: newBooking.format,
-          price: newBooking.price,
-          paymentStatus: newBooking.paymentStatus,
-          meetingLink: newBooking.meetingLink,
-          clientMessage: newBooking.clientMessage,
-        }),
-        sendBookingAlertToAdmin({
-          bookingId: newBooking.id,
-          clientName: newBooking.clientName,
-          clientEmail: newBooking.clientEmail,
-          clientPhone: newBooking.clientPhone,
-          serviceName: newBooking.serviceName,
-          appointmentDate: newBooking.appointmentDate,
-          appointmentTime: newBooking.appointmentTime,
-          format: newBooking.format,
-          price: newBooking.price,
-          paymentStatus: newBooking.paymentStatus,
-          meetingLink: newBooking.meetingLink,
-          clientMessage: newBooking.clientMessage,
-        }),
-      ]);
-    } catch (emailErr) {
-      console.error("[Email Notification Error - Booking]:", emailErr);
+    // Only dispatch confirmation emails if booking is confirmed (not pending payment)
+    if (!requiresPayment) {
+      try {
+        await Promise.allSettled([
+          sendBookingConfirmationToClient({
+            bookingId: newBooking.id,
+            clientName: newBooking.clientName,
+            clientEmail: newBooking.clientEmail,
+            clientPhone: newBooking.clientPhone,
+            serviceName: newBooking.serviceName,
+            appointmentDate: newBooking.appointmentDate,
+            appointmentTime: newBooking.appointmentTime,
+            format: newBooking.format,
+            price: newBooking.price,
+            paymentStatus: newBooking.paymentStatus,
+            meetingLink: newBooking.meetingLink,
+            clientMessage: newBooking.clientMessage,
+          }),
+          sendBookingAlertToAdmin({
+            bookingId: newBooking.id,
+            clientName: newBooking.clientName,
+            clientEmail: newBooking.clientEmail,
+            clientPhone: newBooking.clientPhone,
+            serviceName: newBooking.serviceName,
+            appointmentDate: newBooking.appointmentDate,
+            appointmentTime: newBooking.appointmentTime,
+            format: newBooking.format,
+            price: newBooking.price,
+            paymentStatus: newBooking.paymentStatus,
+            meetingLink: newBooking.meetingLink,
+            clientMessage: newBooking.clientMessage,
+          }),
+        ]);
+      } catch (emailErr) {
+        console.error("[Email Notification Error - Booking]:", emailErr);
+      }
     }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Booking recorded successfully in practice database.",
+        message: requiresPayment
+          ? "Slot reserved successfully. Proceed to payment."
+          : "Booking recorded successfully in practice database.",
+        bookingId: newBooking.id,
         booking: newBooking,
+        requiresPayment,
       },
       { status: 201 }
     );
