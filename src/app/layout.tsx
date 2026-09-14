@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     "Aswathy Jeyarajasekar",
   ],
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://aswathypsychologist.com/"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://aswathypsychologist.com"
   ),
   authors: [{ name: "Aswathy Jeyarajasekar" }],
   openGraph: {
