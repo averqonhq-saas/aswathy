@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 
 const BookingForm = dynamic(() => import("@/components/BookingForm"), {
@@ -35,9 +36,19 @@ export default function BookASessionPage() {
       <header className="fixed top-0 left-0 w-full z-50 bg-surface/85 backdrop-blur-md transition-all duration-300 shadow-[0_1px_8px_rgba(74,51,40,0.04)]">
         <div className="h-20 max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop flex items-center justify-between">
           <Link
-            className="flex items-center group text-left"
+            className="flex items-center gap-3 group text-left"
             href="/"
           >
+            <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-parchment-border/60 shadow-xs bg-surface-container-low group-hover:scale-105 transition-transform duration-200">
+              <Image
+                src="/icon.png"
+                alt="Aswathy Jeyarajasekar Logo"
+                fill
+                sizes="40px"
+                className="object-contain p-0.5"
+                priority
+              />
+            </div>
             <div className="flex flex-col">
               <span className="font-headline-sm text-headline-sm text-primary tracking-tight font-medium">
                 Aswathy Jeyarajasekar
