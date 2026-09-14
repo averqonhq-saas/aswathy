@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import type { JourneyEntry } from "@/lib/types";
 
 const defaultJourneyEntries: JourneyEntry[] = [
@@ -42,6 +43,35 @@ export interface MyJourneySectionProps {
 
 export default function MyJourneySection({ initialJourney }: MyJourneySectionProps = {}) {
   const [entries, setEntries] = useState<JourneyEntry[]>(initialJourney || defaultJourneyEntries);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    // Check initial hash
+    if (typeof window !== "undefined" && window.location.hash === "#journey") {
+      setIsOpen(true);
+    }
+
+    const handleHash = () => {
+      if (window.location.hash === "#journey") {
+        setIsOpen(true);
+      }
+    };
+
+    const handleState = (e: Event) => {
+      const customEvent = e as CustomEvent<{ isOpen: boolean }>;
+      if (customEvent.detail !== undefined) {
+        setIsOpen(customEvent.detail.isOpen);
+      }
+    };
+
+    window.addEventListener("hashchange", handleHash);
+    window.addEventListener("journey-state-change", handleState);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+      window.removeEventListener("journey-state-change", handleState);
+    };
+  }, []);
 
   useEffect(() => {
     if (initialJourney && initialJourney.length > 0) return;
@@ -70,16 +100,34 @@ export default function MyJourneySection({ initialJourney }: MyJourneySectionPro
     };
   }, [initialJourney]);
 
+  if (!isOpen) return null;
+
   return (
     <section
       id="journey"
-      className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop scroll-mt-20"
+      className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop scroll-mt-20 animate-fadeIn"
     >
       <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-center">
         <div className="lg:col-span-5 space-y-space-md">
-          <span className="font-label-caps text-label-caps uppercase tracking-widest text-secondary block">
-            Origin &amp; Inspiration
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="font-label-caps text-label-caps uppercase tracking-widest text-secondary block">
+              Origin &amp; Inspiration
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                window.dispatchEvent(
+                  new CustomEvent("journey-state-change", { detail: { isOpen: false } })
+                );
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface hover:bg-surface-container text-xs font-semibold uppercase tracking-wider text-secondary hover:text-primary transition-colors cursor-pointer border border-parchment-border"
+              aria-label="Hide section"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Hide</span>
+            </button>
+          </div>
           <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
             How I found my way to <span className="italic">psychology.</span>
           </h2>

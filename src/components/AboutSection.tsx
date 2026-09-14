@@ -10,6 +10,39 @@ interface AboutSectionProps {
 
 export default function AboutSection({ initialAbout }: AboutSectionProps) {
   const [about, setAbout] = useState<WebsiteAboutContent | null>(initialAbout || null);
+  const [isJourneyOpen, setIsJourneyOpen] = useState(false);
+
+  useEffect(() => {
+    const handleState = (e: Event) => {
+      const customEvent = e as CustomEvent<{ isOpen: boolean }>;
+      if (customEvent.detail !== undefined) {
+        setIsJourneyOpen(customEvent.detail.isOpen);
+      }
+    };
+    window.addEventListener("journey-state-change", handleState);
+    if (typeof window !== "undefined" && window.location.hash === "#journey") {
+      setIsJourneyOpen(true);
+    }
+    return () => window.removeEventListener("journey-state-change", handleState);
+  }, []);
+
+  const handleToggleJourney = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const nextState = !isJourneyOpen;
+    setIsJourneyOpen(nextState);
+    window.dispatchEvent(
+      new CustomEvent("journey-state-change", { detail: { isOpen: nextState } })
+    );
+
+    if (nextState) {
+      setTimeout(() => {
+        const el = document.getElementById("journey");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 50);
+    }
+  };
 
   useEffect(() => {
     // Only fetch client-side if not pre-populated via Server Component
@@ -60,17 +93,25 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
           </p>
 
           <div className="pt-space-sm">
-            <a
-              className="inline-flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold uppercase tracking-wider group"
-              href="#journey"
+            <button
+              type="button"
+              onClick={handleToggleJourney}
+              className="inline-flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold uppercase tracking-wider group cursor-pointer"
+              aria-expanded={isJourneyOpen}
             >
               <span className="underline underline-offset-8 decoration-secondary-fixed-dim decoration-2 group-hover:decoration-primary transition-all duration-200">
-                Meet {about?.name ? about.name.split(" ")[0] : "Aswathy"}
+                {isJourneyOpen
+                  ? `Hide ${about?.name ? about.name.split(" ")[0] : "Aswathy"}'s Journey`
+                  : `Meet ${about?.name ? about.name.split(" ")[0] : "Aswathy"}`}
               </span>
-              <span className="text-secondary transition-transform duration-200 group-hover:translate-x-1">
-                →
+              <span
+                className={`text-secondary transition-transform duration-200 ${
+                  isJourneyOpen ? "-rotate-90" : "group-hover:translate-x-1"
+                }`}
+              >
+                {isJourneyOpen ? "↑" : "→"}
               </span>
-            </a>
+            </button>
           </div>
         </div>
 

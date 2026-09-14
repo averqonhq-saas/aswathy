@@ -23,9 +23,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
         "services",
         "my-approach",
         "journey",
-        "expectations",
         "faq",
-        "enquiry",
       ];
       const scrollPosition = window.scrollY + 200;
 
@@ -50,8 +48,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
     { label: "About", href: "/#about", id: "about" },
     { label: "Services", href: "/#services", id: "services" },
     { label: "My Approach", href: "/#my-approach", id: "my-approach" },
-    { label: "What to Expect", href: "/#expectations", id: "expectations" },
-    { label: "Enquiry", href: "/#enquiry", id: "enquiry" },
+    { label: "Support & Inquiry", href: "/inquiry", id: "inquiry" },
   ];
 
   return (

@@ -81,12 +81,6 @@ export default function BookASessionPage() {
             >
               My Approach
             </Link>
-            <Link
-              className="font-label-caps text-label-caps tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-200 uppercase"
-              href="/#expectations"
-            >
-              What to Expect
-            </Link>
           </nav>
 
           <div className="flex items-center gap-space-md">
@@ -145,14 +139,6 @@ export default function BookASessionPage() {
                   className="font-headline-sm text-headline-sm text-primary hover:text-secondary py-1 flex items-center justify-between border-b border-surface-container pb-2"
                 >
                   <span>My Approach</span>
-                  <ArrowRight className="w-4 h-4 text-secondary-fixed-dim" />
-                </Link>
-                <Link
-                  href="/#expectations"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="font-headline-sm text-headline-sm text-primary hover:text-secondary py-1 flex items-center justify-between border-b border-surface-container pb-2"
-                >
-                  <span>What to Expect</span>
                   <ArrowRight className="w-4 h-4 text-secondary-fixed-dim" />
                 </Link>
               </nav>

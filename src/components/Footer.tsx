@@ -87,15 +87,15 @@ export default function Footer({ onOpenBooking }: FooterProps) {
                     →
                   </span>
                 </a>
-                <a
+                <Link
                   className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-[14px]"
-                  href="/#enquiry"
+                  href="/inquiry"
                 >
-                  <span>Send an Enquiry</span>
+                  <span>Support &amp; Payment Inquiry</span>
                   <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
                     →
                   </span>
-                </a>
+                </Link>
                 <Link
                   href="/book-a-session#booking-form"
                   className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-left text-[14px]"

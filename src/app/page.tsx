@@ -3,13 +3,11 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import ApproachSection from "@/components/ApproachSection";
 import WhoIWorkWithSection from "@/components/WhoIWorkWithSection";
-import SessionJourneySection from "@/components/SessionJourneySection";
 import MyJourneySection from "@/components/MyJourneySection";
 import ServicesSection from "@/components/ServicesSection";
 import { mapDbServiceToDetail } from "@/lib/service-mapper";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FaqSection from "@/components/FaqSection";
-import EnquirySection from "@/components/EnquirySection";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
 import { getDatabase } from "@/lib/db";
@@ -21,7 +19,6 @@ export default async function Home() {
   let initialAbout = null;
   let initialServices = undefined;
   let initialJourney = undefined;
-  let initialSteps = undefined;
   let initialGroups = undefined;
   let initialTestimonials = undefined;
 
@@ -39,17 +36,6 @@ export default async function Home() {
 
       if (db.journeyEntries && Array.isArray(db.journeyEntries)) {
         initialJourney = [...db.journeyEntries].sort((a: any, b: any) => a.order - b.order);
-      }
-
-      if (db.sessionSteps && Array.isArray(db.sessionSteps)) {
-        initialSteps = db.sessionSteps
-          .filter((s: any) => s.isActive !== false)
-          .sort((a: any, b: any) => a.order - b.order)
-          .map((s: any, idx: number) => ({
-            num: s.stepNumber || String(idx + 1).padStart(2, "0"),
-            title: s.title,
-            desc: s.description,
-          }));
       }
 
       if (db.clientTypes && Array.isArray(db.clientTypes)) {
@@ -103,17 +89,14 @@ export default async function Home() {
           {/* Section 2: Introduction (Server hydrated) */}
           <AboutSection initialAbout={initialAbout} />
 
+          {/* Collapsible: Origin & Inspiration (Opened via 'Meet Aswathy' or #journey) */}
+          <MyJourneySection initialJourney={initialJourney} />
+
           {/* Section 3: My Approach (Pure Server Component) */}
           <ApproachSection />
 
           {/* Section 4: Who I Work With (Server hydrated) */}
           <WhoIWorkWithSection initialGroups={initialGroups} />
-
-          {/* Section 5: Session Journey (Server hydrated) */}
-          <SessionJourneySection initialSteps={initialSteps} />
-
-          {/* Section 6: My Journey (Server hydrated) */}
-          <MyJourneySection initialJourney={initialJourney} />
 
           {/* Section 7: Services (Server hydrated + Lazy loaded modal) */}
           <ServicesSection initialServices={initialServices} />
@@ -124,10 +107,7 @@ export default async function Home() {
           {/* Common Inquiries: FAQ Section */}
           <FaqSection />
 
-          {/* Section 9: Direct Consultation Enquiry Form */}
-          <EnquirySection />
-
-          {/* Section 10: Immersive Booking Banner CTA (Pure Server Component) */}
+          {/* Section 9: Immersive Booking Banner CTA (Pure Server Component) */}
           <CtaSection />
         </div>
       </main>
