@@ -100,96 +100,107 @@ export default function MyJourneySection({ initialJourney }: MyJourneySectionPro
     };
   }, [initialJourney]);
 
-  if (!isOpen) return null;
-
   return (
-    <section
-      id="journey"
-      className="py-space-3xl lg:py-space-4xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop scroll-mt-20 animate-fadeIn"
+    <div
+      className={`grid transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isOpen
+          ? "grid-rows-[1fr] opacity-100 mb-0"
+          : "grid-rows-[0fr] opacity-0 pointer-events-none mb-0"
+      }`}
     >
-      <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-center">
-        <div className="lg:col-span-5 space-y-space-md">
-          <div className="flex items-center justify-between">
-            <span className="font-label-caps text-label-caps uppercase tracking-widest text-secondary block">
-              Origin &amp; Inspiration
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                setIsOpen(false);
-                window.dispatchEvent(
-                  new CustomEvent("journey-state-change", { detail: { isOpen: false } })
-                );
-              }}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface hover:bg-surface-container text-xs font-semibold uppercase tracking-wider text-secondary hover:text-primary transition-colors cursor-pointer border border-parchment-border"
-              aria-label="Hide section"
-            >
-              <X className="w-3.5 h-3.5" />
-              <span>Hide</span>
-            </button>
-          </div>
-          <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
-            How I found my way to <span className="italic">psychology.</span>
-          </h2>
-          <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-            Her journey began in 11th grade, when she experienced the impact of
-            receiving professional psychological support during a difficult
-            phase of her life. That experience sparked her interest in
-            psychology and eventually shaped her academic and professional
-            journey.
-          </p>
-        </div>
-
-        <div className="lg:col-span-7 flex flex-col space-y-space-md">
-          {/* Visual Timeline */}
-          <div className="p-space-xl rounded-3xl bg-surface shadow-sm space-y-space-lg">
-            {entries.map((entry, index) => {
-              const isFirst = index === 0;
-              const isLast = index === entries.length - 1;
-
-              return (
-                <div key={entry.id || index} className="space-y-space-lg">
-                  <div className="flex items-center gap-space-md">
-                    {isFirst ? (
-                      <div className="w-12 h-12 rounded-full bg-secondary-fixed/40 flex items-center justify-center text-primary font-headline-sm shrink-0">
-                        ★
-                      </div>
-                    ) : isLast ? (
-                      <div className="w-12 h-12 rounded-full bg-primary-container text-surface flex items-center justify-center font-headline-sm shadow-sm shrink-0">
-                        <span className="material-symbols-outlined text-[20px] text-surface">
-                          spa
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary font-headline-sm shrink-0">
-                        <span className="material-symbols-outlined text-[20px] text-warm-umber">
-                          menu_book
-                        </span>
-                      </div>
-                    )}
-
-                    <div>
-                      <span className="font-label-caps text-label-caps uppercase tracking-wider text-secondary">
-                        {entry.year}
-                      </span>
-                      <h3 className="font-headline-sm text-headline-sm text-primary">
-                        {entry.heading}
-                      </h3>
-                      <p className="font-body-sm text-body-sm text-on-surface-variant">
-                        {entry.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {!isLast && (
-                    <div className="pl-6 ml-6 h-6 border-l-2 border-dashed border-secondary-fixed"></div>
-                  )}
+      <div className="overflow-hidden">
+        <section
+          id="journey"
+          className="py-space-2xl lg:py-space-3xl bg-surface-container-low px-gutter-mobile lg:px-gutter-desktop scroll-mt-20 border-t border-parchment-border/40"
+        >
+          <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-xl lg:gap-space-2xl items-center">
+            <div className="lg:col-span-5 space-y-space-md">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-space-xs">
+                  <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                  <span className="font-label-caps text-label-caps uppercase tracking-widest text-secondary block text-[11px]">
+                    Origin &amp; Inspiration
+                  </span>
                 </div>
-              );
-            })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    window.dispatchEvent(
+                      new CustomEvent("journey-state-change", { detail: { isOpen: false } })
+                    );
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface hover:bg-surface-container text-xs font-semibold uppercase tracking-wider text-secondary hover:text-primary transition-all duration-200 cursor-pointer border border-parchment-border shadow-2xs hover:scale-105 active:scale-95"
+                  aria-label="Hide section"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  <span>Hide</span>
+                </button>
+              </div>
+              <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
+                How I found my way to <span className="italic">psychology.</span>
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Her journey began in 11th grade, when she experienced the impact of
+                receiving professional psychological support during a difficult
+                phase of her life. That experience sparked her interest in
+                psychology and eventually shaped her academic and professional
+                journey.
+              </p>
+            </div>
+
+            <div className="lg:col-span-7 flex flex-col space-y-space-md">
+              {/* Visual Timeline */}
+              <div className="p-space-lg sm:p-space-xl rounded-3xl bg-surface shadow-xs space-y-space-lg border border-parchment-border/40">
+                {entries.map((entry, index) => {
+                  const isFirst = index === 0;
+                  const isLast = index === entries.length - 1;
+
+                  return (
+                    <div key={entry.id || index} className="space-y-space-md group/entry">
+                      <div className="flex items-start sm:items-center gap-space-md p-space-sm sm:p-space-md rounded-2xl hover:bg-surface-container-low/70 transition-all duration-300">
+                        {isFirst ? (
+                          <div className="w-11 h-11 rounded-full bg-secondary-fixed/40 flex items-center justify-center text-primary font-headline-sm shrink-0 shadow-2xs group-hover/entry:scale-110 transition-transform duration-300">
+                            ★
+                          </div>
+                        ) : isLast ? (
+                          <div className="w-11 h-11 rounded-full bg-primary-container text-surface flex items-center justify-center font-headline-sm shadow-xs shrink-0 group-hover/entry:scale-110 transition-transform duration-300">
+                            <span className="material-symbols-outlined text-[19px] text-surface">
+                              spa
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center text-primary font-headline-sm shrink-0 group-hover/entry:scale-110 transition-transform duration-300">
+                            <span className="material-symbols-outlined text-[19px] text-warm-umber">
+                              menu_book
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="space-y-0.5">
+                          <span className="font-label-caps text-label-caps uppercase tracking-wider text-secondary text-[11px] font-semibold">
+                            {entry.year}
+                          </span>
+                          <h3 className="font-headline-sm text-headline-sm text-primary group-hover/entry:text-primary-container transition-colors">
+                            {entry.heading}
+                          </h3>
+                          <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            {entry.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      {!isLast && (
+                        <div className="pl-6 ml-5 h-5 border-l-2 border-dashed border-secondary-fixed/70"></div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
-    </section>
+    </div>
   );
 }

@@ -76,7 +76,7 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
         {/* Left Column: Heading & Premise */}
         <div className="lg:col-span-5 space-y-space-sm">
           <div className="flex items-center gap-space-xs">
-            <span className="w-2 h-2 rounded-full bg-secondary"></span>
+            <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
             <span className="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant text-[11px]">
               A Little About Me
             </span>
@@ -96,7 +96,7 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
             <button
               type="button"
               onClick={handleToggleJourney}
-              className="inline-flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold uppercase tracking-wider group cursor-pointer"
+              className="inline-flex items-center gap-2 text-primary font-label-md text-label-md font-semibold uppercase tracking-wider group cursor-pointer transition-colors duration-200"
               aria-expanded={isJourneyOpen}
             >
               <span className="underline underline-offset-8 decoration-secondary-fixed-dim decoration-2 group-hover:decoration-primary transition-all duration-200">
@@ -105,8 +105,8 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
                   : `Meet ${about?.name ? about.name.split(" ")[0] : "Aswathy"}`}
               </span>
               <span
-                className={`text-secondary transition-transform duration-200 ${
-                  isJourneyOpen ? "-rotate-90" : "group-hover:translate-x-1"
+                className={`text-secondary transition-transform duration-300 ease-out ${
+                  isJourneyOpen ? "-rotate-90" : "group-hover:translate-x-1.5"
                 }`}
               >
                 {isJourneyOpen ? "↑" : "→"}
@@ -117,7 +117,7 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
 
         {/* Right Column: Portrait & Biographical Card */}
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-12 gap-space-md sm:gap-space-lg items-center">
-          <div className="sm:col-span-5 relative aspect-[4/5] max-h-[350px] rounded-2xl overflow-hidden shadow-md bg-surface-container group">
+          <div className="sm:col-span-5 relative aspect-[4/5] max-h-[350px] rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 bg-surface-container group">
             <Image
               alt={
                 about?.name
@@ -128,11 +128,11 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
               fill
               loading="lazy"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </div>
 
-          <div className="sm:col-span-7 flex flex-col justify-between space-y-space-sm p-space-md sm:p-space-lg rounded-2xl bg-surface shadow-xs border border-parchment-border/50">
+          <div className="sm:col-span-7 flex flex-col justify-between space-y-space-sm p-space-md sm:p-space-lg rounded-2xl bg-surface shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-parchment-border/50 hover:border-secondary-fixed-dim/60 group/card">
             <div className="space-y-space-xs">
               <span className="font-label-caps text-label-caps text-secondary uppercase tracking-widest text-[11px] block">
                 Credentials &amp; Core Belief
@@ -153,7 +153,7 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
             </div>
 
             <div className="pt-space-xs flex items-center gap-space-xs border-t border-surface-container-high/70">
-              <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed shrink-0">
+              <div className="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed shrink-0 transition-transform duration-300 group-hover/card:scale-110">
                 <span className="material-symbols-outlined text-[18px] text-primary">
                   psychology_alt
                 </span>
