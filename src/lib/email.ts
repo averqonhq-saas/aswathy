@@ -1,5 +1,8 @@
 import nodemailer from "nodemailer";
 
+export const INFORMED_CONSENT_FORM_URL =
+  process.env.INFORMED_CONSENT_FORM_URL || "https://forms.gle/1H1DAPQ8x51Hdp5f8";
+
 export interface BookingEmailData {
   bookingId?: string;
   clientName: string;
@@ -194,6 +197,21 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
           </a>
           <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">Direct link: <a href="${data.meetingLink}" style="color: #059669;">${data.meetingLink}</a></p>
         </div>` : ""}
+
+        <!-- Informed Consent Form Card -->
+        <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
+          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">📋 Mandatory Pre-Session Step</p>
+          <h3 style="margin: 0 0 10px; font-size: 17px; color: #0f172a; font-weight: 700;">Informed Consent Form</h3>
+          <p style="margin: 0 0 16px; font-size: 14px; color: #334155; line-height: 1.5; max-width: 480px; margin-left: auto; margin-right: auto;">
+            Prior to your session, please take a moment to review and complete the Informed Consent Form. This ensures confidential, safe, and ethical therapeutic care.
+          </p>
+          <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="display: inline-block; background-color: #2f4f4f; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            📝 Fill Informed Consent Form
+          </a>
+          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">
+            Direct link: <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="color: #059669; font-weight: 600;">${INFORMED_CONSENT_FORM_URL}</a>
+          </p>
+        </div>
 
         <div style="background-color: #f1f5f9; padding: 14px 16px; border-radius: 8px; margin-top: 16px; font-size: 13px; color: #475569; line-height: 1.5;">
           ${isOnline
@@ -629,6 +647,22 @@ export async function sendBookingStatusEmailToClient(
           <strong>Message from Aswathy:</strong> ${note}
         </div>` : ""}
 
+        ${status === "confirmed" ? `
+        <!-- Informed Consent Form Card -->
+        <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
+          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">📋 Mandatory Pre-Session Step</p>
+          <h3 style="margin: 0 0 10px; font-size: 17px; color: #0f172a; font-weight: 700;">Informed Consent Form</h3>
+          <p style="margin: 0 0 16px; font-size: 14px; color: #334155; line-height: 1.5; max-width: 480px; margin-left: auto; margin-right: auto;">
+            Prior to your session, please review and complete the Informed Consent Form. This ensures confidential, safe, and ethical therapeutic care.
+          </p>
+          <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="display: inline-block; background-color: #2f4f4f; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            📝 Fill Informed Consent Form
+          </a>
+          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">
+            Direct link: <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="color: #059669; font-weight: 600;">${INFORMED_CONSENT_FORM_URL}</a>
+          </p>
+        </div>` : ""}
+
         <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">
           If you have questions or need assistance, you can reply directly to this email at any time.
         </p>
@@ -871,6 +905,22 @@ export async function sendPaymentReceiptEmailToClient(
         ${note ? `
         <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #166534; margin: 16px 0;">
           <strong>Settlement Note:</strong> ${note}
+        </div>` : ""}
+
+        ${isPaid ? `
+        <!-- Informed Consent Form Card -->
+        <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
+          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">📋 Mandatory Pre-Session Step</p>
+          <h3 style="margin: 0 0 10px; font-size: 17px; color: #0f172a; font-weight: 700;">Informed Consent Form</h3>
+          <p style="margin: 0 0 16px; font-size: 14px; color: #334155; line-height: 1.5; max-width: 480px; margin-left: auto; margin-right: auto;">
+            Prior to your session, please review and complete the Informed Consent Form. This ensures confidential, safe, and ethical therapeutic care.
+          </p>
+          <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="display: inline-block; background-color: #2f4f4f; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            📝 Fill Informed Consent Form
+          </a>
+          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">
+            Direct link: <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="color: #059669; font-weight: 600;">${INFORMED_CONSENT_FORM_URL}</a>
+          </p>
         </div>` : ""}
 
         <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">

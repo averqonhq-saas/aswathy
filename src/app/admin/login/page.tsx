@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck, Lock, Mail, ArrowRight, Sparkles, KeyRound } from "lucide-react";
+import { ShieldCheck, Lock, Mail, ArrowRight, KeyRound } from "lucide-react";
 import { useToast } from "@/components/admin/Toast";
 import Modal from "@/components/admin/Modal";
 
@@ -16,8 +16,8 @@ function AdminLoginForm() {
     : "/admin/dashboard";
   const { success, error, info } = useToast();
 
-  const [email, setEmail] = useState("roottherapyonline@gmail.com");
-  const [password, setPassword] = useState("admin12345");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -102,17 +102,6 @@ function AdminLoginForm() {
           <p className="font-body-sm text-xs text-on-surface-variant max-w-xs mx-auto leading-relaxed">
             Welcome to your quiet management sanctuary. Access appointments, client enquiries, and website content.
           </p>
-        </div>
-
-        {/* Demo Credentials Quick Pill */}
-        <div className="mb-6 p-3 rounded-2xl bg-surface-container-low border border-surface-container-high text-xs text-on-surface-variant flex items-start gap-2.5">
-          <Sparkles className="w-4 h-4 text-forest-green shrink-0 mt-0.5" />
-          <div className="flex-1 text-[11px] leading-relaxed">
-            <span className="font-semibold text-primary block">Default Login Credentials:</span>
-            <span>Email: <strong className="text-forest-green">roottherapyonline@gmail.com</strong></span>
-            <br />
-            <span>Password: <strong className="text-forest-green">admin12345</strong></span>
-          </div>
         </div>
 
         {/* Error Alert */}

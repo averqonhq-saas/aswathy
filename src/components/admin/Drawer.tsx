@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 export interface DrawerProps {
@@ -22,17 +23,29 @@ export default function Drawer({
   footer,
   width = "lg",
 }: DrawerProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const widthClasses = {
     md: "max-w-md",
@@ -40,11 +53,11 @@ export default function Drawer({
     xl: "max-w-xl",
   }[width];
 
-  return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex justify-end overflow-hidden">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-primary/30 backdrop-blur-xs transition-opacity animate-fadeIn"
+        className="fixed inset-0 bg-primary/40 backdrop-blur-xs transition-opacity animate-fadeIn"
         onClick={onClose}
       />
 
@@ -86,6 +99,7 @@ export default function Drawer({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

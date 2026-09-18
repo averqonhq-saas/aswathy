@@ -645,9 +645,10 @@ export default function BookingsManagementPage() {
         onClose={() => setSelectedBooking(null)}
         title="Consultation Details"
         subtitle={selectedBooking ? `Reference ID: ${selectedBooking.id}` : ""}
+        width="xl"
         footer={
           selectedBooking && (
-            <div className="flex flex-wrap items-center justify-between w-full gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between w-full gap-2.5">
               <div className="flex flex-wrap items-center gap-2">
                 {selectedBooking.bookingStatus === "pending" && (
                   <button
@@ -707,7 +708,7 @@ export default function BookingsManagementPage() {
               <button
                 type="button"
                 onClick={() => setSelectedBooking(null)}
-                className="px-4 py-1.5 rounded-full border border-surface-container text-xs text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                className="px-4 py-1.5 rounded-full border border-surface-container text-xs text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer shrink-0 self-end sm:self-auto"
               >
                 Close
               </button>

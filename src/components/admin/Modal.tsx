@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 export interface ModalProps {
@@ -22,17 +23,29 @@ export default function Modal({
   footer,
   maxWidth = "lg",
 }: ModalProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const maxWidthPreset: Record<string, string> = {
     sm: "max-w-sm",
@@ -44,8 +57,8 @@ export default function Modal({
 
   const maxWidthClass = maxWidthPreset[maxWidth] || maxWidth;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-primary/40 backdrop-blur-xs transition-opacity animate-fadeIn"
@@ -90,6 +103,7 @@ export default function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
