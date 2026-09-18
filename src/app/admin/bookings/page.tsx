@@ -65,6 +65,8 @@ export default function BookingsManagementPage() {
   const [googleStatus, setGoogleStatus] = useState<{
     configured: boolean;
     connected: boolean;
+    needsReauth?: boolean;
+    statusMessage?: string;
     authUrl: string | null;
     calendarAccount?: string;
   } | null>(null);
@@ -289,11 +291,19 @@ export default function BookingsManagementPage() {
       });
       const data = await res.json();
       if (res.ok && data.booking) {
-        success("Google Calendar event created & Google Meet link generated!");
+        success("Official Google Calendar event created & Google Meet link generated!");
         setSelectedBooking(data.booking);
         fetchBookings();
+        fetchGoogleStatus();
       } else {
-        error(data.error || "Failed to generate Google Meet link. Please connect Google Calendar first.");
+        if (data.needsAuth) {
+          error(
+            "Google Calendar token expired. Please click 'Connect Google Calendar' in the header to re-authorize."
+          );
+          fetchGoogleStatus();
+        } else {
+          error(data.error || "Failed to generate Google Meet link. Please connect Google Calendar.");
+        }
       }
     } catch {
       error("Network error generating Google Meet link.");
@@ -517,7 +527,7 @@ export default function BookingsManagementPage() {
           {googleStatus?.connected ? (
             <div
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-xs text-emerald-800 font-medium"
-              title="Google Calendar API connected for roottherapyonline@gmail.com"
+              title="Google Calendar & Google Meet API connected and active"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <Video className="w-3.5 h-3.5 text-emerald-600" />
@@ -528,11 +538,23 @@ export default function BookingsManagementPage() {
               href="/api/auth/google/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 hover:bg-amber-100 text-xs text-amber-900 font-medium transition-all shadow-xs"
-              title="Click once to authorize Google Calendar for roottherapyonline@gmail.com"
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all shadow-xs ${
+                googleStatus?.needsReauth
+                  ? "border-rose-300 bg-rose-50 hover:bg-rose-100 text-rose-900 animate-pulse"
+                  : "border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900"
+              }`}
+              title={
+                googleStatus?.needsReauth
+                  ? "Google Calendar token has expired. Click to re-authorize with roottherapyonline@gmail.com"
+                  : "Click once to authorize Google Calendar for roottherapyonline@gmail.com"
+              }
             >
-              <Calendar className="w-3.5 h-3.5 text-amber-700" />
-              <span>Connect Google Calendar</span>
+              <Calendar className="w-3.5 h-3.5 text-current" />
+              <span>
+                {googleStatus?.needsReauth
+                  ? "⚠️ Reconnect Google Calendar"
+                  : "Connect Google Calendar"}
+              </span>
             </a>
           )}
 

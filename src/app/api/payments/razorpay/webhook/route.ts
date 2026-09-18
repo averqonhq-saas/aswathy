@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { getDatabase, saveDatabase } from "@/lib/db";
-import { createCalendarEventWithMeet } from "@/lib/google-calendar";
+import {
+  createCalendarEventWithMeet,
+} from "@/lib/google-calendar";
 import { sendWhatsAppConfirmation } from "@/lib/whatsapp";
 import {
   sendBookingConfirmationToClient,
@@ -76,11 +78,15 @@ export async function POST(request: Request) {
       const now = new Date().toISOString();
 
       // Create Google Calendar & Meet link
-      let meetingLink =
-        booking.format === "in-person"
-          ? "In-Person Consultation at Clinic"
-          : booking.meetingLink || "Google Meet link being generated";
+      const isOnline = (booking.format || "online").toLowerCase() !== "in-person";
+      let meetingLink = !isOnline
+        ? "In-Person Consultation at Clinic"
+        : (booking.meetingLink && booking.meetingLink.startsWith("https://meet.google.com/") && !booking.meetingLink.includes("meet.google.com/asw-"))
+        ? booking.meetingLink
+        : undefined;
       let calendarEventId: string | undefined = booking.calendarEventId;
+
+      let calendarNeedsReauth = false;
 
       try {
         const calendarResult = await createCalendarEventWithMeet({
@@ -96,11 +102,14 @@ export async function POST(request: Request) {
           clientMessage: booking.clientMessage,
         });
 
-        if (calendarResult.success) {
+        if (calendarResult.needsAuth) {
+          calendarNeedsReauth = true;
+        }
+        if (calendarResult.success && calendarResult.meetingLink) {
+          meetingLink = calendarResult.meetingLink;
+        }
+        if (calendarResult.eventId) {
           calendarEventId = calendarResult.eventId;
-          if (calendarResult.meetingLink) {
-            meetingLink = calendarResult.meetingLink;
-          }
         }
       } catch (calErr: any) {
         console.error("[Razorpay Webhook Calendar Error]:", calErr?.message || calErr);
@@ -118,8 +127,25 @@ export async function POST(request: Request) {
       if (!booking.history) booking.history = [];
       booking.history.unshift({
         timestamp: now,
-        action: `Payment captured via Razorpay Webhook (Payment ID: ${paymentId}). Appointment confirmed.`,
+        action: `Payment captured via Razorpay Webhook (Payment ID: ${paymentId}). Appointment confirmed.${
+          calendarNeedsReauth
+            ? " ⚠️ Google Calendar needs re-authorization (invalid_grant)."
+            : ""
+        }`,
       });
+
+      if (calendarNeedsReauth) {
+        if (!db.notifications) db.notifications = [];
+        db.notifications.unshift({
+          id: `notif_cal_${Date.now()}`,
+          type: "status_change",
+          title: "⚠️ Google Calendar Disconnected (invalid_grant)",
+          message: `Google Calendar authorization expired during webhook processing for booking #${booking.id} (${booking.clientName}). Please reconnect Google Calendar in Admin Bookings.`,
+          link: "/admin/bookings",
+          isRead: false,
+          createdAt: now,
+        });
+      }
 
       await saveDatabase(db);
 

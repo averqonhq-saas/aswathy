@@ -133,18 +133,33 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             © 2026 Aswathy Jeyarajasekar. All rights reserved. Confidential
             &amp; Person-Centered Care.
           </p>
-          <div className="flex items-center gap-space-lg">
-            <span className="hover:text-surface transition-colors duration-200">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px]">
+            <span className="text-on-tertiary-container">
               Professional Licensure &amp; Ethics Certified
             </span>
+            <span className="w-1 h-1 rounded-full bg-on-tertiary-container hidden sm:inline-block"></span>
+            <Link
+              href="/privacy-policy"
+              className="text-surface-bright/80 hover:text-secondary-fixed underline underline-offset-2 transition-colors duration-200"
+            >
+              Privacy Policy
+            </Link>
             <span className="w-1 h-1 rounded-full bg-on-tertiary-container"></span>
-            <span className="hover:text-surface transition-colors duration-200">
-              Privacy
-            </span>
-            <a href="https://www.averqon.in/" target="blank" >
-            <span className="hover:text-surface transition-colors duration-200">
+            <Link
+              href="/terms-and-conditions"
+              className="text-surface-bright/80 hover:text-secondary-fixed underline underline-offset-2 transition-colors duration-200"
+            >
+              Terms &amp; Policy
+            </Link>
+            <span className="w-1 h-1 rounded-full bg-on-tertiary-container"></span>
+            <a
+              href="https://www.averqon.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-on-tertiary-container hover:text-surface-bright transition-colors duration-200"
+            >
               by Averqon
-            </span></a>
+            </a>
           </div>
         </div>
       </div>

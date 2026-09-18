@@ -8,7 +8,9 @@ import {
   sendBookingRescheduledEmailToClient,
   sendPaymentReceiptEmailToClient,
 } from "@/lib/email";
-import { createCalendarEventWithMeet } from "@/lib/google-calendar";
+import {
+  createCalendarEventWithMeet,
+} from "@/lib/google-calendar";
 import { sendWhatsAppConfirmation } from "@/lib/whatsapp";
 
 export async function GET(
@@ -76,6 +78,7 @@ export async function PATCH(
         });
 
         if (calResult.success && calResult.meetingLink) {
+          const meetLink = calResult.meetingLink;
           const db = await getDatabase();
           const target = db.bookings.find(
             (item) => item.id === b.id || item.id.toLowerCase() === b.id.toLowerCase()
@@ -83,13 +86,13 @@ export async function PATCH(
           const now = new Date().toISOString();
 
           if (target) {
-            target.meetingLink = calResult.meetingLink;
+            target.meetingLink = meetLink;
             target.calendarEventId = calResult.eventId;
             target.updatedAt = now;
             if (!target.history) target.history = [];
             target.history.unshift({
               timestamp: now,
-              action: `Google Meet link generated automatically upon payment verification & calendar invitation dispatched`,
+              action: `Google Meet link generated via Google Calendar (${meetLink})`,
             });
             await saveDatabase(db);
           }
@@ -98,7 +101,7 @@ export async function PATCH(
             const pool = getPgPool();
             await pool.query(
               `UPDATE bookings SET meeting_link = $1, updated_at = $2 WHERE id = $3 OR LOWER(id) = LOWER($3)`,
-              [calResult.meetingLink, now, b.id]
+              [meetLink, now, b.id]
             );
           } catch (sqlErr) {
             console.warn("[PATCH Booking] Error updating relational meeting_link:", sqlErr);
@@ -133,13 +136,15 @@ export async function PATCH(
           {
             error:
               calResult.error ||
-              calResult.warning ||
-              "Could not generate Google Meet. Check Google OAuth credentials.",
+              "Could not generate Google Meet link. Please ensure Google Calendar is connected.",
+            needsAuth: calResult.needsAuth || false,
+            authUrl: "/api/auth/google/login",
           },
           { status: 400 }
         );
       }
 
+      const meetingLink = calResult.meetingLink;
       const db = await getDatabase();
       const target = db.bookings.find(
         (item) => item.id === b.id || item.id.toLowerCase() === b.id.toLowerCase()
@@ -147,13 +152,13 @@ export async function PATCH(
       const now = new Date().toISOString();
 
       if (target) {
-        target.meetingLink = calResult.meetingLink;
+        target.meetingLink = meetingLink;
         target.calendarEventId = calResult.eventId;
         target.updatedAt = now;
         if (!target.history) target.history = [];
         target.history.unshift({
           timestamp: now,
-          action: `Google Meet link generated & calendar invitation dispatched`,
+          action: `Google Meet link generated via Google Calendar (${meetingLink})`,
         });
         await saveDatabase(db);
       }
@@ -162,13 +167,14 @@ export async function PATCH(
         const pool = getPgPool();
         await pool.query(
           `UPDATE bookings SET meeting_link = $1, updated_at = $2 WHERE id = $3 OR LOWER(id) = LOWER($3)`,
-          [calResult.meetingLink, now, b.id]
+          [meetingLink, now, b.id]
         );
       } catch (sqlErr) {
         console.warn("[PATCH Booking] Error updating relational meeting_link:", sqlErr);
       }
 
       updated = await bookingService.getBooking(id);
+      return NextResponse.json({ success: true, booking: updated });
     } else if (action === "send_payment_receipt") {
       if (paymentStatus === "paid") {
         await ensureMeetGenerated(id);

@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { getDatabase, saveDatabase } from "@/lib/db";
-import { createCalendarEventWithMeet } from "@/lib/google-calendar";
+import {
+  createCalendarEventWithMeet,
+} from "@/lib/google-calendar";
 import { sendWhatsAppConfirmation } from "@/lib/whatsapp";
 import {
   sendBookingConfirmationToClient,
@@ -79,11 +81,15 @@ export async function POST(request: Request) {
     }
 
     // 4. Create Google Calendar Event & Generate Google Meet Link
-    let meetingLink =
-      booking.format === "in-person"
-        ? "In-Person Consultation at Clinic"
-        : booking.meetingLink || "Google Meet link being generated";
+    const isOnline = (booking.format || "online").toLowerCase() !== "in-person";
+    let meetingLink = !isOnline
+      ? "In-Person Consultation at Clinic"
+      : (booking.meetingLink && booking.meetingLink.startsWith("https://meet.google.com/") && !booking.meetingLink.includes("meet.google.com/asw-"))
+      ? booking.meetingLink
+      : undefined;
     let calendarEventId: string | undefined = booking.calendarEventId;
+
+    let calendarNeedsReauth = false;
 
     try {
       const calendarResult = await createCalendarEventWithMeet({
@@ -99,13 +105,17 @@ export async function POST(request: Request) {
         clientMessage: booking.clientMessage,
       });
 
-      if (calendarResult.success) {
+      if (calendarResult.needsAuth) {
+        calendarNeedsReauth = true;
+      }
+      if (calendarResult.success && calendarResult.meetingLink) {
+        meetingLink = calendarResult.meetingLink;
+      }
+      if (calendarResult.eventId) {
         calendarEventId = calendarResult.eventId;
-        if (calendarResult.meetingLink) {
-          meetingLink = calendarResult.meetingLink;
-        }
-      } else if (calendarResult.warning) {
-        console.warn("[Google Calendar Verification Warning]:", calendarResult.warning);
+      }
+      if (calendarResult.warning) {
+        console.info("[Google Calendar Notice]:", calendarResult.warning);
       }
     } catch (calErr: any) {
       console.error("[Google Calendar Verification Exception]:", calErr?.message || calErr);
@@ -125,7 +135,13 @@ export async function POST(request: Request) {
     if (!booking.history) booking.history = [];
     booking.history.unshift({
       timestamp: now,
-      action: `Payment of ₹${booking.price || 1800} verified via Razorpay (Payment ID: ${razorpay_payment_id}). Appointment confirmed.${calendarEventId ? " Google Meet room ready." : ""}`,
+      action: `Payment of ₹${booking.price || 1800} verified via Razorpay (Payment ID: ${razorpay_payment_id}). Appointment confirmed.${
+        calendarEventId
+          ? " Google Meet room ready."
+          : calendarNeedsReauth
+          ? " ⚠️ Google Calendar needs re-authorization (invalid_grant)."
+          : ""
+      }`,
     });
 
     // Notify practice admin in local inbox
@@ -134,11 +150,23 @@ export async function POST(request: Request) {
       id: `notif_${Date.now()}`,
       type: "booking_new",
       title: "Payment Verified & Consultation Confirmed",
-      message: `Payment of ₹${booking.price || 1800} verified from ${booking.clientName} for ${booking.serviceName} (${booking.appointmentDate} at ${booking.appointmentTime}). Google Meet room scheduled.`,
+      message: `Payment of ₹${booking.price || 1800} verified from ${booking.clientName} for ${booking.serviceName} (${booking.appointmentDate} at ${booking.appointmentTime}).${calendarEventId ? " Google Meet room scheduled." : ""}`,
       link: "/admin/bookings",
       isRead: false,
       createdAt: now,
     });
+
+    if (calendarNeedsReauth) {
+      db.notifications.unshift({
+        id: `notif_cal_${Date.now()}`,
+        type: "status_change",
+        title: "⚠️ Google Calendar Disconnected (invalid_grant)",
+        message: `Google Calendar authorization expired while processing booking #${booking.id} (${booking.clientName}). Please reconnect Google Calendar in Admin Bookings.`,
+        link: "/admin/bookings",
+        isRead: false,
+        createdAt: now,
+      });
+    }
 
     await saveDatabase(db);
 

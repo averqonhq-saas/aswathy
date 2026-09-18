@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useCallback } from "react";
+import Link from "next/link";
 import {
   Video,
   Building2,
@@ -1047,6 +1048,38 @@ END:VCALENDAR`;
                   {confirmedBooking.razorpayPaymentId || "rzp_paid"}
                 </code>
               </p>
+
+              {/* Google Meet room ready banner */}
+              {confirmedBooking.meetingLink && confirmedBooking.meetingLink.startsWith("http") && (
+                <div className="pt-3 border-t border-[#e2d9ce]/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                      <Video className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Google Meet Session Ready</span>
+                    </span>
+                    <p className="text-xs text-[#5a4033] mt-0.5">
+                      Your consultation link has been generated:
+                    </p>
+                    <a
+                      href={confirmedBooking.meetingLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-emerald-700 font-semibold underline block mt-0.5 break-all"
+                    >
+                      {confirmedBooking.meetingLink}
+                    </a>
+                  </div>
+                  <a
+                    href={confirmedBooking.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold shadow-xs transition-colors shrink-0"
+                  >
+                    <span>Join Google Meet</span>
+                    <span>→</span>
+                  </a>
+                </div>
+              )}
             </div>
           ) : (
             <div className="rounded-2xl p-5 sm:p-6 border text-left space-y-2.5 transition-all duration-300 bg-white border-[#e2d9ce] shadow-xs">
@@ -1784,9 +1817,21 @@ END:VCALENDAR`;
         {/* BOTTOM ACTION BAR                                            */}
         {/* ============================================================ */}
         <div className="pt-6 border-t border-[#e2d9ce] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs text-[#5a4033]">
-            <span className="w-2 h-2 rounded-full bg-[#F4D242] inline-block animate-pulse"></span>
-            <span>{config.instantConfirmationText || "Meeting details will be shared after payment confirmation"}</span>
+          <div className="flex flex-col gap-1 text-xs text-[#5a4033]">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#F4D242] inline-block animate-pulse"></span>
+              <span>{config.instantConfirmationText || "Meeting details will be shared after payment confirmation"}</span>
+            </div>
+            <p className="text-[11px] text-[#82746f] pl-4">
+              By continuing, you agree to our{" "}
+              <Link href="/terms-and-conditions" target="_blank" className="underline hover:text-[#412a1e]">
+                Terms &amp; Policy
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy-policy" target="_blank" className="underline hover:text-[#412a1e]">
+                Privacy Policy
+              </Link>.
+            </p>
           </div>
 
           <button

@@ -22,6 +22,7 @@ export interface CalendarEventResult {
   htmlLink?: string;
   error?: string;
   warning?: string;
+  needsAuth?: boolean;
 }
 
 /**
@@ -144,19 +145,20 @@ export async function createCalendarEventWithMeet(
     );
     return {
       success: false,
-      warning: "Google OAuth credentials missing.",
+      error: "Google OAuth credentials (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET) missing.",
+      needsAuth: true,
     };
   }
 
   const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
   if (!refreshToken || refreshToken.trim() === "") {
     console.warn(
-      "[Google Calendar] GOOGLE_REFRESH_TOKEN not set. Google Calendar authorization needed."
+      "[Google Calendar] GOOGLE_REFRESH_TOKEN not set. Calendar authorization required."
     );
     return {
       success: false,
-      warning:
-        "Google Calendar authorization needed. Please authorize via /api/auth/google/login.",
+      error: "Google Calendar is not authorized. Please connect Google Calendar in admin dashboard.",
+      needsAuth: true,
     };
   }
 
@@ -215,7 +217,7 @@ export async function createCalendarEventWithMeet(
       },
     };
 
-    // If online, generate Google Meet link automatically
+    // If online, generate Google Meet link automatically via conferenceData
     if (isOnline) {
       requestBody.conferenceData = {
         createRequest: {
@@ -247,12 +249,34 @@ export async function createCalendarEventWithMeet(
       eventId: event.id || undefined,
       meetingLink,
       htmlLink: event.htmlLink || undefined,
+      warning:
+        isOnline && !meetingLink
+          ? "Calendar event created, but Google Meet link was not returned by Google."
+          : undefined,
     };
   } catch (error: any) {
-    console.error("[Google Calendar Error - Insert Event]:", error?.message || error);
+    const errorMsg =
+      error?.response?.data?.error_description ||
+      error?.response?.data?.error ||
+      error?.message ||
+      "Google Calendar API error";
+
+    const isInvalidGrant =
+      error?.response?.data?.error === "invalid_grant" ||
+      String(errorMsg).includes("invalid_grant") ||
+      String(errorMsg).includes("Token has been expired or revoked");
+
+    console.error(
+      "[Google Calendar Error - Insert Event]:",
+      isInvalidGrant ? "invalid_grant (Token expired/revoked)" : errorMsg
+    );
+
     return {
       success: false,
-      error: error?.message || "Failed to create Google Calendar event",
+      error: isInvalidGrant
+        ? "Google Calendar authorization has expired (invalid_grant). Please click 'Connect Google Calendar' in the admin dashboard."
+        : `Google Calendar Error: ${errorMsg}`,
+      needsAuth: isInvalidGrant,
     };
   }
 }

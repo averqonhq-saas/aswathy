@@ -17,6 +17,7 @@ function ConfirmationContent() {
     serviceName: string;
     date: string;
     time: string;
+    meetingLink?: string;
   }>({
     id: searchParams.get("booking_id") || searchParams.get("id") || `ASW-${Date.now().toString().slice(-6)}`,
     clientName: searchParams.get("name") || searchParams.get("client_name") || "Valued Client",
@@ -24,6 +25,7 @@ function ConfirmationContent() {
     serviceName: searchParams.get("service") || "Individual Therapy Consultation",
     date: searchParams.get("date") || new Date().toISOString().split("T")[0],
     time: searchParams.get("time") || "10:00 AM",
+    meetingLink: searchParams.get("meeting_link") || searchParams.get("meet") || searchParams.get("link") || "",
   });
 
   // Update booking details if URL params change
@@ -31,12 +33,14 @@ function ConfirmationContent() {
     const rawId = searchParams.get("booking_id") || searchParams.get("id");
     const name = searchParams.get("name") || searchParams.get("client_name");
     const email = searchParams.get("email") || searchParams.get("client_email");
-    if (rawId || name || email) {
+    const meet = searchParams.get("meeting_link") || searchParams.get("meet") || searchParams.get("link");
+    if (rawId || name || email || meet) {
       setBookingDetails((prev) => ({
         ...prev,
         id: rawId || prev.id,
         clientName: name || prev.clientName,
         clientEmail: email || prev.clientEmail,
+        meetingLink: meet || prev.meetingLink,
       }));
     }
   }, [searchParams]);
@@ -111,9 +115,20 @@ END:VCALENDAR`;
                 <Video className="w-3.5 h-3.5" />
                 <span>100% Online Telehealth</span>
               </span>
-              <span className="text-[11px] text-[#705d00] font-medium block">
-                Meeting details will be shared after payment confirmation
-              </span>
+              {bookingDetails.meetingLink && bookingDetails.meetingLink.startsWith("http") ? (
+                <a
+                  href={bookingDetails.meetingLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-[#047857] font-semibold underline block mt-0.5"
+                >
+                  Join Google Meet →
+                </a>
+              ) : (
+                <span className="text-[11px] text-[#705d00] font-medium block">
+                  Meeting details will be shared after payment confirmation
+                </span>
+              )}
             </div>
 
             <div className="space-y-1">
