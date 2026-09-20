@@ -33,7 +33,7 @@ export function getGoogleOAuth2Client() {
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const redirectUri =
     process.env.GOOGLE_REDIRECT_URI ||
-    "https://aswathy-pi.vercel.app/api/auth/google/callback";
+    "https://www.aswathypsychologist.com/api/auth/google/callback";
 
   if (!clientId || !clientSecret) {
     return null;

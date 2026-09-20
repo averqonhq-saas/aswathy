@@ -8,7 +8,7 @@ export async function GET() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || "https://aswathy-pi.vercel.app/api/auth/google/callback";
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || "https://www.aswathypsychologist.com/api/auth/google/callback";
 
   const isConfigured = Boolean(clientId && clientSecret);
   let isConnected = false;

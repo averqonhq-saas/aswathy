@@ -32,12 +32,16 @@ export const metadata: Metadata = {
     "Aswathy Jeyarajasekar",
   ],
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://aswathypsychologist.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.aswathypsychologist.com"
   ),
+  alternates: {
+    canonical: "https://www.aswathypsychologist.com",
+  },
   authors: [{ name: "Aswathy Jeyarajasekar" }],
   openGraph: {
     title: "Aswathy Jeyarajasekar | Counselling Psychologist",
     description: "A space to understand yourself, at your own pace.",
+    url: "https://www.aswathypsychologist.com",
     type: "website",
     siteName: "Aswathy Jeyarajasekar Therapy",
     images: [
@@ -64,6 +68,9 @@ export const metadata: Metadata = {
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
+  },
+  verification: {
+    google: "J0tXxJ6KuD1VTOHu2fWwhKdxjxseC9gd_wtD5h7rXs4",
   },
 };
 
