@@ -172,6 +172,18 @@ export async function GET(request: Request) {
               <li>Custom branded confirmation email is delivered via Gmail SMTP</li>
             </ul>
           </div>
+          ${tokens.refresh_token ? `
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 24px; text-align: left;">
+            <div style="font-size: 11px; font-weight: 700; color: #065f46; text-transform: uppercase; margin-bottom: 6px;">
+              Fresh Refresh Token Generated:
+            </div>
+            <code style="font-size: 11px; color: #1e293b; word-break: break-all; background: #ffffff; padding: 8px 10px; border-radius: 6px; border: 1px solid #cbd5e1; display: block; user-select: all;">
+              ${tokens.refresh_token}
+            </code>
+            <div style="font-size: 11px; color: #64748b; margin-top: 6px;">
+              Saved locally. Please also copy this into Vercel Settings &gt; Environment Variables as <code>GOOGLE_REFRESH_TOKEN</code>.
+            </div>
+          </div>` : ""}
           <a href="/admin/bookings" class="btn">Go to Admin Bookings</a>
         </div>
       </body>
