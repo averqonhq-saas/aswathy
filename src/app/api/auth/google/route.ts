@@ -2,14 +2,17 @@ import { NextResponse } from "next/server";
 import { getGoogleCalendarAuthUrl } from "@/lib/google-calendar";
 
 export async function GET() {
-  const url = getGoogleCalendarAuthUrl();
+  const authUrl = getGoogleCalendarAuthUrl();
 
-  if (!url) {
+  if (!authUrl) {
     return NextResponse.json(
-      { error: "Google OAuth is not configured" },
+      {
+        success: false,
+        error: "Google OAuth is not configured",
+      },
       { status: 500 }
     );
   }
 
-  return NextResponse.redirect(url);
+  return NextResponse.redirect(authUrl);
 }

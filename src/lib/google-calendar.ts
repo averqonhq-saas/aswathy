@@ -1,6 +1,6 @@
 import { google } from "googleapis";
-import fs from "fs";
-import path from "path";
+
+export const GOOGLE_CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.events";
 
 export interface CreateMeetEventParams {
   bookingId: string;
@@ -8,10 +8,14 @@ export interface CreateMeetEventParams {
   clientEmail: string;
   clientPhone?: string;
   serviceName: string;
-  appointmentDate: string; // YYYY-MM-DD
-  appointmentTime: string; // e.g. "10:00 AM" or "14:30"
+  appointmentDate?: string; // YYYY-MM-DD
+  appointmentTime?: string; // e.g. "10:00 AM" or "14:30"
+  startIso?: string;
+  endIso?: string;
   durationMinutes?: number;
   format?: "online" | "in-person";
+  isOnline?: boolean;
+  adminEmail?: string;
   clientMessage?: string;
 }
 
@@ -25,6 +29,15 @@ export interface CalendarEventResult {
   needsAuth?: boolean;
 }
 
+export function setupGoogleTokenLogging(oauth2Client: any) {
+  oauth2Client.on("tokens", (tokens: any) => {
+    console.log("[Google OAuth] Access token refreshed");
+    if (tokens.refresh_token) {
+      console.log("[Google OAuth] A new refresh token was issued.");
+    }
+  });
+}
+
 /**
  * Returns OAuth2 client configured with Google credentials
  */
@@ -36,13 +49,20 @@ export function getGoogleOAuth2Client() {
     "https://www.aswathypsychologist.com/api/auth/google/callback";
 
   if (!clientId || !clientSecret) {
+    console.error("[Google OAuth] Missing client credentials");
     return null;
   }
 
-  const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+  const oauth2Client = new google.auth.OAuth2(
+    clientId,
+    clientSecret,
+    redirectUri
+  );
+
+  setupGoogleTokenLogging(oauth2Client);
 
   const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-  if (refreshToken && refreshToken.trim() !== "") {
+  if (refreshToken?.trim()) {
     oauth2Client.setCredentials({
       refresh_token: refreshToken.trim(),
     });
@@ -56,15 +76,15 @@ export function getGoogleOAuth2Client() {
  */
 export function getGoogleCalendarAuthUrl(): string | null {
   const oauth2Client = getGoogleOAuth2Client();
-  if (!oauth2Client) return null;
+  if (!oauth2Client) {
+    return null;
+  }
 
   return oauth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
-    scope: [
-      "https://www.googleapis.com/auth/calendar",
-      "https://www.googleapis.com/auth/calendar.events",
-    ],
+    include_granted_scopes: true,
+    scope: [GOOGLE_CALENDAR_SCOPE],
   });
 }
 
@@ -76,7 +96,6 @@ export function parseAppointmentToRFC3339(
   timeStr: string,
   durationMinutes: number = 50
 ): { startIso: string; endIso: string } {
-  // Ensure dateStr is YYYY-MM-DD
   const cleanDate = dateStr.includes("T") ? dateStr.split("T")[0] : dateStr.trim();
 
   let hours = 10;
@@ -99,11 +118,9 @@ export function parseAppointmentToRFC3339(
     }
   }
 
-  // Create start time in IST (+05:30)
   const pad = (n: number) => String(n).padStart(2, "0");
   const startIso = `${cleanDate}T${pad(hours)}:${pad(minutes)}:00+05:30`;
 
-  // Calculate end time
   const totalStartMinutes = hours * 60 + minutes;
   const totalEndMinutes = totalStartMinutes + durationMinutes;
   const endHours = Math.floor(totalEndMinutes / 60) % 24;
@@ -119,164 +136,124 @@ export function parseAppointmentToRFC3339(
 export async function createCalendarEventWithMeet(
   params: CreateMeetEventParams
 ): Promise<CalendarEventResult> {
-  const {
-    bookingId,
-    clientName,
-    clientEmail,
-    clientPhone,
-    serviceName,
-    appointmentDate,
-    appointmentTime,
-    durationMinutes = 50,
-    format = "online",
-    clientMessage,
-  } = params;
+  const oauth2Client = getGoogleOAuth2Client();
+  if (!oauth2Client) {
+    return {
+      success: false,
+      error: "Google OAuth is not configured",
+      needsAuth: true,
+    };
+  }
+
+  if (!process.env.GOOGLE_REFRESH_TOKEN?.trim()) {
+    return {
+      success: false,
+      error: "Google Calendar is not connected",
+      needsAuth: true,
+    };
+  }
+
+  const calendar = google.calendar({
+    version: "v3",
+    auth: oauth2Client,
+  });
+
+  const isOnline =
+    params.isOnline !== undefined
+      ? params.isOnline
+      : (params.format || "online").toLowerCase() !== "in-person";
 
   const adminEmail =
+    params.adminEmail ||
     process.env.ADMIN_NOTIFICATION_EMAIL ||
     process.env.EMAIL_USER ||
     "roottherapyonline@gmail.com";
 
-  const oauth2Client = getGoogleOAuth2Client();
+  const { startIso, endIso } =
+    params.startIso && params.endIso
+      ? { startIso: params.startIso, endIso: params.endIso }
+      : parseAppointmentToRFC3339(
+          params.appointmentDate || "",
+          params.appointmentTime || "10:00 AM",
+          params.durationMinutes || 50
+        );
 
-  if (!oauth2Client) {
-    console.warn(
-      "[Google Calendar] Google OAuth credentials (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET) missing."
-    );
-    return {
-      success: false,
-      error: "Google OAuth credentials (GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET) missing.",
-      needsAuth: true,
-    };
-  }
+  const attendees: Array<{ email: string; displayName?: string }> = [
+    {
+      email: adminEmail,
+      displayName: "Aswathy Psychologist",
+    },
+  ];
 
-  const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-  if (!refreshToken || refreshToken.trim() === "") {
-    console.warn(
-      "[Google Calendar] GOOGLE_REFRESH_TOKEN not set. Calendar authorization required."
-    );
-    return {
-      success: false,
-      error: "Google Calendar is not authorized. Please connect Google Calendar in admin dashboard.",
-      needsAuth: true,
-    };
+  if (params.clientEmail && params.clientEmail.includes("@")) {
+    attendees.push({
+      email: params.clientEmail.trim().toLowerCase(),
+      displayName: params.clientName,
+    });
   }
 
   try {
-    const calendar = google.calendar({ version: "v3", auth: oauth2Client });
-    const { startIso, endIso } = parseAppointmentToRFC3339(
-      appointmentDate,
-      appointmentTime,
-      durationMinutes
-    );
-
-    const isOnline = format === "online";
-    const eventSummary = `${serviceName} - ${clientName} | Root Therapy`;
-    const eventDescription = [
-      `Psychological Consultation Session - Root Therapy`,
-      `Client: ${clientName}`,
-      `Email: ${clientEmail}`,
-      `Phone: ${clientPhone || "Not provided"}`,
-      `Service: ${serviceName}`,
-      `Format: ${isOnline ? "Online (Google Meet)" : "In-Person Clinic"}`,
-      `Appointment Ref: ${bookingId}`,
-      clientMessage ? `Client Note: ${clientMessage}` : "",
-      "",
-      "--------------------------------------------------",
-      "Confidential Therapy Session. Please join 5 minutes prior to the start time.",
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    const attendees: Array<{ email: string; displayName?: string }> = [
-      { email: adminEmail, displayName: "Root Therapy Admin" },
-    ];
-
-    if (clientEmail && clientEmail.includes("@")) {
-      attendees.push({ email: clientEmail.trim().toLowerCase(), displayName: clientName });
-    }
-
-    const requestBody: any = {
-      summary: eventSummary,
-      description: eventDescription,
-      start: {
-        dateTime: startIso,
-        timeZone: "Asia/Kolkata",
-      },
-      end: {
-        dateTime: endIso,
-        timeZone: "Asia/Kolkata",
-      },
-      attendees,
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: "email", minutes: 24 * 60 }, // 24 hours
-          { method: "popup", minutes: 30 }, // 30 minutes
-        ],
-      },
-    };
-
-    // If online, generate Google Meet link automatically via conferenceData
-    if (isOnline) {
-      requestBody.conferenceData = {
-        createRequest: {
-          requestId: `meet-${bookingId.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`,
-          conferenceSolutionKey: {
-            type: "hangoutsMeet",
-          },
-        },
-      };
-    }
-
     const response = await calendar.events.insert({
       calendarId: "primary",
       conferenceDataVersion: isOnline ? 1 : 0,
-      sendUpdates: "all", // Triggers Google's official calendar invite to attendees
-      requestBody,
+      sendUpdates: "all",
+      requestBody: {
+        summary: `Therapy Consultation: ${params.serviceName}`,
+        description: params.clientMessage
+          ? `Online counselling appointment\n\nClient Note: ${params.clientMessage}`
+          : "Online counselling appointment",
+        start: {
+          dateTime: startIso,
+          timeZone: "Asia/Kolkata",
+        },
+        end: {
+          dateTime: endIso,
+          timeZone: "Asia/Kolkata",
+        },
+        attendees,
+        conferenceData: isOnline
+          ? {
+              createRequest: {
+                requestId: `meet-${params.bookingId.replace(/[^a-zA-Z0-9]/g, "")}-${Date.now()}`,
+                conferenceSolutionKey: {
+                  type: "hangoutsMeet",
+                },
+              },
+            }
+          : undefined,
+      },
     });
 
     const event = response.data;
     const meetingLink =
       event.hangoutLink ||
       event.conferenceData?.entryPoints?.find(
-        (ep) => ep.entryPointType === "video"
-      )?.uri ||
-      undefined;
+        (entry) => entry.entryPointType === "video"
+      )?.uri;
 
     return {
       success: true,
       eventId: event.id || undefined,
-      meetingLink,
+      meetingLink: meetingLink || undefined,
       htmlLink: event.htmlLink || undefined,
-      warning:
-        isOnline && !meetingLink
-          ? "Calendar event created, but Google Meet link was not returned by Google."
-          : undefined,
     };
   } catch (error: any) {
-    const errorMsg =
-      error?.response?.data?.error_description ||
-      error?.response?.data?.error ||
-      error?.message ||
-      "Google Calendar API error";
-
-    const isInvalidGrant =
-      error?.response?.data?.error === "invalid_grant" ||
-      String(errorMsg).includes("invalid_grant") ||
-      String(errorMsg).includes("Token has been expired or revoked");
-
-    console.error(
-      "[Google Calendar Error - Insert Event]:",
-      isInvalidGrant ? "invalid_grant (Token expired/revoked)" : errorMsg
-    );
-
+    console.error("[Google Calendar Error]", error?.response?.data || error);
+    const googleError = error?.response?.data?.error;
+    if (
+      googleError === "invalid_grant" ||
+      error?.message?.includes("invalid_grant") ||
+      error?.message?.includes("expired")
+    ) {
+      return {
+        success: false,
+        error: "GOOGLE_REAUTH_REQUIRED",
+        needsAuth: true,
+      };
+    }
     return {
       success: false,
-      error: isInvalidGrant
-        ? "Google Calendar authorization has expired (invalid_grant). Please click 'Connect Google Calendar' in the admin dashboard."
-        : `Google Calendar Error: ${errorMsg}`,
-      needsAuth: isInvalidGrant,
+      error: "GOOGLE_CALENDAR_ERROR",
     };
   }
 }
@@ -287,26 +264,36 @@ export async function createCalendarEventWithMeet(
 export async function deleteCalendarEvent(
   eventId: string
 ): Promise<{ success: boolean; error?: string }> {
-  if (!eventId) {
-    return { success: false, error: "No event ID provided" };
-  }
-
   const oauth2Client = getGoogleOAuth2Client();
   if (!oauth2Client) {
-    return { success: false, error: "Google OAuth client not initialized" };
+    return {
+      success: false,
+      error: "Google OAuth is not configured",
+    };
   }
 
+  const calendar = google.calendar({
+    version: "v3",
+    auth: oauth2Client,
+  });
+
   try {
-    const calendar = google.calendar({ version: "v3", auth: oauth2Client });
     await calendar.events.delete({
       calendarId: "primary",
       eventId: eventId.trim(),
-      sendUpdates: "all", // Automatically notifies attendees that the old event is cancelled
+      sendUpdates: "all",
     });
-    return { success: true };
-  } catch (err: any) {
-    const errorMsg = err?.response?.data?.error?.message || err?.message || "Failed to delete calendar event";
-    console.warn(`[Google Calendar] Could not delete event ${eventId}:`, errorMsg);
-    return { success: false, error: errorMsg };
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    console.error(
+      "[Google Calendar Delete Error]",
+      error?.response?.data || error
+    );
+    return {
+      success: false,
+      error: "GOOGLE_CALENDAR_DELETE_ERROR",
+    };
   }
 }
