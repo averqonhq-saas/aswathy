@@ -1,4 +1,310 @@
 {
+  "admins": [
+    {
+      "id": "admin_aswathy_1",
+      "name": "Aswathy Jeyarajasekar",
+      "role": "superadmin",
+      "email": "roottherapyonline@gmail.com",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-18T07:57:41.174Z",
+      "passwordHash": "3070c03d1fc8579f448d5434d5aae75c:87bcaf08d725c10fdd806bd8a92d06512c29bee67a649961ebf33cdf729ec0ad4b179d5ad6b56cd24536e102d83e9959576c834d0eda7c079473e1dfe18f783d",
+      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif_1789921196155",
+      "link": "/admin/bookings",
+      "type": "booking_rescheduled",
+      "title": "Booking Rescheduled",
+      "isRead": false,
+      "message": "Muneeswaran P's appointment rescheduled to 2026-09-22 at 07:30 AM.",
+      "createdAt": "2026-09-20T16:19:56.113Z"
+    },
+    {
+      "id": "notif_1789920947438",
+      "link": "/admin/bookings",
+      "type": "booking_rescheduled",
+      "title": "Booking Rescheduled",
+      "isRead": false,
+      "message": "Muneeswaran P's appointment rescheduled to 2026-09-23 at 07:30 AM.",
+      "createdAt": "2026-09-20T16:15:47.401Z"
+    },
+    {
+      "id": "notif_1789920654560",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Muneeswaran P (#ASW-671776) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-20T16:10:53.254Z"
+    },
+    {
+      "id": "notif_1789920563033",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-22 at 7:00.",
+      "createdAt": "2026-09-20T16:09:20.224Z"
+    },
+    {
+      "id": "notif_1789798413971",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Aswathy J (#ASW-871528) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-19T06:13:32.664Z"
+    },
+    {
+      "id": "notif_1789798398346",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PENDING",
+      "isRead": false,
+      "message": "Payment status for Aswathy J (#ASW-871528) manually marked as PENDING (Reverted to pending manually).",
+      "createdAt": "2026-09-19T06:13:16.941Z"
+    },
+    {
+      "id": "notif_1789797915685",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Aswathy J (#ASW-871528) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-19T06:05:14.351Z"
+    },
+    {
+      "id": "notif_1789797782570",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Aswathy J booked \"Individual Session \" for 2026-09-21 at 7:00.",
+      "createdAt": "2026-09-19T06:02:59.671Z"
+    },
+    {
+      "id": "notif_1789722579969",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Muneeswaran P (#ASW-658118) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-18T09:09:39.937Z"
+    },
+    {
+      "id": "notif_1789722546893",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-19 at 06:00 PM (Evening Slot).",
+      "createdAt": "2026-09-18T09:09:06.821Z"
+    },
+    {
+      "id": "notif_1789369840867",
+      "link": "/admin/enquiries",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "isRead": false,
+      "message": "Muneeswaran P: Booking & Scheduling Support",
+      "createdAt": "2026-09-14T07:10:40.867Z"
+    }
+  ],
+  "websiteAbout": {
+    "name": "Aswathy Jeyarajasekar",
+    "title": "Counselling Psychologist",
+    "fullBio": "I hold a B.Sc. in Psychology and an M.Sc. in Counselling Psychology, along with intensive training in Learning Disabilities.\n\nAs a Counselling Psychologist, I take a Client-Centred approach, focusing on creating a safe, compassionate, and non-judgmental space where you can feel heard and understood.\n\nMy practice is centred around helping individuals explore their emotions, develop deeper self-understanding, navigate life’s challenges, and work towards meaningful personal growth. I believe therapy is a collaborative process, where your experiences, needs, and pace remain at the heart of the work.\n",
+    "updatedAt": "2026-09-10T07:05:53.126Z",
+    "shortIntro": "Hi, I’m Aswathy, a Counselling Psychologist. I believe therapy is a space where you can feel heard, understood, and accepted without judgment. My goal is to create a safe and comfortable environment where you can openly explore your thoughts, emotions, relationships, and life experiences.",
+    "profileImage": "/aswathy-photo2.jpg",
+    "qualifications": [],
+    "experienceYears": "1+ Year in Supervised Private Practice"
+  },
+  "settings": {
+    "account": {
+      "email": "roottherapyonline@gmail.com",
+      "adminName": "Aswathy Jeyarajasekar",
+      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
+    },
+    "booking": {
+      "zohoUrl": "https://averqon.zohobookings.in/portal-embed#/averqon",
+      "provider": "zoho",
+      "bufferTime": 15,
+      "defaultFormat": "online",
+      "maxAdvanceDays": 60,
+      "zohoRefreshToken": "1000.21bce53ad70393c6ea84f2f19e11dcab.81086e3d20d0573cd86388eeca63bdd9",
+      "bufferTimeMinutes": 15,
+      "advanceNoticeHours": 24,
+      "confirmationMessage": "Thank you for reaching out. Your confidential session has been reserved. A confirmation email with telehealth instructions has been dispatched.",
+      "slotDurationMinutes": 50,
+      "defaultSessionDuration": 50,
+      "cancellationNoticeHours": 24,
+      "cancellationPolicyHours": 24
+    },
+    "general": {
+      "email": "roottherapyonline@gmail.com",
+      "phone": "+91 755 0002973",
+      "tagline": "Gentle, non-judgmental space for emotional healing",
+      "currency": "INR (₹)",
+      "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
+      "timezone": "Asia/Kolkata (IST)",
+      "whatsapp": "https://wa.me/919876543210",
+      "instagram": "https://instagram.com/aswathy.psychology",
+      "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
+      "contactEmail": "roottherapyonline@gmail.com",
+      "contactPhone": "+91 755 0002973",
+      "practiceName": "The Safe Sanctuary | Aswathy Counselling",
+      "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
+    },
+    "notifications": {
+      "bookingAlerts": true,
+      "enquiryAlerts": true,
+      "emailOnBooking": true,
+      "emailOnEnquiry": true,
+      "feedbackAlerts": true,
+      "dailySummaryDigest": false,
+      "emailNotifications": true
+    }
+  },
+  "journeyEntries": [
+    {
+      "id": "jrn_2",
+      "year": "High School | Where It Began",
+      "order": 1,
+      "heading": "My first experience with professional psychological support.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-14T06:28:24.218Z",
+      "description": ""
+    },
+    {
+      "id": "jrn_1",
+      "year": "Undergraduate Years | Discovering Psychology",
+      "order": 2,
+      "heading": "Beginning my academic journey in Psychology.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-14T06:28:24.218Z",
+      "description": ""
+    },
+    {
+      "id": "jrn_3",
+      "year": "Postgraduate Years | Finding My Path",
+      "order": 3,
+      "heading": "Pursuing Counselling Psychology.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-14T06:28:24.218Z",
+      "description": ""
+    },
+    {
+      "id": "jrn_4",
+      "year": "Today | Becoming, Not Arriving",
+      "order": 4,
+      "heading": "Growing as a Counselling Psychologist and building my practice.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-14T06:28:24.218Z",
+      "description": "\n"
+    }
+  ],
+  "sessionFormats": [
+    {
+      "id": "individual-online",
+      "tag": "Video Consultation",
+      "icon": "video",
+      "badge": "Popular",
+      "order": 1,
+      "price": 1800,
+      "title": "Individual Online Counselling",
+      "format": "online",
+      "duration": "50 Minutes · Secure Video",
+      "isActive": true,
+      "badgeType": "popular",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-12T09:40:13.127Z",
+      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
+    },
+    {
+      "id": "initial-discovery",
+      "tag": "Exploratory",
+      "icon": "discovery",
+      "badge": "Introductory",
+      "order": 2,
+      "price": 0,
+      "title": "Initial Discovery Call",
+      "format": "online",
+      "duration": "20 Minutes · Introductory",
+      "isActive": true,
+      "badgeType": "introductory",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-12T09:40:13.127Z",
+      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
+    }
+  ],
+  "media": [
+    {
+      "id": "med_1",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      "title": "Aswathy Jeyarajasekar Portrait",
+      "category": "profile",
+      "filename": "aswathy-portrait.jpg",
+      "mimeType": "image/jpeg",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "sizeBytes": 145000,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
+    },
+    {
+      "id": "med_2",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      "title": "Quiet Consulting Sanctuary Studio",
+      "category": "website",
+      "filename": "sanctuary-room.jpg",
+      "mimeType": "image/jpeg",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "sizeBytes": 210000,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
+    }
+  ],
+  "enquiries": [
+    {
+      "id": "enq_1789369840867",
+      "name": "Muneeswaran P",
+      "email": "muneeswaransmp1973@gmail.com",
+      "phone": "08300864083",
+      "status": "new",
+      "message": "payment",
+      "subject": "Booking & Scheduling Support",
+      "createdAt": "2026-09-14T07:10:40.867Z",
+      "deletedAt": "2026-09-14T07:11:15.686Z",
+      "updatedAt": "2026-09-14T07:10:40.867Z",
+      "internalNotes": ""
+    },
+    {
+      "id": "enq_1789364106282",
+      "name": "Muneeswaran P",
+      "email": "muneeswaranmd2004@gmail.com",
+      "phone": "08300864083",
+      "status": "new",
+      "message": "hi",
+      "subject": "Payment Issue / Billing Assistance",
+      "createdAt": "2026-09-14T05:35:06.282Z",
+      "deletedAt": "2026-09-14T05:42:52.861Z",
+      "updatedAt": "2026-09-14T05:35:06.282Z",
+      "internalNotes": ""
+    },
+    {
+      "id": "enq_1788871456202",
+      "name": "Muneeswaran P",
+      "email": "muneeswaranmd2004@gmail.com",
+      "phone": "08300864083",
+      "status": "new",
+      "message": "hi",
+      "subject": "Emotional Wellbeing & Stress",
+      "createdAt": "2026-09-08T12:44:16.202Z",
+      "deletedAt": "2026-09-08T12:44:39.791Z",
+      "updatedAt": "2026-09-08T12:44:16.202Z",
+      "internalNotes": ""
+    }
+  ],
   "services": [
     {
       "id": "svc_emotional_wellbeing",
@@ -159,53 +465,6 @@
       "clientDisplayName": "Client M"
     }
   ],
-  "bookings": [],
-  "settings": {
-    "account": {
-      "email": "roottherapyonline@gmail.com",
-      "adminName": "Aswathy Jeyarajasekar",
-      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
-    },
-    "booking": {
-      "zohoUrl": "https://averqon.zohobookings.in/portal-embed#/averqon",
-      "provider": "zoho",
-      "bufferTime": 15,
-      "defaultFormat": "online",
-      "maxAdvanceDays": 60,
-      "zohoRefreshToken": "1000.21bce53ad70393c6ea84f2f19e11dcab.81086e3d20d0573cd86388eeca63bdd9",
-      "bufferTimeMinutes": 15,
-      "advanceNoticeHours": 24,
-      "confirmationMessage": "Thank you for reaching out. Your confidential session has been reserved. A confirmation email with telehealth instructions has been dispatched.",
-      "slotDurationMinutes": 50,
-      "defaultSessionDuration": 50,
-      "cancellationNoticeHours": 24,
-      "cancellationPolicyHours": 24
-    },
-    "general": {
-      "email": "roottherapyonline@gmail.com",
-      "phone": "+91 755 0002973",
-      "tagline": "Gentle, non-judgmental space for emotional healing",
-      "currency": "INR (₹)",
-      "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
-      "timezone": "Asia/Kolkata (IST)",
-      "whatsapp": "https://wa.me/919876543210",
-      "instagram": "https://instagram.com/aswathy.psychology",
-      "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
-      "contactEmail": "roottherapyonline@gmail.com",
-      "contactPhone": "+91 755 0002973",
-      "practiceName": "The Safe Sanctuary | Aswathy Counselling",
-      "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
-    },
-    "notifications": {
-      "bookingAlerts": true,
-      "enquiryAlerts": true,
-      "emailOnBooking": true,
-      "emailOnEnquiry": true,
-      "feedbackAlerts": true,
-      "dailySummaryDigest": false,
-      "emailNotifications": true
-    }
-  },
   "clientTypes": [
     {
       "id": "ct_1",
@@ -251,336 +510,6 @@
       "createdAt": "2026-09-06T13:18:50.470Z",
       "updatedAt": "2026-09-06T13:18:50.470Z",
       "description": "Managing corporate stress, work-life balance erosion, and interpersonal conflicts."
-    }
-  ],
-  "sessionFormats": [
-    {
-      "id": "individual-online",
-      "tag": "Video Consultation",
-      "icon": "video",
-      "badge": "Popular",
-      "order": 1,
-      "price": 1800,
-      "title": "Individual Online Counselling",
-      "format": "online",
-      "duration": "50 Minutes · Secure Video",
-      "isActive": true,
-      "badgeType": "popular",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-12T09:40:13.127Z",
-      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
-    },
-    {
-      "id": "initial-discovery",
-      "tag": "Exploratory",
-      "icon": "discovery",
-      "badge": "Introductory",
-      "order": 2,
-      "price": 0,
-      "title": "Initial Discovery Call",
-      "format": "online",
-      "duration": "20 Minutes · Introductory",
-      "isActive": true,
-      "badgeType": "introductory",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-12T09:40:13.127Z",
-      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
-    }
-  ],
-  "notifications": [
-    {
-      "id": "notif_1789364106282",
-      "type": "enquiry_new",
-      "title": "New Client Enquiry",
-      "message": "Muneeswaran P: Payment Issue / Billing Assistance",
-      "link": "/admin/enquiries",
-      "isRead": false,
-      "createdAt": "2026-09-14T05:35:06.282Z"
-    },
-    {
-      "id": "notif_1788871456203",
-      "link": "/admin/enquiries",
-      "type": "enquiry_new",
-      "title": "New Client Enquiry",
-      "isRead": true,
-      "message": "Muneeswaran P: Emotional Wellbeing & Stress",
-      "createdAt": "2026-09-08T12:44:16.202Z"
-    }
-  ],
-  "media": [
-    {
-      "id": "med_1",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-      "title": "Aswathy Jeyarajasekar Portrait",
-      "category": "profile",
-      "filename": "aswathy-portrait.jpg",
-      "mimeType": "image/jpeg",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 145000,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
-    },
-    {
-      "id": "med_2",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-      "title": "Quiet Consulting Sanctuary Studio",
-      "category": "website",
-      "filename": "sanctuary-room.jpg",
-      "mimeType": "image/jpeg",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 210000,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
-    }
-  ],
-  "admins": [
-    {
-      "id": "admin_aswathy_1",
-      "name": "Aswathy Jeyarajasekar",
-      "role": "superadmin",
-      "email": "roottherapyonline@gmail.com",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "passwordHash": "9dc5b1993a171283196e2527c78c8ba7:54c404b541a11dcb4a85f78131f0dfb70dbf58d5cc25243c454dffbb264a9fad186a6b24b6606c802e6f2707c8373a79664b8ca255d9c1095525b9555c76f85f",
-      "profileImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg"
-    }
-  ],
-  "journeyEntries": [
-    {
-      "id": "jrn_2",
-      "year": "High School | Where It Began",
-      "order": 1,
-      "heading": "My first experience with professional psychological support.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "Going through a difficult phase in my life and experiencing professional psychological support introduced me to the impact that a safe therapeutic space can have. This experience sparked my curiosity about psychology and planted the first seed of what would eventually become my career. Sometimes, our own experiences become the beginning of the work we are meant to do."
-    },
-    {
-      "id": "jrn_1",
-      "year": "Undergraduate Years | Discovering Psychology",
-      "order": 2,
-      "heading": "Beginning my academic journey in Psychology.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "What started as a personal interest gradually grew into a deeper academic and professional curiosity. Studying psychology helped me understand human behaviour, emotions, relationships, and the many factors that shape our experiences. Psychology taught me that there is always more beneath what we see on the surface."
-    },
-    {
-      "id": "jrn_3",
-      "year": "Postgraduate Years | Finding My Path",
-      "order": 3,
-      "heading": "Pursuing Counselling Psychology.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "My postgraduate journey gave me the opportunity to move beyond understanding psychology theoretically and begin developing the skills required to work therapeutically with people. Through academic learning, practical experiences, and supervision, I began developing my own understanding of what it means to be a counsellor. Becoming a therapist is not simply about learning techniques, it is also about developing self-awareness, empathy, and the ability to truly be present with another person."
-    },
-    {
-      "id": "jrn_4",
-      "year": "Today | Becoming, Not Arriving",
-      "order": 4,
-      "heading": "Growing as a Counselling Psychologist and building my practice.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-09T09:47:39.688Z",
-      "description": "Today, I approach counselling with empathy, genuineness, and respect for each person’s individuality. I primarily follow a client-centred approach, creating a safe and non-judgmental space where individuals can explore their thoughts, emotions, relationships, and life experiences at their own pace.\n\nI see becoming a psychologist not as a destination, but as an ongoing journey of learning, reflection, and growth. I am grateful for the experiences that brought me here and for the opportunity to continue learning alongside the people I work with. Therapy is not about having all the answers. Sometimes, it is about creating a space where someone feels safe enough to discover their own."
-    }
-  ],
-  "websiteAbout": {
-    "name": "Aswathy Jeyarajasekar",
-    "title": "Counselling Psychologist",
-    "fullBio": "I hold a B.Sc. in Psychology and an M.Sc. in Counselling Psychology, along with intensive training in Learning Disabilities.\n\nAs a Counselling Psychologist, I take a Client-Centred approach, focusing on creating a safe, compassionate, and non-judgmental space where you can feel heard and understood.\n\nMy practice is centred around helping individuals explore their emotions, develop deeper self-understanding, navigate life’s challenges, and work towards meaningful personal growth. I believe therapy is a collaborative process, where your experiences, needs, and pace remain at the heart of the work.\n",
-    "updatedAt": "2026-09-10T07:05:53.126Z",
-    "shortIntro": "Hi, I’m Aswathy, a Counselling Psychologist. I believe therapy is a space where you can feel heard, understood, and accepted without judgment. My goal is to create a safe and comfortable environment where you can openly explore your thoughts, emotions, relationships, and life experiences.",
-    "profileImage": "/aswathy-photo2.jpg",
-    "qualifications": [],
-    "experienceYears": "1+ Year in Supervised Private Practice"
-  },
-  "sessionSteps": [
-    {
-      "id": "step_1",
-      "order": 1,
-      "title": "Connecting & Understanding",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "01",
-      "description": "The first phase is about creating a safe, comfortable space and understanding what brings you to therapy. We explore your concerns, experiences, emotions, relationships, and what you hope to work towards."
-    },
-    {
-      "id": "step_2",
-      "order": 2,
-      "title": "Exploring & Becoming Aware",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "02",
-      "description": "Together, we gently explore patterns, emotions, beliefs, relationships, and coping responses. This phase is about developing a deeper understanding of yourself and what may be influencing your present experiences."
-    },
-    {
-      "id": "step_3",
-      "order": 3,
-      "title": "Working Through & Building Skills",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "03",
-      "description": "As we understand your experiences better, therapy focuses on working through what feels difficult and developing healthier ways of coping, emotional regulation, self-awareness, communication, and decision-making."
-    },
-    {
-      "id": "step_4",
-      "order": 4,
-      "title": "Growth & Integration",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "04",
-      "description": "The focus gradually shifts towards applying what you have explored in therapy to everyday life. You may begin to notice changes in how you respond to yourself, others, and challenging situations."
-    },
-    {
-      "id": "step_5",
-      "order": 5,
-      "title": "Reviewing & Moving Forward",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "05",
-      "description": "We reflect on your progress, the changes you have made, and the areas you may still want to work on. Depending on your needs, therapy may gradually reduce in frequency, come to an end, or continue with new goals."
-    }
-  ],
-  "blockedSlots": [],
-  "enquiries": [
-    {
-      "id": "enq_1789364106282",
-      "name": "Muneeswaran P",
-      "email": "muneeswaranmd2004@gmail.com",
-      "phone": "08300864083",
-      "subject": "Payment Issue / Billing Assistance",
-      "message": "hi",
-      "status": "new",
-      "internalNotes": "",
-      "createdAt": "2026-09-14T05:35:06.282Z",
-      "updatedAt": "2026-09-14T05:35:06.282Z"
-    },
-    {
-      "id": "enq_1788871456202",
-      "name": "Muneeswaran P",
-      "email": "muneeswaranmd2004@gmail.com",
-      "phone": "08300864083",
-      "status": "new",
-      "message": "hi",
-      "subject": "Emotional Wellbeing & Stress",
-      "createdAt": "2026-09-08T12:44:16.202Z",
-      "deletedAt": "2026-09-08T12:44:39.791Z",
-      "updatedAt": "2026-09-08T12:44:16.202Z",
-      "internalNotes": ""
-    }
-  ],
-  "serviceCategories": [
-    {
-      "id": "cat_emotional",
-      "name": "Emotional Wellbeing",
-      "slug": "emotional-wellbeing",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Anxiety, depression, chronic stress regulation, emotional fatigue."
-    },
-    {
-      "id": "cat_1788882225101",
-      "name": "Student",
-      "slug": "student",
-      "createdAt": "2026-09-08T15:43:45.101Z",
-      "updatedAt": "2026-09-08T15:43:45.101Z",
-      "description": "Student"
-    }
-  ],
-  "availability": [
-    {
-      "id": "avail_mon",
-      "endTime": "21:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "monday",
-      "isWorking": true,
-      "startTime": "18:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_tue",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "tuesday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_wed",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "wednesday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_thu",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "thursday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_fri",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "friday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_sat",
-      "endTime": "15:00",
-      "breakEnd": "13:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "saturday",
-      "isWorking": true,
-      "startTime": "10:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "12:30",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_sun",
-      "endTime": "14:00",
-      "breakEnd": "13:00",
-      "isActive": false,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "sunday",
-      "isWorking": false,
-      "startTime": "10:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "12:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
     }
   ],
   "bookingFormConfig": {
@@ -753,5 +682,223 @@
       "message": "*Video must be ON throughout the session.\n *Audio-only or chat sessions are not offered.\n*Payment must be completed before the session. Your booking is confirmed only after payment.\n*Payment can be made using the QR code shared by the therapist via WhatsApp or email. Please provide your WhatsApp number for payment and booking communication.\n*Meeting details will be shared after payment confirmation.\n*Informed consent and relevant therapy information will be shared after the first session.\n*Rescheduling is permitted only if requested at least 24 hours in advance, subject to availability.\n *Cancellations made within 24 hours are non-refundable and non-reschedulable.\n*Late arrivals will still end at the scheduled session time.\n\n"
     },
     "updatedAt": "2026-09-12T09:40:13.127Z"
-  }
+  },
+  "bookings": [
+    {
+      "id": "ASW-671776",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "timestamp": "2026-09-20T16:19:57.969Z",
+          "action": "Rescheduled & Synchronized: Old calendar invitation cancelled. New invitation dispatched with Google Meet (https://meet.google.com/ops-uyqj-eqw)"
+        },
+        {
+          "note": "Rescheduled by practitioner",
+          "action": "Rescheduled from 2026-09-23 07:30 AM to 2026-09-22 07:30 AM",
+          "timestamp": "2026-09-20T16:19:56.113Z"
+        },
+        {
+          "note": "Rescheduled by practitioner",
+          "action": "Rescheduled from 2026-09-22 7:00 to 2026-09-23 07:30 AM",
+          "timestamp": "2026-09-20T16:15:47.401Z"
+        },
+        {
+          "note": "Marked as paid manually (Cash / UPI / Reception)",
+          "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
+          "timestamp": "2026-09-20T16:10:53.254Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/hzy-utpv-eyp)",
+          "timestamp": "2026-09-20T16:10:45.625Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-20T16:09:20.224Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-20T16:09:20.224Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-09-20T16:19:57.969Z",
+      "clientName": "Muneeswaran P",
+      "clientEmail": "muneeswaranmd2004@gmail.com",
+      "clientPhone": "+918300864083",
+      "meetingLink": "https://meet.google.com/ops-uyqj-eqw",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "hi",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-09-22",
+      "appointmentTime": "07:30 AM",
+      "calendarEventId": "ig51lbpotesgdqergaodieoeog",
+      "durationMinutes": 60,
+      "googleEventId": "ig51lbpotesgdqergaodieoeog"
+    }
+  ],
+  "blockedSlots": [],
+  "sessionSteps": [
+    {
+      "id": "step_1",
+      "order": 1,
+      "title": "Connecting & Understanding",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "01",
+      "description": "The first phase is about creating a safe, comfortable space and understanding what brings you to therapy. We explore your concerns, experiences, emotions, relationships, and what you hope to work towards."
+    },
+    {
+      "id": "step_2",
+      "order": 2,
+      "title": "Exploring & Becoming Aware",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "02",
+      "description": "Together, we gently explore patterns, emotions, beliefs, relationships, and coping responses. This phase is about developing a deeper understanding of yourself and what may be influencing your present experiences."
+    },
+    {
+      "id": "step_3",
+      "order": 3,
+      "title": "Working Through & Building Skills",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "03",
+      "description": "As we understand your experiences better, therapy focuses on working through what feels difficult and developing healthier ways of coping, emotional regulation, self-awareness, communication, and decision-making."
+    },
+    {
+      "id": "step_4",
+      "order": 4,
+      "title": "Growth & Integration",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "04",
+      "description": "The focus gradually shifts towards applying what you have explored in therapy to everyday life. You may begin to notice changes in how you respond to yourself, others, and challenging situations."
+    },
+    {
+      "id": "step_5",
+      "order": 5,
+      "title": "Reviewing & Moving Forward",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "05",
+      "description": "We reflect on your progress, the changes you have made, and the areas you may still want to work on. Depending on your needs, therapy may gradually reduce in frequency, come to an end, or continue with new goals."
+    }
+  ],
+  "serviceCategories": [
+    {
+      "id": "cat_emotional",
+      "name": "Emotional Wellbeing",
+      "slug": "emotional-wellbeing",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Anxiety, depression, chronic stress regulation, emotional fatigue."
+    },
+    {
+      "id": "cat_1788882225101",
+      "name": "Student",
+      "slug": "student",
+      "createdAt": "2026-09-08T15:43:45.101Z",
+      "updatedAt": "2026-09-08T15:43:45.101Z",
+      "description": "Student"
+    }
+  ],
+  "availability": [
+    {
+      "id": "avail_mon",
+      "endTime": "21:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "monday",
+      "isWorking": true,
+      "startTime": "18:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_tue",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "tuesday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_wed",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "wednesday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_thu",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "thursday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_fri",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "friday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_sat",
+      "endTime": "15:00",
+      "breakEnd": "13:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "saturday",
+      "isWorking": true,
+      "startTime": "10:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "12:30",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_sun",
+      "endTime": "14:00",
+      "breakEnd": "13:00",
+      "isActive": false,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "sunday",
+      "isWorking": false,
+      "startTime": "10:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "12:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    }
+  ]
 }

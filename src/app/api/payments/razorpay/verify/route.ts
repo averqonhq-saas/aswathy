@@ -85,8 +85,8 @@ export async function POST(request: Request) {
     let meetingLink = !isOnline
       ? "In-Person Consultation at Clinic"
       : (booking.meetingLink && booking.meetingLink.startsWith("https://meet.google.com/") && !booking.meetingLink.includes("meet.google.com/asw-"))
-      ? booking.meetingLink
-      : undefined;
+        ? booking.meetingLink
+        : undefined;
     let calendarEventId: string | undefined = booking.calendarEventId;
 
     let calendarNeedsReauth = false;
@@ -135,13 +135,12 @@ export async function POST(request: Request) {
     if (!booking.history) booking.history = [];
     booking.history.unshift({
       timestamp: now,
-      action: `Payment of ₹${booking.price || 1800} verified via Razorpay (Payment ID: ${razorpay_payment_id}). Appointment confirmed.${
-        calendarEventId
+      action: `Payment of ₹${booking.price || 1800} verified via Razorpay (Payment ID: ${razorpay_payment_id}). Appointment confirmed.${calendarEventId
           ? " Google Meet room ready."
           : calendarNeedsReauth
-          ? " ⚠️ Google Calendar needs re-authorization (invalid_grant)."
-          : ""
-      }`,
+            ? " ⚠️ Google Calendar needs re-authorization (invalid_grant)."
+            : ""
+        }`,
     });
 
     // Notify practice admin in local inbox
@@ -202,7 +201,7 @@ export async function POST(request: Request) {
     let emailDispatched = false;
     const durationLabel = `${booking.durationMinutes || 50} minutes`;
     const psychologistName =
-      process.env.WHATSAPP_PSYCHOLOGIST_NAME || "Aswathy | roottherapyonline.com";
+      process.env.WHATSAPP_PSYCHOLOGIST_NAME || "Aswathy | aswathypsychologist.com";
     try {
       const [whatsappRes, emailClientRes] = await Promise.allSettled([
         sendWhatsAppConfirmation({
@@ -273,7 +272,7 @@ export async function POST(request: Request) {
             booking.id,
           ]
         );
-      } catch {}
+      } catch { }
     } catch (notifyErr: any) {
       console.error("[Post-Payment Notification Dispatch Error]:", notifyErr);
     }

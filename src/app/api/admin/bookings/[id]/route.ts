@@ -10,6 +10,7 @@ import {
 } from "@/lib/email";
 import {
   createCalendarEventWithMeet,
+  deleteCalendarEvent,
 } from "@/lib/google-calendar";
 import { sendWhatsAppConfirmation } from "@/lib/whatsapp";
 
@@ -193,7 +194,78 @@ export async function PATCH(
     } else if (action === "update_notes" && internalNotes !== undefined) {
       updated = await bookingService.updateBookingNotes(id, internalNotes);
     } else if (action === "reschedule" && date && time) {
+      // 1. Check for existing calendar event to cancel
+      const currentBooking = await bookingService.getBooking(id);
+      const oldEventId = currentBooking?.calendarEventId || (currentBooking as any)?.googleEventId;
+
+      if (oldEventId) {
+        try {
+          console.log(`[Reschedule] Cancelling old Google Calendar event ${oldEventId}...`);
+          await deleteCalendarEvent(oldEventId);
+        } catch (delErr) {
+          console.warn(`[Reschedule] Could not delete old Google Calendar event ${oldEventId}:`, delErr);
+        }
+      }
+
+      // 2. Reschedule booking record
       updated = await bookingService.rescheduleBooking(id, date, time, note);
+
+      // 3. Create fresh Google Calendar event & Google Meet link for the new time slot
+      if (updated) {
+        try {
+          const calResult = await createCalendarEventWithMeet({
+            bookingId: updated.id,
+            clientName: updated.clientName,
+            clientEmail: updated.clientEmail,
+            clientPhone: updated.clientPhone,
+            serviceName: updated.serviceName,
+            appointmentDate: date,
+            appointmentTime: time,
+            durationMinutes: updated.durationMinutes || 50,
+            format: updated.format || "online",
+            clientMessage: updated.clientMessage,
+          });
+
+          if (calResult.success && calResult.meetingLink) {
+            const newMeetingLink = calResult.meetingLink;
+            const newEventId = calResult.eventId;
+            const db = await getDatabase();
+            const target = db.bookings.find(
+              (item) => item.id === updated!.id || item.id.toLowerCase() === updated!.id.toLowerCase()
+            );
+            const now = new Date().toISOString();
+
+            if (target) {
+              target.meetingLink = newMeetingLink;
+              if (newEventId) {
+                target.calendarEventId = newEventId;
+                (target as any).googleEventId = newEventId;
+              }
+              target.updatedAt = now;
+              if (!target.history) target.history = [];
+              target.history.unshift({
+                timestamp: now,
+                action: `Rescheduled & Synchronized: Old calendar invitation cancelled. New invitation dispatched with Google Meet (${newMeetingLink})`,
+              });
+              await saveDatabase(db);
+            }
+
+            try {
+              const pool = getPgPool();
+              await pool.query(
+                `UPDATE bookings SET meeting_link = $1, google_event_id = $2, updated_at = $3 WHERE id = $4 OR LOWER(id) = LOWER($4)`,
+                [newMeetingLink, newEventId, now, updated.id]
+              );
+            } catch (sqlErr) {
+              console.warn("[Reschedule SQL Sync] Error updating new calendar event details:", sqlErr);
+            }
+
+            updated = (await bookingService.getBooking(id)) || updated;
+          }
+        } catch (calErr) {
+          console.error("[Reschedule - Create New Calendar Event Error]:", calErr);
+        }
+      }
     } else if (paymentStatus && !status) {
       if (paymentStatus === "paid") {
         await ensureMeetGenerated(id);
@@ -258,6 +330,24 @@ export async function PATCH(
       } catch (emailErr) {
         console.error("[Email Notification Error - Reschedule]:", emailErr);
       }
+
+      // Also trigger WhatsApp confirmation for rescheduled session if phone exists
+      if (updated.clientPhone) {
+        try {
+          await sendWhatsAppConfirmation({
+            phone: updated.clientPhone,
+            customerName: updated.clientName,
+            serviceName: updated.serviceName,
+            appointmentDate: updated.appointmentDate,
+            appointmentTime: updated.appointmentTime,
+            duration: `${updated.durationMinutes || 50} minutes`,
+            meetingLink: updated.meetingLink,
+            psychologistName: "Aswathy Jeyarajasekar",
+          });
+        } catch (waErr) {
+          console.warn("[WhatsApp Notification Warning - Reschedule]:", waErr);
+        }
+      }
     } else if (
       (action === "update_payment_status" || action === "send_payment_receipt" || paymentStatus) &&
       body.sendEmail !== false
@@ -302,7 +392,7 @@ export async function PATCH(
             duration: `${updated.durationMinutes || 50} minutes`,
             meetingLink: updated.meetingLink,
             psychologistName:
-              process.env.WHATSAPP_PSYCHOLOGIST_NAME || "Aswathy | roottherapyonline.com",
+              process.env.WHATSAPP_PSYCHOLOGIST_NAME || "Aswathy | aswathypsychologist.com",
           });
 
           if (waResult.success) {
@@ -312,7 +402,7 @@ export async function PATCH(
                 `UPDATE bookings SET whatsapp_status = 'sent', whatsapp_sent = TRUE WHERE id = $1`,
                 [updated.id]
               );
-            } catch {}
+            } catch { }
             console.info(
               `[Admin Manual Pay] WhatsApp confirmation sent to ${updated.clientPhone} for booking ${updated.id}`
             );
@@ -350,7 +440,7 @@ export async function DELETE(
 
     const { id } = await params;
     const db = await getDatabase();
-    
+
     let found = false;
 
     // 1. Remove from JSONB collections / db.bookings

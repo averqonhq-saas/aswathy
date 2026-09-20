@@ -280,3 +280,33 @@ export async function createCalendarEventWithMeet(
     };
   }
 }
+
+/**
+ * Deletes an event from Google Calendar and notifies attendees of the cancellation.
+ */
+export async function deleteCalendarEvent(
+  eventId: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!eventId) {
+    return { success: false, error: "No event ID provided" };
+  }
+
+  const oauth2Client = getGoogleOAuth2Client();
+  if (!oauth2Client) {
+    return { success: false, error: "Google OAuth client not initialized" };
+  }
+
+  try {
+    const calendar = google.calendar({ version: "v3", auth: oauth2Client });
+    await calendar.events.delete({
+      calendarId: "primary",
+      eventId: eventId.trim(),
+      sendUpdates: "all", // Automatically notifies attendees that the old event is cancelled
+    });
+    return { success: true };
+  } catch (err: any) {
+    const errorMsg = err?.response?.data?.error?.message || err?.message || "Failed to delete calendar event";
+    console.warn(`[Google Calendar] Could not delete event ${eventId}:`, errorMsg);
+    return { success: false, error: errorMsg };
+  }
+}

@@ -216,8 +216,8 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
         <div style="background-color: #f1f5f9; padding: 14px 16px; border-radius: 8px; margin-top: 16px; font-size: 13px; color: #475569; line-height: 1.5;">
           ${isOnline
       ? (data.meetingLink && data.meetingLink.startsWith("http")
-          ? "💡 <strong>Telehealth Note:</strong> Your session will be held securely via Google Meet. Please ensure a quiet, private space and a stable internet connection 5 minutes prior to start."
-          : "💡 <strong>Telehealth Note:</strong> You will receive a private, encrypted Google Meet link before your scheduled session. Please ensure a quiet, private space and a stable internet connection.")
+        ? "💡 <strong>Telehealth Note:</strong> Your session will be held securely via Google Meet. Please ensure a quiet, private space and a stable internet connection 5 minutes prior to start."
+        : "💡 <strong>Telehealth Note:</strong> You will receive a private, encrypted Google Meet link before your scheduled session. Please ensure a quiet, private space and a stable internet connection.")
       : "💡 <strong>In-Person Note:</strong> Clinic address and directions will be confirmed with you when we contact you."}
         </div>
 
@@ -229,7 +229,7 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
         <p style="margin-top: 28px; font-size: 14px; color: #334155; line-height: 1.5;">
           Thank you,<br>
           <strong>Aswathy</strong><br>
-          <span style="font-size: 12px; color: #64748b;">Counselling Psychologist &amp; Psychotherapist | roottherapyonline.com</span>
+          <span style="font-size: 12px; color: #64748b;">Counselling Psychologist &amp; Psychotherapist | aswathypsychologist.com</span>
         </p>
       </td>
     </tr>
@@ -311,9 +311,9 @@ export async function sendBookingWelcomeEmailToClient(data: BookingEmailData): P
             <strong style="color: #92400e; font-size: 14px;">Meeting details will be shared after payment confirmation</strong>
           </div>
           <p style="margin: 0; font-size: 13px; color: #78350f; line-height: 1.5;">
-            ${isOnline 
-              ? "For your online session, your private Google Meet video link and Google Calendar invitation will be generated automatically and sent to you once payment is confirmed." 
-              : "Clinic arrival directions and in-person consultation details will be confirmed with you upon payment confirmation."}
+            ${isOnline
+      ? "For your online session, your private Google Meet video link and Google Calendar invitation will be generated automatically and sent to you once payment is confirmed."
+      : "Clinic arrival directions and in-person consultation details will be confirmed with you upon payment confirmation."}
           </p>
         </div>
 
@@ -356,7 +356,7 @@ export async function sendBookingWelcomeEmailToClient(data: BookingEmailData): P
         <p style="margin-top: 28px; font-size: 14px; color: #334155; line-height: 1.5;">
           Warm regards,<br>
           <strong>Aswathy</strong><br>
-          <span style="font-size: 12px; color: #64748b;">Counselling Psychologist &amp; Psychotherapist | roottherapyonline.com</span>
+          <span style="font-size: 12px; color: #64748b;">Counselling Psychologist &amp; Psychotherapist | aswathypsychologist.com</span>
         </p>
       </td>
     </tr>
@@ -751,10 +751,30 @@ export async function sendBookingRescheduledEmailToClient(
           </tr>
         </table>
 
+        ${isOnline && data.meetingLink && data.meetingLink.startsWith("http") ? `
+        <div style="background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #065f46; text-transform: uppercase; letter-spacing: 0.5px;">
+            📹 New Google Meet Consultation Link
+          </p>
+          <p style="margin: 0 0 14px; font-size: 13px; color: #047857;">
+            The previous calendar event has been cancelled and replaced with this new appointment time.
+          </p>
+          <a href="${data.meetingLink}" target="_blank" style="display: inline-block; background-color: #047857; color: #ffffff; text-decoration: none; padding: 11px 26px; border-radius: 6px; font-weight: 600; font-size: 14px; margin: 0 0 10px;">
+            Join Google Meet Session
+          </a>
+          <p style="margin: 6px 0 0; font-size: 12px; color: #047857; word-break: break-all;">
+            Or copy link: <a href="${data.meetingLink}" style="color: #047857; text-decoration: underline;">${data.meetingLink}</a>
+          </p>
+        </div>` : ""}
+
         ${note ? `
         <div style="background-color: #f1f5f9; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #475569; margin: 16px 0;">
-          <strong>Note:</strong> ${note}
+          <strong>Practitioner Note:</strong> ${note}
         </div>` : ""}
+
+        <div style="background-color: #f8fafc; border-left: 3px solid #047857; padding: 10px 14px; font-size: 12px; color: #475569; margin: 16px 0;">
+          📅 <strong>Calendar Update:</strong> A new Google Calendar invite with the updated session details has been sent to your email. The old invitation has been cancelled.
+        </div>
 
         <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">
           If this new timing does not work with your schedule, please reply directly to this email so we can find a time that suits you better.

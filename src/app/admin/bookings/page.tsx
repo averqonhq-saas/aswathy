@@ -28,6 +28,47 @@ import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { useToast } from "@/components/admin/Toast";
 import type { Booking } from "@/lib/types";
 
+function formatTimeToAmPm(timeStr: string): string {
+  if (!timeStr) return "";
+  const trimmed = timeStr.trim();
+
+  // Match 24h format like "14:30" or "9:05"
+  const match24 = trimmed.match(/^([0-9]{1,2}):([0-9]{2})$/);
+  if (match24) {
+    let hours = parseInt(match24[1], 10);
+    const minutes = match24[2];
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const hoursStr = hours < 10 ? `0${hours}` : `${hours}`;
+    return `${hoursStr}:${minutes} ${ampm}`;
+  }
+
+  // Match 12h format like "2:30pm" or "02:30 PM"
+  const match12 = trimmed.match(/^([0-9]{1,2}):([0-9]{2})\s*([a-zA-Z]{2})$/i);
+  if (match12) {
+    let hours = parseInt(match12[1], 10);
+    const minutes = match12[2];
+    const ampm = match12[3].toUpperCase();
+    const hoursStr = hours < 10 ? `0${hours}` : `${hours}`;
+    return `${hoursStr}:${minutes} ${ampm}`;
+  }
+
+  return trimmed;
+}
+
+function convertAmPmTo24h(timeStr: string): string {
+  if (!timeStr) return "";
+  const match = timeStr.trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+  if (!match) return "";
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const ampm = match[3] ? match[3].toUpperCase() : null;
+  if (ampm === "PM" && hours < 12) hours += 12;
+  if (ampm === "AM" && hours === 12) hours = 0;
+  return `${String(hours).padStart(2, "0")}:${minutes}`;
+}
+
 export default function BookingsManagementPage() {
   const { success, error, info } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -337,6 +378,7 @@ export default function BookingsManagementPage() {
     e.preventDefault();
     if (!selectedBooking || !rescheduleDate || !rescheduleTime) return;
 
+    const finalTime = formatTimeToAmPm(rescheduleTime) || rescheduleTime;
     setRescheduleLoading(true);
     try {
       const res = await fetch(`/api/admin/bookings/${selectedBooking.id}`, {
@@ -345,13 +387,13 @@ export default function BookingsManagementPage() {
         body: JSON.stringify({
           action: "reschedule",
           date: rescheduleDate,
-          time: rescheduleTime,
+          time: finalTime,
           note: "Rescheduled by practitioner",
         }),
       });
       const data = await res.json();
       if (res.ok) {
-        success(`Booking rescheduled to ${rescheduleDate} at ${rescheduleTime}.`);
+        success(`Booking rescheduled to ${rescheduleDate} at ${finalTime}.`);
         setSelectedBooking(data.booking);
         setRescheduleOpen(false);
         fetchBookings();
@@ -1121,29 +1163,80 @@ export default function BookingsManagementPage() {
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="font-label-caps text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold block">
-              New Appointment Time Slot
-            </label>
-            <select
-              value={rescheduleTime}
-              onChange={(e) => setRescheduleTime(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs text-primary focus:outline-none focus:border-forest-green focus:bg-surface"
-            >
-              {[
-                "10:00 AM",
-                "11:30 AM",
-                "02:00 PM",
-                "03:30 PM",
-                "05:00 PM",
-                "06:30 PM",
-                "07:30 PM",
-              ].map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="font-label-caps text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold block">
+                New Appointment Time Slot (Manual Entry)
+              </label>
+              {rescheduleTime && (
+                <span className="text-[10px] text-forest-green font-semibold bg-forest-green/10 px-2 py-0.5 rounded-md">
+                  {formatTimeToAmPm(rescheduleTime) || rescheduleTime}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Clock className="w-3.5 h-3.5 text-on-surface-variant/70 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 10:00 AM, 02:30 PM, 04:15 PM"
+                  value={rescheduleTime}
+                  onChange={(e) => setRescheduleTime(e.target.value)}
+                  onBlur={(e) => {
+                    const formatted = formatTimeToAmPm(e.target.value);
+                    if (formatted) setRescheduleTime(formatted);
+                  }}
+                  className="w-full pl-8 pr-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs text-primary focus:outline-none focus:border-forest-green focus:bg-surface font-medium"
+                />
+              </div>
+
+              {/* Native time picker helper */}
+              <div className="relative shrink-0" title="Pick from clock">
+                <input
+                  type="time"
+                  value={convertAmPmTo24h(rescheduleTime)}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setRescheduleTime(formatTimeToAmPm(e.target.value));
+                    }
+                  }}
+                  className="px-2.5 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs text-primary focus:outline-none focus:border-forest-green focus:bg-surface cursor-pointer"
+                />
+              </div>
+            </div>
+
+            {/* Quick preset chips */}
+            <div className="pt-1">
+              <span className="text-[10px] text-on-surface-variant/70 block mb-1 font-medium">
+                Quick preset slots (click to select or type manual time above):
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  "10:00 AM",
+                  "11:30 AM",
+                  "02:00 PM",
+                  "03:30 PM",
+                  "05:00 PM",
+                  "06:30 PM",
+                  "07:30 PM",
+                ].map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setRescheduleTime(t)}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                      formatTimeToAmPm(rescheduleTime) === t
+                        ? "bg-forest-green text-white shadow-xs"
+                        : "bg-surface-container-low border border-surface-container-high text-on-surface-variant hover:bg-surface-container hover:text-primary"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </form>
       </Modal>

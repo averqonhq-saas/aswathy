@@ -115,7 +115,7 @@ export async function sendWhatsAppConfirmation(
   const psychologistName =
     params.psychologistName ||
     process.env.WHATSAPP_PSYCHOLOGIST_NAME ||
-    "Aswathy | roottherapyonline.com";
+    "Aswathy | aswathypsychologist.com";
   const meetLink =
     params.meetingLink && params.meetingLink.startsWith("http")
       ? params.meetingLink
