@@ -20,9 +20,9 @@ export default function Footer({ onOpenBooking }: FooterProps) {
                   A Private Practice for Wholeness
                 </span>
               </div>
-              <h2 className="font-headline-lg text-headline-lg text-surface tracking-tight max-w-xl">
+              <p className="font-headline-lg text-headline-lg text-surface tracking-tight max-w-xl font-medium">
                 Aswathy Counselling Psychology
-              </h2>
+              </p>
               <p className="font-quote-editorial text-quote-editorial italic text-primary-fixed-dim max-w-lg leading-relaxed pt-space-xs">
                 &ldquo;Creating a space to feel heard, understood, and
                 respected.&rdquo;

@@ -11,6 +11,8 @@ import FaqSection from "@/components/FaqSection";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
 import { getDatabase } from "@/lib/db";
+import JsonLd from "@/components/JsonLd";
+import { DEFAULT_FAQS } from "@/lib/faq-data";
 
 // Next.js ISR: Revalidate server-rendered page every 60 seconds
 export const revalidate = 60;
@@ -77,8 +79,47 @@ export default async function Home() {
     console.error("Server component data hydration error:", err);
   }
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: DEFAULT_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
+      },
+    })),
+  };
+
+  const servicesSchema = initialServices && initialServices.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: initialServices.map((s: any, idx: number) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      item: {
+        "@type": "Service",
+        name: s.title,
+        description: s.summary,
+        provider: {
+          "@type": "Person",
+          name: "Aswathy Jeyarajasekar",
+        },
+        offers: {
+          "@type": "Offer",
+          price: s.price || 1800,
+          priceCurrency: "INR",
+        },
+      },
+    })),
+  } : null;
+
+  const pageSchemas = servicesSchema ? [faqSchema, servicesSchema] : [faqSchema];
+
   return (
     <>
+      <JsonLd data={pageSchemas} />
       <Navbar />
       
       <main className="w-full pt-20 bg-surface">

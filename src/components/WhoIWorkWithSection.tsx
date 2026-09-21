@@ -133,9 +133,9 @@ export default function WhoIWorkWithSection({ initialGroups }: WhoIWorkWithSecti
                 <span className="material-symbols-outlined text-secondary text-[22px]">
                   {group.icon}
                 </span>
-                <span className="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                <h3 className="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
                   {group.title}
-                </span>
+                </h3>
               </button>
             );
           })}

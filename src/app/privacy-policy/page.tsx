@@ -16,17 +16,57 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+import JsonLd from "@/components/JsonLd";
+
 export const metadata: Metadata = {
-  title: "Privacy Policy | Aswathy Counselling Psychology",
+  title: "Privacy Policy & Confidentiality | Aswathy Counselling Psychology",
   description:
-    "Privacy Policy for Aswathy Counselling Psychology (Root Therapy). Learn how we protect your personal health information, confidential therapy session data, and privacy.",
+    "Learn how Aswathy Counselling Psychology protects your personal details, confidential consultation records, and digital privacy under professional psychological ethics.",
+  alternates: {
+    canonical: "https://www.aswathypsychologist.com/privacy-policy",
+  },
+  openGraph: {
+    title: "Privacy Policy & Confidentiality | Aswathy Counselling Psychology",
+    description:
+      "Our ethical commitment to confidentiality, client data protection, and secure online mental health consultations.",
+    url: "https://www.aswathypsychologist.com/privacy-policy",
+    siteName: "Aswathy Jeyarajasekar Counselling Psychology",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy | Aswathy Counselling Psychology",
+    description:
+      "Our ethical commitment to confidentiality and client data protection.",
+  },
 };
 
 export default function PrivacyPolicyPage() {
   const lastUpdated = "September 18, 2026";
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.aswathypsychologist.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Privacy Policy",
+        item: "https://www.aswathypsychologist.com/privacy-policy",
+      },
+    ],
+  };
+
   return (
     <>
+      <JsonLd data={breadcrumbSchema} />
       <Navbar />
       <main className="w-full pt-28 lg:pt-32 pb-20 bg-surface min-h-screen">
         <div className="max-w-4xl mx-auto px-gutter-mobile lg:px-gutter-desktop">

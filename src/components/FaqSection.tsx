@@ -2,36 +2,11 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { DEFAULT_FAQS, type FaqItem } from "@/lib/faq-data";
+export { DEFAULT_FAQS, type FaqItem };
 
-export default function FaqSection() {
+export default function FaqSection({ faqs = DEFAULT_FAQS }: { faqs?: FaqItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const faqs = [
-    {
-      q: "What happens in our very first session?",
-      a: "The first session is gentle and unhurried. We take time to get to know each other, explore what brought you to therapy, discuss what you hope to experience, and answer any questions you have about the therapeutic process. There is never any pressure to dive into deep trauma or speak about anything before you feel ready.",
-    },
-    {
-      q: "Are all sessions conducted online?",
-      a: "Yes. All consultations are held 100% online via secure, encrypted Google Meet telehealth links. This allows you to speak from the comfort, safety, and confidentiality of your own private space anywhere in India or internationally, without commuting stress.",
-    },
-    {
-      q: "How strictly confidential are our conversations?",
-      a: "Your privacy is sacred. Everything shared in our sessions is strictly confidential in accordance with professional psychological ethics and legal standards. The only standard ethical exceptions involve imminent risk of severe harm to yourself or others, which would always be handled with transparent care.",
-    },
-    {
-      q: "What if I don't know where to start or feel nervous?",
-      a: "Feeling nervous or uncertain is completely natural. You do not need to arrive with an agenda or polished explanations. It is my role as your psychologist to facilitate an open, gentle dialogue through thoughtful questions and patient pauses.",
-    },
-    {
-      q: "How often will we meet?",
-      a: "Most clients begin with weekly or bi-weekly 50-minute sessions to build momentum and rapport. As you gain clarity and emotional grounding, we collaboratively review and adjust the frequency to suit your personal pace and schedule.",
-    },
-    {
-      q: "How do I book, and what are the payment arrangements?",
-      a: "You can easily schedule a consultation using the 'Book a Session' button on this website. After selecting your preferred date and format, you will receive confirmation details and payment guidelines via email or WhatsApp.",
-    },
-  ];
 
   return (
     <section
@@ -63,23 +38,29 @@ export default function FaqSection() {
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
                   className="w-full p-space-lg text-left flex items-center justify-between gap-space-md cursor-pointer"
                   aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${idx}`}
+                  id={`faq-question-${idx}`}
                 >
-                  <span className="font-headline-sm text-headline-sm text-primary text-base md:text-lg">
+                  <h3 className="font-headline-sm text-headline-sm text-primary text-base md:text-lg">
                     {faq.q}
-                  </span>
+                  </h3>
                   <div
-                    className={`w-8 h-8 rounded-full bg-surface flex items-center justify-center shrink-0 text-secondary transition-transform duration-300 ${
-                      isOpen ? "rotate-180 bg-primary text-surface" : ""
+                    className={`w-8 h-8 rounded-full bg-surface flex items-center justify-center shrink-0 transition-transform duration-300 ${
+                      isOpen ? "rotate-180 bg-secondary/10 text-secondary" : "text-primary"
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
+
                 {isOpen && (
-                  <div className="px-space-lg pb-space-lg pt-0 animate-fadeIn">
-                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed border-t border-surface-container-high pt-space-sm">
-                      {faq.a}
-                    </p>
+                  <div
+                    id={`faq-answer-${idx}`}
+                    role="region"
+                    aria-labelledby={`faq-question-${idx}`}
+                    className="px-space-lg pb-space-lg pt-space-xs text-on-surface-variant font-body-md text-body-md leading-relaxed border-t border-parchment-border/40"
+                  >
+                    <p>{faq.a}</p>
                   </div>
                 )}
               </div>

@@ -18,18 +18,29 @@ const plusJakarta = Plus_Jakarta_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
+import JsonLd from "@/components/JsonLd";
+
 export const metadata: Metadata = {
-  title: "Aswathy Jeyarajasekar | Counselling Psychologist",
+  title: {
+    default: "Aswathy Jeyarajasekar | Counselling Psychologist in Chennai & Online",
+    template: "%s | Aswathy Jeyarajasekar - Counselling Psychologist",
+  },
   description:
-    "An empathetic, collaborative space to explore your thoughts, emotions, experiences, and the parts of life that may feel difficult to navigate alone.",
+    "Empathetic, client-centred psychological counselling for adolescents, young adults, students, and working professionals. In-person sessions in Anna Nagar, Chennai and secure online counselling across India.",
   keywords: [
     "Counselling Psychologist",
-    "Psychology",
-    "Therapy",
-    "Mental Health",
-    "Person-centered counselling",
-    "Anxiety support",
-    "Student counselling",
+    "Counselling Psychologist Chennai",
+    "Counselling Psychologist near me",
+    "Online Counselling",
+    "Online Psychological Counselling",
+    "Mental Health Counselling",
+    "Individual Counselling",
+    "Student Counselling",
+    "Young Adult Counselling",
+    "Adult Counselling",
+    "Emotional Wellbeing",
+    "Psychological Support",
+    "Counselling Sessions",
     "Aswathy Jeyarajasekar",
   ],
   metadataBase: new URL(
@@ -38,28 +49,54 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.aswathypsychologist.com",
   },
-  authors: [{ name: "Aswathy Jeyarajasekar" }],
+  authors: [{ name: "Aswathy Jeyarajasekar", url: "https://www.aswathypsychologist.com" }],
+  creator: "Aswathy Jeyarajasekar",
+  publisher: "Aswathy Jeyarajasekar Counselling Psychology",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "Aswathy Jeyarajasekar | Counselling Psychologist",
-    description: "A space to understand yourself, at your own pace.",
+    title: "Aswathy Jeyarajasekar | Counselling Psychologist in Chennai & Online",
+    description:
+      "A compassionate, non-judgmental space for emotional wellbeing, personal growth, and navigating life challenges at your own pace.",
     url: "https://www.aswathypsychologist.com",
+    siteName: "Aswathy Jeyarajasekar Counselling Psychology",
+    locale: "en_IN",
     type: "website",
-    siteName: "Aswathy Jeyarajasekar Therapy",
     images: [
       {
-        url: "/aswathy-photo.jpg",
+        url: "https://www.aswathypsychologist.com/aswathy-photo.jpg",
         width: 1200,
         height: 630,
         alt: "Aswathy Jeyarajasekar, Counselling Psychologist",
+        type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aswathy Jeyarajasekar | Counselling Psychologist",
+    title: "Aswathy Jeyarajasekar | Counselling Psychologist in Chennai & Online",
     description:
-      "An empathetic, collaborative space to explore your thoughts, emotions, and life challenges.",
-    images: ["/aswathy-photo.jpg"],
+      "Empathetic, individualised psychological counselling for adolescents, young adults, students, and working professionals.",
+    images: [
+      {
+        url: "https://www.aswathypsychologist.com/aswathy-photo.jpg",
+        alt: "Aswathy Jeyarajasekar, Counselling Psychologist",
+      },
+    ],
   },
   icons: {
     icon: [
@@ -78,6 +115,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#fcf9f2",
 };
 
 export default function RootLayout({
@@ -85,6 +123,114 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const globalSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://www.aswathypsychologist.com/#website",
+      url: "https://www.aswathypsychologist.com",
+      name: "Aswathy Jeyarajasekar Counselling Psychology",
+      description:
+        "Client-centred, empathetic counselling psychology practice offering in-person consultations in Chennai and secure online counselling across India.",
+      inLanguage: "en-IN",
+      publisher: {
+        "@id": "https://www.aswathypsychologist.com/#person",
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://www.aswathypsychologist.com/#person",
+      name: "Aswathy Jeyarajasekar",
+      jobTitle: "Counselling Psychologist",
+      url: "https://www.aswathypsychologist.com",
+      image: "https://www.aswathypsychologist.com/aswathy-photo.jpg",
+      description:
+        "Counselling Psychologist with B.Sc. Psychology and M.Sc. Counselling Psychology with 1+ year in supervised private practice, focusing on client-centred emotional wellbeing.",
+      hasCredential: [
+        {
+          "@type": "EducationalOccupationalCredential",
+          credentialCategory: "degree",
+          name: "M.Sc. in Counselling Psychology",
+        },
+        {
+          "@type": "EducationalOccupationalCredential",
+          credentialCategory: "degree",
+          name: "B.Sc. in Psychology",
+        },
+      ],
+      knowsAbout: [
+        "Counselling Psychology",
+        "Client-Centred Therapy",
+        "Emotional Wellbeing",
+        "Stress Management",
+        "Young Adult Counselling",
+        "Student Mental Health",
+        "Interpersonal Dynamics",
+      ],
+      sameAs: [
+        "https://linkedin.com/in/aswathy-jeyarajasekar",
+        "https://instagram.com/aswathy.psychology",
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": ["ProfessionalService", "HealthAndBeautyBusiness"],
+      "@id": "https://www.aswathypsychologist.com/#practice",
+      name: "Aswathy Jeyarajasekar Counselling Psychology",
+      url: "https://www.aswathypsychologist.com",
+      logo: "https://www.aswathypsychologist.com/icon.png",
+      image: "https://www.aswathypsychologist.com/aswathy-photo.jpg",
+      telephone: "+917550002973",
+      email: "roottherapyonline@gmail.com",
+      priceRange: "₹₹",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Anna Nagar",
+        addressLocality: "Chennai",
+        addressRegion: "Tamil Nadu",
+        addressCountry: "IN",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 13.085,
+        longitude: 80.2101,
+      },
+      areaServed: [
+        {
+          "@type": "City",
+          name: "Chennai",
+        },
+        {
+          "@type": "Country",
+          name: "India",
+        },
+        {
+          "@type": "AdministrativeArea",
+          name: "Worldwide (Online Telehealth)",
+        },
+      ],
+      founder: {
+        "@id": "https://www.aswathypsychologist.com/#person",
+      },
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ],
+          opens: "09:00",
+          closes: "18:00",
+        },
+      ],
+    },
+  ];
+
   return (
     <html
       lang="en"
@@ -119,6 +265,7 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         />
+        <JsonLd data={globalSchemas} />
       </head>
       <body className="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed">
         {children}

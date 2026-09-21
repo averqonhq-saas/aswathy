@@ -121,8 +121,8 @@ export default function AboutSection({ initialAbout }: AboutSectionProps) {
             <Image
               alt={
                 about?.name
-                  ? `${about.name}, ${about.title || "Counselling Psychologist"}`
-                  : "Aswathy Jeyarajasekar, Counselling Psychologist"
+                  ? `${about.name}, ${about.title || "Counselling Psychologist"} - B.Sc. & M.Sc. Counselling Psychology`
+                  : "Aswathy Jeyarajasekar, Counselling Psychologist - B.Sc. & M.Sc. Counselling Psychology"
               }
               src={about?.profileImage || "/aswathy-photo2.jpg"}
               fill

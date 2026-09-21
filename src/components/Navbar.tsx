@@ -69,7 +69,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
             <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-parchment-border/60 shadow-xs bg-surface-container-low group-hover:scale-105 transition-transform duration-200">
               <Image
                 src="/icon.png"
-                alt="Aswathy Jeyarajasekar Logo"
+                alt="Aswathy Jeyarajasekar Logo - Counselling Psychologist"
                 fill
                 sizes="40px"
                 className="object-contain p-0.5"

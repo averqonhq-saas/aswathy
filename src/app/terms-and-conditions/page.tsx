@@ -16,17 +16,57 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+import JsonLd from "@/components/JsonLd";
+
 export const metadata: Metadata = {
-  title: "Terms & Conditions | Aswathy Counselling Psychology",
+  title: "Terms of Service & Consultation Policy | Aswathy Counselling Psychology",
   description:
-    "Terms of Service, Consultations, Cancellation, and Refund Policy for Aswathy Counselling Psychology (Root Therapy). Please read prior to booking an appointment.",
+    "Consultation guidelines, confidentiality limits, appointment rescheduling, and cancellation terms for Aswathy Counselling Psychology practice.",
+  alternates: {
+    canonical: "https://www.aswathypsychologist.com/terms-and-conditions",
+  },
+  openGraph: {
+    title: "Terms of Service & Consultation Policy | Aswathy Counselling Psychology",
+    description:
+      "Clear consultation guidelines and ethical framework for counselling sessions with Aswathy Jeyarajasekar.",
+    url: "https://www.aswathypsychologist.com/terms-and-conditions",
+    siteName: "Aswathy Jeyarajasekar Counselling Psychology",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Terms & Conditions | Aswathy Counselling Psychology",
+    description:
+      "Consultation guidelines and cancellation terms for psychological counselling appointments.",
+  },
 };
 
 export default function TermsAndConditionsPage() {
   const lastUpdated = "September 18, 2026";
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://www.aswathypsychologist.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Terms & Conditions",
+        item: "https://www.aswathypsychologist.com/terms-and-conditions",
+      },
+    ],
+  };
+
   return (
     <>
+      <JsonLd data={breadcrumbSchema} />
       <Navbar />
       <main className="w-full pt-28 lg:pt-32 pb-20 bg-surface min-h-screen">
         <div className="max-w-4xl mx-auto px-gutter-mobile lg:px-gutter-desktop">

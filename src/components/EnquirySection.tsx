@@ -100,12 +100,12 @@ export default function EnquirySection() {
                   Support &amp; Payment Inquiry
                 </span>
               </div>
-              <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
+              <h1 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
                 Support inquiries or{" "}
                 <span className="italic font-normal text-soft-terracotta">
                   payment issues?
                 </span>
-              </h2>
+              </h1>
               <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed pt-space-xs">
                 Whether you have questions before booking, need help with a payment issue or transaction, or want to inquire about our consultation formats, we are here to assist you promptly.
               </p>

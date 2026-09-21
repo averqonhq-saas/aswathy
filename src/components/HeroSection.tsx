@@ -89,7 +89,7 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
           <div className="relative w-full max-w-md aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-xl bg-surface-container-low group">
             <Image
               src="/aswathy-photo.jpg"
-              alt="Aswathy Jeyarajasekar, Counselling Psychologist"
+              alt="Aswathy Jeyarajasekar, Counselling Psychologist in Chennai offering online psychological counselling"
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 450px"

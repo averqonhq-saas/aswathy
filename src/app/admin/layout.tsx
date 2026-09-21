@@ -14,8 +14,22 @@ export default function RootAdminLayout({
   const isLogin = pathname === "/admin/login";
 
   if (isLogin) {
-    return <ToastProvider>{children}</ToastProvider>;
+    return (
+      <>
+        <head>
+          <meta name="robots" content="noindex, nofollow" />
+        </head>
+        <ToastProvider>{children}</ToastProvider>
+      </>
+    );
   }
 
-  return <AdminLayout>{children}</AdminLayout>;
+  return (
+    <>
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
+      <AdminLayout>{children}</AdminLayout>
+    </>
+  );
 }

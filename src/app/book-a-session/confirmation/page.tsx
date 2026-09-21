@@ -200,6 +200,9 @@ END:VCALENDAR`;
 export default function BookingConfirmationPage() {
   return (
     <>
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
       <Navbar />
       <main className="w-full min-h-[80vh] pt-24 pb-16 bg-surface flex items-center justify-center">
         <Suspense
