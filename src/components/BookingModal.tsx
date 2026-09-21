@@ -94,21 +94,32 @@ export default function BookingModal({
   }, [availableDates, selectedDate]);
 
   const [bookedSlots, setBookedSlots] = useState<Array<{ date: string; time: string }>>([]);
+  const [config, setConfig] = useState<any>(null);
 
   useEffect(() => {
-    async function loadBooked() {
+    async function loadData() {
       try {
-        const res = await fetch("/api/bookings");
-        if (!res.ok) return;
-        const data = await res.json();
-        if (Array.isArray(data.bookedSlots)) {
-          setBookedSlots(data.bookedSlots);
+        const [bookRes, contentRes] = await Promise.all([
+          fetch("/api/bookings"),
+          fetch("/api/content", { cache: "no-store" }),
+        ]);
+        if (bookRes.ok) {
+          const data = await bookRes.json();
+          if (Array.isArray(data.bookedSlots)) {
+            setBookedSlots(data.bookedSlots);
+          }
+        }
+        if (contentRes.ok) {
+          const content = await contentRes.json();
+          if (content.bookingFormConfig) {
+            setConfig(content.bookingFormConfig);
+          }
         }
       } catch {
         // Fallback
       }
     }
-    loadBooked();
+    loadData();
   }, []);
 
   const isSlotBooked = (dateStr: string, timeStr: string) => {
@@ -117,13 +128,49 @@ export default function BookingModal({
     );
   };
 
-  const rawMorningSlots = ["10:00 AM", "11:30 AM"];
-  const rawAfternoonSlots = ["02:00 PM", "03:30 PM"];
-  const rawEveningSlots = ["05:00 PM", "06:30 PM", "07:30 PM"];
+  // Only scheduled slots for selected date
+  const selectedDayOverride = config?.singleDaySlots?.find((s: any) => s.date === selectedDate);
+  const isSelectedDateOnLeave = !!(
+    selectedDayOverride?.isOffDay ||
+    (selectedDayOverride && Array.isArray(selectedDayOverride.slots) && selectedDayOverride.slots.length === 0)
+  );
 
-  const morningSlots = rawMorningSlots.filter((t) => !isSlotBooked(selectedDate, t));
-  const afternoonSlots = rawAfternoonSlots.filter((t) => !isSlotBooked(selectedDate, t));
-  const eveningSlots = rawEveningSlots.filter((t) => !isSlotBooked(selectedDate, t));
+  const candidateSlots: Array<{ time: string; isEvening?: boolean }> =
+    isSelectedDateOnLeave
+      ? []
+      : selectedDayOverride && Array.isArray(selectedDayOverride.slots) && selectedDayOverride.slots.length > 0
+      ? selectedDayOverride.slots
+      : config?.onlyScheduledSlots === false
+      ? [
+          { time: "10:00 AM" },
+          { time: "11:30 AM" },
+          { time: "02:00 PM" },
+          { time: "03:30 PM" },
+          { time: "05:00 PM" },
+          { time: "06:30 PM" },
+          { time: "07:30 PM" },
+        ]
+      : [];
+
+  const parseHourFromTime = (timeStr: string) => {
+    const m = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+    if (!m) return 12;
+    let h = parseInt(m[1], 10);
+    const p = m[3] ? m[3].toUpperCase() : "";
+    if (p === "PM" && h < 12) h += 12;
+    if (p === "AM" && h === 12) h = 0;
+    return h;
+  };
+
+  const morningSlots = candidateSlots
+    .filter((s) => parseHourFromTime(s.time) < 12)
+    .map((s) => s.time);
+  const afternoonSlots = candidateSlots
+    .filter((s) => parseHourFromTime(s.time) >= 12 && parseHourFromTime(s.time) < 17)
+    .map((s) => s.time);
+  const eveningSlots = candidateSlots
+    .filter((s) => parseHourFromTime(s.time) >= 17)
+    .map((s) => s.time);
 
   const handleNextFromStep1 = () => setStep(2);
 
@@ -506,85 +553,153 @@ END:VCALENDAR`;
                       2. Available Time Slots (IST / UTC+5:30)
                     </label>
 
-                    <div className="space-y-space-sm">
-                      <div>
-                        <span className="text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant block mb-1">
-                          Morning
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {morningSlots.map((time) => {
-                            const isSelected = selectedTime === time;
-                            return (
-                              <button
-                                key={time}
-                                type="button"
-                                onClick={() => setSelectedTime(time)}
-                                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
-                                  isSelected
-                                    ? "bg-primary text-surface border-primary shadow-xs"
-                                    : "bg-surface hover:bg-surface-container border-surface-container text-on-surface"
-                                }`}
-                              >
-                                <Clock className="w-3.5 h-3.5" />
-                                <span>{time}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                    {candidateSlots.length === 0 ? (
+                      <div className="p-5 rounded-2xl bg-surface-container border border-outline-variant text-center space-y-1.5 my-2">
+                        <p className="text-xs font-semibold text-primary">
+                          There is no slot available for this date
+                        </p>
+                        <p className="text-[11px] text-on-surface-variant max-w-xs mx-auto">
+                          No consultation slots are scheduled for this date. Please choose another date with open slots.
+                        </p>
                       </div>
+                    ) : (
+                      <div className="space-y-space-sm">
+                        {morningSlots.length > 0 && (
+                          <div>
+                            <span className="text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant block mb-1">
+                              Morning
+                            </span>
+                            <div className="flex flex-wrap gap-2">
+                              {morningSlots.map((time) => {
+                                const isBooked = isSlotBooked(selectedDate, time);
+                                const isSelected = selectedTime === time;
 
-                      <div>
-                        <span className="text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant block mb-1">
-                          Afternoon
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {afternoonSlots.map((time) => {
-                            const isSelected = selectedTime === time;
-                            return (
-                              <button
-                                key={time}
-                                type="button"
-                                onClick={() => setSelectedTime(time)}
-                                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
-                                  isSelected
-                                    ? "bg-primary text-surface border-primary shadow-xs"
-                                    : "bg-surface hover:bg-surface-container border-surface-container text-on-surface"
-                                }`}
-                              >
-                                <Clock className="w-3.5 h-3.5" />
-                                <span>{time}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
+                                if (isBooked) {
+                                  return (
+                                    <div
+                                      key={time}
+                                      className="px-3 py-2 rounded-xl text-xs font-medium border bg-surface-container text-on-surface-variant/60 cursor-not-allowed flex items-center gap-1.5 opacity-70"
+                                      title="Slot unavailable"
+                                    >
+                                      <span className="line-through">{time}</span>
+                                      <span className="text-[9px] uppercase font-semibold px-1.5 py-0.2 rounded bg-surface text-secondary">
+                                        No slot
+                                      </span>
+                                    </div>
+                                  );
+                                }
 
-                      <div>
-                        <span className="text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant block mb-1">
-                          Evening
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {eveningSlots.map((time) => {
-                            const isSelected = selectedTime === time;
-                            return (
-                              <button
-                                key={time}
-                                type="button"
-                                onClick={() => setSelectedTime(time)}
-                                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
-                                  isSelected
-                                    ? "bg-primary text-surface border-primary shadow-xs"
-                                    : "bg-surface hover:bg-surface-container border-surface-container text-on-surface"
-                                }`}
-                              >
-                                <Clock className="w-3.5 h-3.5" />
-                                <span>{time}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                                return (
+                                  <button
+                                    key={time}
+                                    type="button"
+                                    onClick={() => setSelectedTime(time)}
+                                    className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
+                                      isSelected
+                                        ? "bg-primary text-surface border-primary shadow-xs"
+                                        : "bg-surface hover:bg-surface-container border-surface-container text-on-surface"
+                                    }`}
+                                  >
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span>{time}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {afternoonSlots.length > 0 && (
+                          <div>
+                            <span className="text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant block mb-1">
+                              Afternoon
+                            </span>
+                            <div className="flex flex-wrap gap-2">
+                              {afternoonSlots.map((time) => {
+                                const isBooked = isSlotBooked(selectedDate, time);
+                                const isSelected = selectedTime === time;
+
+                                if (isBooked) {
+                                  return (
+                                    <div
+                                      key={time}
+                                      className="px-3 py-2 rounded-xl text-xs font-medium border bg-surface-container text-on-surface-variant/60 cursor-not-allowed flex items-center gap-1.5 opacity-70"
+                                      title="Slot unavailable"
+                                    >
+                                      <span className="line-through">{time}</span>
+                                      <span className="text-[9px] uppercase font-semibold px-1.5 py-0.2 rounded bg-surface text-secondary">
+                                        No slot
+                                      </span>
+                                    </div>
+                                  );
+                                }
+
+                                return (
+                                  <button
+                                    key={time}
+                                    type="button"
+                                    onClick={() => setSelectedTime(time)}
+                                    className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
+                                      isSelected
+                                        ? "bg-primary text-surface border-primary shadow-xs"
+                                        : "bg-surface hover:bg-surface-container border-surface-container text-on-surface"
+                                    }`}
+                                  >
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span>{time}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {eveningSlots.length > 0 && (
+                          <div>
+                            <span className="text-[11px] uppercase tracking-wider font-semibold text-on-surface-variant block mb-1">
+                              Evening
+                            </span>
+                            <div className="flex flex-wrap gap-2">
+                              {eveningSlots.map((time) => {
+                                const isBooked = isSlotBooked(selectedDate, time);
+                                const isSelected = selectedTime === time;
+
+                                if (isBooked) {
+                                  return (
+                                    <div
+                                      key={time}
+                                      className="px-3 py-2 rounded-xl text-xs font-medium border bg-surface-container text-on-surface-variant/60 cursor-not-allowed flex items-center gap-1.5 opacity-70"
+                                      title="Slot unavailable"
+                                    >
+                                      <span className="line-through">{time}</span>
+                                      <span className="text-[9px] uppercase font-semibold px-1.5 py-0.2 rounded bg-surface text-secondary">
+                                        No slot
+                                      </span>
+                                    </div>
+                                  );
+                                }
+
+                                return (
+                                  <button
+                                    key={time}
+                                    type="button"
+                                    onClick={() => setSelectedTime(time)}
+                                    className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
+                                      isSelected
+                                        ? "bg-primary text-surface border-primary shadow-xs"
+                                        : "bg-surface hover:bg-surface-container border-surface-container text-on-surface"
+                                    }`}
+                                  >
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span>{time}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               )}

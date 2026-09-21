@@ -80,6 +80,7 @@ export interface BookingFormConfig {
   defaultPaymentStatus?: "pending" | "paid"; // Default status when online payment is disabled
   manualPaymentInstructions?: string; // Instructions for client on manual settlement
   noticeBox?: BookingNoticeBox; // Client-facing announcement/notice banner on booking form
+  onlyScheduledSlots?: boolean; // When true (default), only explicit Day Schedule slots are shown in booking; unscheduled dates show "There is no slot".
   updatedAt: string;
 }
 
@@ -173,6 +174,7 @@ export const DEFAULT_BOOKING_FORM_CONFIG: BookingFormConfig = {
   paymentDisabledNote: "No upfront payment required online. You may settle your consultation fee directly at the clinic or after your session.",
   manualPaymentInstructions: "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
   singleDaySlots: [],
+  onlyScheduledSlots: true,
   noticeBox: {
     enabled: false,
     title: "Important Clinic Notice",

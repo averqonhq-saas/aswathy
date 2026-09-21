@@ -521,6 +521,56 @@ export default function AdminBookingFormControlPage() {
       {/* ============================================================ */}
       {activeTab === "slots" && (
         <div className="space-y-6">
+          {/* Scheduling Policy Card */}
+          <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#1A3828] inline-block"></span>
+                  <h3 className="font-playfair text-base font-semibold text-[#1A3828]">
+                    Client Booking Schedule Mode
+                  </h3>
+                </div>
+                <p className="text-xs text-[#7B7368] mt-1 max-w-xl leading-relaxed">
+                  Control whether booking is strictly restricted to dates with an active Day Schedule, or if recurring daily slots are used as a fallback.
+                </p>
+              </div>
+
+              <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                <input
+                  type="checkbox"
+                  checked={config.onlyScheduledSlots !== false}
+                  onChange={(e) =>
+                    setConfig({ ...config, onlyScheduledSlots: e.target.checked })
+                  }
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1A3828]"></div>
+              </label>
+            </div>
+
+            <div
+              className={`p-4 rounded-xl border text-xs leading-relaxed flex items-start gap-2.5 ${
+                config.onlyScheduledSlots !== false
+                  ? "bg-[#fbf7ee] border-[#705d00]/25 text-[#5a4033]"
+                  : "bg-amber-50 border-amber-200 text-amber-900"
+              }`}
+            >
+              <Info className="w-4 h-4 shrink-0 text-[#705d00] mt-0.5" />
+              <div>
+                {config.onlyScheduledSlots !== false ? (
+                  <span>
+                    <strong>Only Scheduled Day Slots are displayed:</strong> Clients can only book on dates you configure below in <em>Day Schedule &amp; Leave Management</em>. All other remaining dates and booked slots will display <strong>&ldquo;There is no slot&rdquo;</strong>.
+                  </span>
+                ) : (
+                  <span>
+                    <strong>Recurring Daily Slots Active:</strong> The fallback daily slots configured below will be displayed for any date that does not have a day-specific override.
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Slots Card */}
           <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-5">
             <div>

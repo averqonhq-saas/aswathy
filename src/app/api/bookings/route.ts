@@ -140,6 +140,35 @@ export async function POST(request: Request) {
       );
     }
 
+    // Verify that the date and slot are explicitly scheduled when onlyScheduledSlots is enabled
+    const isStrictScheduledOnly = db.bookingFormConfig?.onlyScheduledSlots !== false;
+    if (isStrictScheduledOnly) {
+      if (
+        !dayOverride ||
+        dayOverride.isOffDay ||
+        !Array.isArray(dayOverride.slots) ||
+        dayOverride.slots.length === 0
+      ) {
+        return NextResponse.json(
+          {
+            error: `There is no slot scheduled for ${appointmentDate}. Please choose an available scheduled date.`,
+          },
+          { status: 400 }
+        );
+      }
+      const isSlotInSchedule = dayOverride.slots.some((s) =>
+        areSlotsMatching(s.time, appointmentTime)
+      );
+      if (!isSlotInSchedule) {
+        return NextResponse.json(
+          {
+            error: `The consultation slot at ${appointmentTime} is not scheduled for ${appointmentDate}. Please choose an available scheduled slot.`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Check if the specific slot is blocked by admin
     const isSlotBlocked = db.blockedSlots?.some(
       (b) =>

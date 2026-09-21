@@ -165,6 +165,23 @@ export default function BookingForm({
           if (Array.isArray(data.bookingFormConfig.contactChannels) && data.bookingFormConfig.contactChannels.length > 0) {
             setContactChannel(data.bookingFormConfig.contactChannels[0]);
           }
+
+          // If only explicitly scheduled slots are allowed, intelligently select the first upcoming date that has active scheduled slots
+          if (loadedConfig.onlyScheduledSlots !== false && Array.isArray(loadedConfig.singleDaySlots)) {
+            const todayStr = new Date().toISOString().split("T")[0];
+            const firstScheduledWorkingDay = loadedConfig.singleDaySlots.find(
+              (s) => s.date >= todayStr && !s.isOffDay && Array.isArray(s.slots) && s.slots.length > 0
+            );
+            if (firstScheduledWorkingDay) {
+              const [yr, mo, dy] = firstScheduledWorkingDay.date.split("-").map(Number);
+              const targetDate = new Date(yr, mo - 1, dy);
+              setSelectedDate(targetDate);
+              setViewDate(targetDate);
+              if (firstScheduledWorkingDay.slots.length > 0) {
+                setSelectedTime(firstScheduledWorkingDay.slots[0].time);
+              }
+            }
+          }
         }
       } catch {
         // Fallback to defaults
@@ -397,6 +414,17 @@ export default function BookingForm({
     [bookedSlots, config.blockedSlots]
   );
 
+  // Check if current date is explicitly scheduled with consultation slots
+  const isDateScheduled = useMemo(() => {
+    if (config.onlyScheduledSlots === false) return true;
+    return !!(
+      activeSingleDayOverride &&
+      activeSingleDayOverride.slots &&
+      activeSingleDayOverride.slots.length > 0 &&
+      !activeSingleDayOverride.isOffDay
+    );
+  }, [config.onlyScheduledSlots, activeSingleDayOverride]);
+
   // Candidate time slots configured for the date before filtering booked slots
   const candidateTimeSlots = useMemo(() => {
     if (isDateOnLeave) {
@@ -409,8 +437,13 @@ export default function BookingForm({
     ) {
       return activeSingleDayOverride.slots;
     }
+    // Strict mode (default): Only explicitly scheduled day slots display in booking!
+    // Remaining unscheduled dates have NO slots ("There is no slot").
+    if (config.onlyScheduledSlots !== false) {
+      return [];
+    }
     return config.timeSlots || TIME_SLOTS;
-  }, [isDateOnLeave, activeSingleDayOverride, config.timeSlots]);
+  }, [isDateOnLeave, activeSingleDayOverride, config.onlyScheduledSlots, config.timeSlots]);
 
   // Active time slots: Filter out any slot that is booked or blocked
   const activeTimeSlots = useMemo(() => {
@@ -443,7 +476,7 @@ export default function BookingForm({
   // Jump to the next upcoming available date that has open, unbooked slots
   const handleJumpToNextAvailableDate = () => {
     const candidate = new Date(selectedDate);
-    for (let i = 1; i <= 30; i++) {
+    for (let i = 1; i <= 60; i++) {
       candidate.setDate(candidate.getDate() + 1);
       const cDateStr = `${candidate.getFullYear()}-${String(candidate.getMonth() + 1).padStart(2, "0")}-${String(candidate.getDate()).padStart(2, "0")}`;
       const override = config.singleDaySlots?.find((s) => s.date === cDateStr);
@@ -459,7 +492,7 @@ export default function BookingForm({
       );
       const daySlots = override && override.slots && override.slots.length > 0 && !override.isOffDay
         ? override.slots
-        : (config.timeSlots || TIME_SLOTS);
+        : (config.onlyScheduledSlots !== false ? [] : (config.timeSlots || TIME_SLOTS));
       const hasOpenSlots = daySlots.some((s) => !isSlotBookedOrBlocked(cDateStr, s.time));
 
       if (!isLeave && hasOpenSlots) {
@@ -489,7 +522,7 @@ export default function BookingForm({
           ? "No consultation slots are available on this date as the therapist is on leave. Please choose an alternate date."
           : isAllSlotsBooked
           ? "All consultation slots for this date have already been reserved. Please select another date."
-          : "No appointment slots are available on this date. Please select an alternate date."
+          : "There is no slot available for this date. Please select an alternate scheduled date."
       );
       return;
     }
@@ -1372,17 +1405,26 @@ END:VCALENDAR`;
                       dayOverride.slots.length > 0 &&
                       !dayOverride.isOffDay
                     );
+                    const isStrictScheduledOnly = config.onlyScheduledSlots !== false;
+                    const isScheduledDay = hasCustomSingleDaySlots || (!isStrictScheduledOnly && (config.timeSlots || TIME_SLOTS).length > 0);
                     const dayCandidateSlots = hasCustomSingleDaySlots
                       ? (dayOverride?.slots || [])
-                      : (config.timeSlots || TIME_SLOTS);
+                      : (!isStrictScheduledOnly ? (config.timeSlots || TIME_SLOTS) : []);
+                    const isAvailable =
+                      item.isCurrentMonth &&
+                      !past &&
+                      !isLeaveDay &&
+                      isScheduledDay &&
+                      dayCandidateSlots.some((s) => !isSlotBookedOrBlocked(itemDateStr, s.time));
                     const isFullyBooked =
                       !isLeaveDay &&
                       !past &&
                       item.isCurrentMonth &&
+                      isScheduledDay &&
                       dayCandidateSlots.length > 0 &&
-                      dayCandidateSlots.every((s) => isSlotBookedOrBlocked(itemDateStr, s.time));
-                    const isAvailable =
-                      item.isCurrentMonth && !past && !isLeaveDay && !isFullyBooked;
+                      !isAvailable;
+                    const isUnscheduled =
+                      item.isCurrentMonth && !past && !isLeaveDay && !isScheduledDay;
 
                     return (
                       <button
@@ -1399,7 +1441,9 @@ END:VCALENDAR`;
                             ? `${itemDateStr}: Therapist on Leave · No Slots Available`
                             : isFullyBooked
                             ? `${itemDateStr}: All Consultation Slots Booked`
-                            : undefined
+                            : isUnscheduled
+                            ? `${itemDateStr}: There is no slot scheduled`
+                            : `${itemDateStr}: Scheduled Slots Available`
                         }
                         className={`relative h-10 w-full rounded-lg flex flex-col items-center justify-center text-xs transition-all font-medium ${
                           !item.isCurrentMonth
@@ -1411,23 +1455,24 @@ END:VCALENDAR`;
                               ? "bg-rose-800 text-white font-semibold shadow-sm ring-2 ring-rose-400"
                               : isFullyBooked
                               ? "bg-[#6b584e] text-white font-semibold shadow-sm ring-2 ring-[#a8988e]"
+                              : isUnscheduled
+                              ? "bg-[#5a4a42] text-white font-semibold shadow-sm ring-2 ring-[#8c7d75]"
                               : "bg-[#412a1e] text-[#fcf9f2] font-semibold shadow-sm"
                             : isLeaveDay
                             ? "text-rose-700 bg-rose-50/70 hover:bg-rose-100/80 border border-rose-200/70 cursor-pointer"
                             : isFullyBooked
                             ? "text-[#82746f] bg-[#ede8e1]/60 hover:bg-[#e4ded6] border border-[#d8d0c5] cursor-pointer"
-                            : "text-[#1c1c18] hover:bg-[#e5e2db]/70 cursor-pointer"
+                            : isAvailable
+                            ? "text-[#1c1c18] font-semibold hover:bg-[#e5e2db]/80 cursor-pointer"
+                            : "text-[#82746f]/70 hover:bg-[#e5e2db]/50 cursor-pointer"
                         }`}
                       >
                         <span>{item.day}</span>
-                        {/* Dot indicator for available working days */}
+                        {/* Dot indicator for available scheduled days */}
                         {isAvailable && !isSelected && (
                           <span
-                            className={`w-1 h-1 rounded-full absolute bottom-1 ${
-                              hasCustomSingleDaySlots
-                                ? "bg-[#705d00] ring-1 ring-[#F4D242]"
-                                : "bg-[#F4D242]"
-                            }`}
+                            className="w-1.5 h-1.5 rounded-full absolute bottom-1 bg-[#F4D242] ring-1 ring-[#705d00]"
+                            title="Slots Available"
                           ></span>
                         )}
                         {/* Dot indicator for fully booked days */}
@@ -1436,7 +1481,7 @@ END:VCALENDAR`;
                         )}
                         {/* Dot indicator for leave days */}
                         {isLeaveDay && item.isCurrentMonth && !past && !isSelected && (
-                          <span className="w-1.5 h-1.5 rounded-full absolute bottom-1 bg-rose-500"></span>
+                          <span className="w-1.5 h-1.5 rounded-full absolute bottom-1 bg-rose-500" title="On Leave"></span>
                         )}
                       </button>
                     );
@@ -1451,12 +1496,8 @@ END:VCALENDAR`;
                   <span>Selected Date</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#F4D242] inline-block"></span>
-                  <span>Daily Slots</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#705d00] ring-1 ring-[#F4D242] inline-block"></span>
-                  <span>Custom Day Slots</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#F4D242] ring-1 ring-[#705d00] inline-block"></span>
+                  <span>Scheduled Slots</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#8c7d75] inline-block"></span>
@@ -1496,7 +1537,7 @@ END:VCALENDAR`;
                 )}
 
                 {/* IF ON LEAVE OR NO SLOTS: EMPATHETIC NOTICE CARD */}
-                {isDateOnLeave || activeTimeSlots.length === 0 ? (
+                {isDateOnLeave || candidateTimeSlots.length === 0 || activeTimeSlots.length === 0 ? (
                   <div className="rounded-2xl bg-[#fff5f5] border border-rose-200 p-6 text-center space-y-4 my-auto">
                     <div className="w-12 h-12 rounded-full bg-rose-100 border border-rose-200 flex items-center justify-center mx-auto text-rose-700 shadow-xs">
                       <CalendarOff className="w-6 h-6 text-rose-600" />
@@ -1508,14 +1549,14 @@ END:VCALENDAR`;
                           ? "Therapist On Leave"
                           : isAllSlotsBooked
                           ? "Fully Booked"
-                          : "No Slots Available"}
+                          : "There Is No Slot"}
                       </span>
                       <h4 className="font-serif text-lg font-medium text-[#412a1e]">
                         {isDateOnLeave
                           ? "No Consultation Slots Available"
                           : isAllSlotsBooked
                           ? "All Consultation Slots Booked"
-                          : "No Slots Available for this Date"}
+                          : "There is no slot available for this date"}
                       </h4>
                       <p className="text-xs text-[#5a4033] max-w-xs mx-auto leading-relaxed">
                         {activeSingleDayOverride?.leaveReason || activeSingleDayOverride?.note
@@ -1524,7 +1565,7 @@ END:VCALENDAR`;
                           ? "Aswathy is away on leave on this date. No consultation slots are available."
                           : isAllSlotsBooked
                           ? "All consultation slots for this date have already been reserved by other clients. Please choose another date or tap below to jump to the next available opening."
-                          : "There are no consultation slots available for booking on this date."}
+                          : "There are no consultation slots scheduled for this date. Only dates with an active clinical schedule are open for booking."}
                       </p>
                       <p className="text-[11px] text-[#82746f] pt-1">
                         Please choose another open date from the calendar, or tap below:
@@ -1541,10 +1582,29 @@ END:VCALENDAR`;
                     </button>
                   </div>
                 ) : (
-                  /* Slots Grid */
+                  /* Slots Grid: only scheduled slots display; booked slots clearly marked with "No slot (Booked)" */
                   <div className="grid grid-cols-2 gap-2.5">
-                    {activeTimeSlots.map((slot) => {
+                    {candidateTimeSlots.map((slot) => {
+                      const isBooked = isSlotBookedOrBlocked(selectedDateStr, slot.time);
                       const isSelected = selectedTime === slot.time;
+
+                      if (isBooked) {
+                        return (
+                          <div
+                            key={slot.time}
+                            className={`${
+                              slot.isEvening ? "col-span-2" : "col-span-1"
+                            } py-2.5 px-3 rounded-xl text-xs font-medium text-center border bg-[#eae5dc]/60 border-[#d8d0c5] text-[#82746f] cursor-not-allowed flex items-center justify-center gap-2 select-none opacity-80`}
+                            title={`${slot.time} is already reserved`}
+                          >
+                            <span className="line-through">{slot.time}</span>
+                            <span className="text-[9px] uppercase font-semibold px-1.5 py-0.5 rounded bg-[#d8d0c5]/80 text-[#5a4033]">
+                              No slot
+                            </span>
+                          </div>
+                        );
+                      }
+
                       return (
                         <button
                           key={slot.time}
@@ -1554,7 +1614,7 @@ END:VCALENDAR`;
                             slot.isEvening ? "col-span-2" : "col-span-1"
                           } py-2.5 px-3 rounded-xl text-xs font-medium transition-all text-center border cursor-pointer ${
                             isSelected
-                              ? "bg-[#F4D242] border-[#F4D242] text-[#221b00] font-semibold shadow-sm"
+                              ? "bg-[#F4D242] border-[#F4D242] text-[#221b00] font-semibold shadow-sm ring-1 ring-[#705d00]/30"
                               : "bg-[#f6f3ec] hover:bg-[#ece8df] border-[#e2d9ce] text-[#412a1e]"
                           }`}
                         >
@@ -1624,9 +1684,11 @@ END:VCALENDAR`;
                     {selectedDateStr}{" "}
                     {isDateOnLeave
                       ? "· (Therapist on Leave — No Slots Available)"
+                      : activeTimeSlots.length === 0
+                      ? "· (There is no slot available for this date)"
                       : selectedTime
                       ? `at ${selectedTime}`
-                      : "· (Select a slot)"}
+                      : "· (Select an available slot)"}
                   </div>
                 </div>
               </div>
@@ -1858,7 +1920,7 @@ END:VCALENDAR`;
                     ? "No Slots Available (On Leave) — Choose Another Date"
                     : isAllSlotsBooked
                     ? "All Slots Booked — Choose Another Date"
-                    : "No Slots Available — Choose Another Date"}
+                    : "There Is No Slot — Choose Another Date"}
                 </span>
               </span>
             ) : (
