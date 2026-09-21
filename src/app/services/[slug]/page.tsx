@@ -208,7 +208,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container border border-parchment-border/60">
                 <Video className="w-4 h-4 text-secondary" />
-                <span>Online Telehealth &amp; In-Person (Anna Nagar, Chennai)</span>
+                <span>100% Online Telehealth (Google Meet)</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container border border-parchment-border/60 font-semibold text-primary">
                 <span>Fee: ₹{service.price}</span>
@@ -287,7 +287,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
               {service.sessionApproach}
             </p>
             <p className="text-xs sm:text-sm text-on-surface-variant pt-2 border-t border-parchment-border/40">
-              Consultations are offered both <strong>100% online via secure Google Meet telehealth</strong> (accessible from anywhere in India and globally) and <strong>in-person in Anna Nagar, Chennai</strong>.
+              Consultations are conducted <strong>100% online via secure Google Meet telehealth</strong>, accessible from anywhere in India and globally.
             </p>
           </section>
 

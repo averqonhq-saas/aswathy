@@ -6,7 +6,7 @@ export interface FaqItem {
 export const DEFAULT_FAQS: FaqItem[] = [
   {
     q: "How to find a counselling psychologist in Chennai?",
-    a: "When seeking a counselling psychologist in Chennai, look for certified qualifications (such as an M.Sc. in Counselling Psychology), professional clinical supervision, a client-centred ethos, and clear boundaries regarding confidentiality. Aswathy Jeyarajasekar offers consultations both in Anna Nagar, Chennai and 100% online across Tamil Nadu and India.",
+    a: "When seeking a counselling psychologist, look for certified qualifications (such as an M.Sc. in Counselling Psychology), professional clinical supervision, a client-centred ethos, and clear boundaries regarding confidentiality. Aswathy Jeyarajasekar offers consultations 100% online via secure, confidential video sessions accessible across Chennai, Tamil Nadu, and all of India.",
   },
   {
     q: "Where can I get online counselling in India?",

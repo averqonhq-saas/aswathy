@@ -131,7 +131,7 @@ export default function PrivacyPolicyPage() {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-secondary mt-1 shrink-0" />
-                  <span><strong>Consultation Intake Information:</strong> Appointment date &amp; time, preferred format (Online Video via Google Meet or In-Person Clinic), service requested, and optional introductory notes or concerns you choose to share in the booking form.</span>
+                  <span><strong>Consultation Intake Information:</strong> Appointment date &amp; time, preferred format (100% Online Video via Google Meet), service requested, and optional introductory notes or concerns you choose to share in the booking form.</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-secondary mt-1 shrink-0" />

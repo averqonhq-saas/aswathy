@@ -1127,7 +1127,7 @@ END:VCALENDAR`;
               </div>
               <p className="text-xs text-[#5a4033] leading-relaxed">
                 {config.paymentDisabledNote ||
-                  "Your appointment slot has been reserved. You can settle the consultation fee in person at the clinic or during your consultation."}
+                  "Your appointment slot has been reserved. You can settle the consultation fee online prior to or during your consultation."}
               </p>
             </div>
           )}
@@ -1803,13 +1803,13 @@ END:VCALENDAR`;
                   <div className="flex flex-wrap items-center justify-between gap-1">
                     <p className="font-semibold text-[#1A3828]">Manual Payment Settlement</p>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-300">
-                      Status: {config.defaultPaymentStatus === "paid" ? "Marked as Paid" : "Pay at Clinic / Session"}
+                      Status: {config.defaultPaymentStatus === "paid" ? "Marked as Paid" : "Pay Later / At Session"}
                     </span>
                   </div>
                   <p className="text-[11px] leading-relaxed text-[#5a4033]">
                     {config.manualPaymentInstructions ||
                       config.paymentDisabledNote ||
-                      "Your booking will be reserved instantly. You can settle the consultation fee in person at the clinic or during your consultation."}
+                      "Your booking will be reserved instantly. You can settle the consultation fee online prior to or during your consultation."}
                   </p>
                 </div>
               </div>

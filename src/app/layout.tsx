@@ -131,7 +131,7 @@ export default function RootLayout({
       url: "https://www.aswathypsychologist.com",
       name: "Aswathy Jeyarajasekar Counselling Psychology",
       description:
-        "Client-centred, empathetic counselling psychology practice offering in-person consultations in Chennai and secure online counselling across India.",
+        "Client-centred, empathetic counselling psychology practice offering secure, confidential 100% online counselling across Chennai, India, and globally.",
       inLanguage: "en-IN",
       publisher: {
         "@id": "https://www.aswathypsychologist.com/#person",

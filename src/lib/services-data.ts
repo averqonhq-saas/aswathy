@@ -73,14 +73,14 @@ export const DETAILED_SERVICES: DetailedService[] = [
         a: "Not at all. Many clients come to explore personal growth, gain clarity about their direction, or simply have a quiet, dedicated space to reflect with a psychologist.",
       },
       {
-        q: "Are individual counselling sessions available in person in Chennai?",
-        a: "Sessions are available in person in Anna Nagar, Chennai, as well as 100% online through secure Google Meet telehealth links across India.",
+        q: "Are individual counselling sessions conducted online?",
+        a: "Yes, all consultations are conducted 100% online via secure Google Meet telehealth sessions, accessible from anywhere in Chennai, across India, and globally.",
       },
     ],
     durationMinutes: 50,
     price: 1800,
-    format: "Online (Google Meet Telehealth) & In-Person Consultation",
-    locationDetails: "Anna Nagar, Chennai, Tamil Nadu & Worldwide Online",
+    format: "100% Online (Google Meet Telehealth)",
+    locationDetails: "Online Telehealth (Across India & Worldwide)",
   },
   {
     slug: "student-counselling",
@@ -134,8 +134,8 @@ export const DETAILED_SERVICES: DetailedService[] = [
     ],
     durationMinutes: 50,
     price: 1500,
-    format: "Online (Google Meet Telehealth) & In-Person Consultation",
-    locationDetails: "Anna Nagar, Chennai, Tamil Nadu & Worldwide Online",
+    format: "100% Online (Google Meet Telehealth)",
+    locationDetails: "Online Telehealth (Across India & Worldwide)",
   },
   {
     slug: "emotional-wellbeing-counselling",
@@ -189,8 +189,8 @@ export const DETAILED_SERVICES: DetailedService[] = [
     ],
     durationMinutes: 50,
     price: 1800,
-    format: "Online (Google Meet Telehealth) & In-Person Consultation",
-    locationDetails: "Anna Nagar, Chennai, Tamil Nadu & Worldwide Online",
+    format: "100% Online (Google Meet Telehealth)",
+    locationDetails: "Online Telehealth (Across India & Worldwide)",
   },
   {
     slug: "relationship-counselling",
@@ -244,8 +244,8 @@ export const DETAILED_SERVICES: DetailedService[] = [
     ],
     durationMinutes: 50,
     price: 1800,
-    format: "Online (Google Meet Telehealth) & In-Person Consultation",
-    locationDetails: "Anna Nagar, Chennai, Tamil Nadu & Worldwide Online",
+    format: "100% Online (Google Meet Telehealth)",
+    locationDetails: "Online Telehealth (Across India & Worldwide)",
   },
   {
     slug: "life-transitions-counselling",
@@ -299,8 +299,8 @@ export const DETAILED_SERVICES: DetailedService[] = [
     ],
     durationMinutes: 50,
     price: 1800,
-    format: "Online (Google Meet Telehealth) & In-Person Consultation",
-    locationDetails: "Anna Nagar, Chennai, Tamil Nadu & Worldwide Online",
+    format: "100% Online (Google Meet Telehealth)",
+    locationDetails: "Online Telehealth (Across India & Worldwide)",
   },
 ];
 
