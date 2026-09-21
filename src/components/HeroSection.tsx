@@ -22,17 +22,17 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
             </span>
           </div>
 
-          <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-primary tracking-tight text-balance leading-none">
-            A space to understand yourself,{" "}
-            <span className="italic font-headline-lg lg:font-display-hero text-primary/90">
-              at your own pace.
+          <h1 className="font-display-hero text-display-hero-mobile lg:text-display-hero text-primary tracking-tight text-balance leading-tight">
+            Counselling Psychologist in Chennai &amp; Online.{" "}
+            <span className="italic font-headline-lg lg:font-display-hero text-primary/90 block text-2xl sm:text-3xl lg:text-4xl mt-2 font-normal">
+              A space to understand yourself, at your own pace.
             </span>
           </h1>
 
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
-            An empathetic, collaborative space to explore your thoughts,
-            emotions, experiences, and the parts of life that may feel difficult
-            to navigate alone.
+            Client-centred and empathetic psychological counselling for adolescents,
+            young adults, adults, students, and working professionals in Chennai
+            and online across India.
           </p>
 
           <div className="pt-space-xs flex flex-wrap items-center gap-space-md">
@@ -41,22 +41,22 @@ export default function HeroSection({ onOpenBooking }: HeroSectionProps) {
               className="inline-flex items-center justify-center px-space-xl py-space-md rounded-full bg-primary-container text-surface-bright hover:bg-primary transition-all duration-300 shadow-[0_8px_24px_-6px_rgba(244,210,66,0.35)] hover:shadow-[0_12px_28px_-4px_rgba(244,210,66,0.55)] group"
             >
               <span className="font-label-md text-label-md font-semibold tracking-wide uppercase">
-                Book a Session
+                Book an Online Counselling Session
               </span>
               <span className="ml-space-xs text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
                 →
               </span>
             </Link>
 
-            <a
-              href="#about"
+            <Link
+              href="/services"
               className="inline-flex items-center justify-center px-space-xl py-space-md rounded-full bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-medium tracking-wide uppercase transition-all duration-200 group"
             >
-              <span>About Aswathy</span>
+              <span>Explore Counselling Services</span>
               <span className="ml-space-xs text-on-surface-variant transition-transform duration-200 group-hover:translate-x-1">
                 →
               </span>
-            </a>
+            </Link>
           </div>
 
           {/* Subtle grounded meta badges */}

@@ -87,11 +87,13 @@ export default function SessionJourneySection({ initialSteps }: SessionJourneySe
       <div className="max-w-container-max mx-auto space-y-space-2xl">
         <div className="max-w-2xl space-y-space-xs">
           <span className="font-label-caps text-label-caps uppercase tracking-widest text-secondary block">
-            What to Expect
+            Counselling Process
           </span>
           <h2 className="font-headline-xl text-headline-xl-mobile lg:text-headline-xl text-primary tracking-tight">
-            Nothing has to be figured out{" "}
-            <span className="italic">before you arrive.</span>
+            What to expect in a session.{" "}
+            <span className="italic block text-xl sm:text-2xl text-primary/80 mt-1 font-normal">
+              Nothing has to be figured out before you arrive.
+            </span>
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
             A transparent, welcoming sequence designed to alleviate uncertainty

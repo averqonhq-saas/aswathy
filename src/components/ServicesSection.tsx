@@ -135,13 +135,13 @@ export default function ServicesSection({
             </p>
           </div>
 
-          <div className="flex items-center justify-between md:justify-end gap-4 md:gap-6 w-full md:w-auto pt-1 md:pt-0">
+          <div className="flex items-center justify-between md:justify-end gap-3 sm:gap-6 w-full md:w-auto pt-1 md:pt-0">
             <Link
-              href="/book-a-session#booking-form"
+              href="/services"
               className="inline-flex items-center gap-space-xs font-label-md text-xs sm:text-label-md font-semibold text-primary uppercase tracking-wider group shrink-0"
             >
               <span className="underline underline-offset-8 decoration-secondary-fixed-dim decoration-2 group-hover:decoration-primary">
-                Book a Consultation
+                Explore All Services
               </span>
               <span className="text-secondary transition-transform duration-200 group-hover:translate-x-1">
                 →

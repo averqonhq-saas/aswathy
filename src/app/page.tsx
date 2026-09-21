@@ -5,6 +5,7 @@ import ApproachSection from "@/components/ApproachSection";
 import WhoIWorkWithSection from "@/components/WhoIWorkWithSection";
 import MyJourneySection from "@/components/MyJourneySection";
 import ServicesSection from "@/components/ServicesSection";
+import SessionJourneySection from "@/components/SessionJourneySection";
 import { mapDbServiceToDetail } from "@/lib/service-mapper";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FaqSection from "@/components/FaqSection";
@@ -138,6 +139,9 @@ export default async function Home() {
 
           {/* Section 4: Who I Work With (Server hydrated) */}
           <WhoIWorkWithSection initialGroups={initialGroups} />
+
+          {/* Section 5: What to Expect in a Session */}
+          <SessionJourneySection />
 
           {/* Section 7: Services (Server hydrated + Lazy loaded modal) */}
           <ServicesSection initialServices={initialServices} />

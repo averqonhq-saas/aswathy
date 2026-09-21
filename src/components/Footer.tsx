@@ -11,8 +11,8 @@ export default function Footer({ onOpenBooking }: FooterProps) {
     <footer className="w-full bg-tertiary text-surface pt-space-4xl pb-space-2xl">
       <div className="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl pb-space-3xl border-b border-surface-container/10">
-          {/* Left Column */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-space-xl">
+          {/* Left Column (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-space-xl">
             <div className="space-y-space-md">
               <div className="flex items-center gap-space-xs">
                 <span className="w-2 h-2 rounded-full bg-secondary-fixed"></span>
@@ -31,11 +31,11 @@ export default function Footer({ onOpenBooking }: FooterProps) {
 
             <div className="flex flex-col space-y-space-xxs text-on-tertiary-container">
               <span className="font-body-sm text-body-sm font-medium text-surface-bright">
-                Registered Qualified Psychologist
+                Aswathy Jeyarajasekar • B.Sc. &amp; M.Sc. Counselling Psychology
               </span>
-              {/* <span className="font-body-sm text-body-sm text-on-tertiary-container">
-                Specialized in Anxiety, Relational Dynamics, and Somatic Grounding
-              </span> */}
+              <span className="font-body-sm text-xs text-on-tertiary-container">
+                In-person clinic in Anna Nagar, Chennai &amp; secure online consultations across India
+              </span>
               <div className="pt-space-xs flex flex-col sm:flex-row sm:items-center gap-y-1 sm:gap-x-4">
                 <a
                   href="mailto:roottherapyonline@gmail.com"
@@ -53,76 +53,97 @@ export default function Footer({ onOpenBooking }: FooterProps) {
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-space-xl">
+          {/* Middle Column: Counselling Services (4 cols) */}
+          <div className="lg:col-span-4 flex flex-col space-y-space-md">
+            <span className="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-widest block text-xs">
+              Counselling Services
+            </span>
+            <nav className="flex flex-col space-y-2 text-sm text-surface-bright">
+              <Link
+                href="/services/individual-counselling"
+                className="hover:text-secondary-fixed transition-colors py-0.5"
+              >
+                Individual Counselling in Chennai
+              </Link>
+              <Link
+                href="/services/student-counselling"
+                className="hover:text-secondary-fixed transition-colors py-0.5"
+              >
+                Student &amp; Young Adult Counselling
+              </Link>
+              <Link
+                href="/services/emotional-wellbeing-counselling"
+                className="hover:text-secondary-fixed transition-colors py-0.5"
+              >
+                Emotional Wellbeing &amp; Stress Management
+              </Link>
+              <Link
+                href="/services/relationship-counselling"
+                className="hover:text-secondary-fixed transition-colors py-0.5"
+              >
+                Relationship &amp; Interpersonal Dynamics
+              </Link>
+              <Link
+                href="/services/life-transitions-counselling"
+                className="hover:text-secondary-fixed transition-colors py-0.5"
+              >
+                Life Challenges &amp; Transitions
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-secondary-fixed hover:text-surface-bright pt-1 transition-colors"
+              >
+                <span>Explore all counselling services</span>
+                <span>→</span>
+              </Link>
+            </nav>
+          </div>
+
+          {/* Right Column: Quick Navigation (3 cols) */}
+          <div className="lg:col-span-3 flex flex-col justify-between space-y-space-lg">
             <div className="space-y-space-md">
-              <span className="font-label-caps text-label-caps text-on-tertiary-container uppercase tracking-widest block">
+              <span className="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-widest block text-xs">
                 Explore Sanctuary
               </span>
-              <nav className="flex flex-col space-y-space-sm">
-                <a
-                  className="text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-[14px]"
-                  href="#about"
-                >
-                  <span>About Aswathy</span>
-                  <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
-                    →
-                  </span>
-                </a>
-                <a
-                  className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-[14px]"
-                  href="#services"
-                >
-                  <span>Therapeutic Services</span>
-                  <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
-                    →
-                  </span>
-                </a>
-                <a
-                  className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-[14px]"
-                  href="#my-approach"
-                >
-                  <span>My Approach &amp; Philosophy</span>
-                  <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
-                    →
-                  </span>
-                </a>
+              <nav className="flex flex-col space-y-2 text-sm text-surface-bright">
                 <Link
-                  className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-[14px]"
+                  className="hover:text-secondary-fixed transition-colors py-0.5"
+                  href="/#about"
+                >
+                  About the Psychologist
+                </Link>
+                <Link
+                  className="hover:text-secondary-fixed transition-colors py-0.5"
+                  href="/#session-journey"
+                >
+                  What to Expect in a Session
+                </Link>
+                <Link
+                  className="hover:text-secondary-fixed transition-colors py-0.5"
+                  href="/#my-approach"
+                >
+                  Person-Centred Approach
+                </Link>
+                <Link
+                  className="hover:text-secondary-fixed transition-colors py-0.5"
+                  href="/#faq"
+                >
+                  Frequently Asked Questions
+                </Link>
+                <Link
+                  className="hover:text-secondary-fixed transition-colors py-0.5"
                   href="/inquiry"
                 >
-                  <span>Support &amp; Payment Inquiry</span>
-                  <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
-                    →
-                  </span>
+                  Support &amp; Payment Inquiry
                 </Link>
                 <Link
                   href="/book-a-session#booking-form"
-                  className="font-body-md text-body-md text-surface-bright hover:text-secondary-fixed transition-colors duration-200 flex items-center justify-between py-space-xxs group text-left text-[14px]"
+                  className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-secondary-fixed hover:text-surface-bright pt-1 transition-colors"
                 >
-                  <span>Book a Consultation</span>
-                  <span className="text-secondary-container transition-transform duration-200 group-hover:translate-x-1">
-                    →
-                  </span>
+                  <span>Book an online counselling session</span>
+                  <span>→</span>
                 </Link>
               </nav>
-            </div>
-
-            <div className="bg-tertiary-container p-space-lg rounded-xl flex items-center justify-between">
-              <div className="space-y-space-xxs">
-                <span className="font-label-caps text-label-caps text-secondary-fixed block">
-                  Support &amp; Consultations
-                </span>
-                <span className="font-body-sm text-body-sm text-surface-bright block">
-                  100% Online Consultations
-                </span>
-              </div>
-              <Link
-                href="/book-a-session#booking-form"
-                className="px-space-md py-space-xs rounded-full bg-surface text-primary font-label-md text-label-md font-medium hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors duration-200 shrink-0"
-              >
-                Inquire
-              </Link>
             </div>
           </div>
         </div>

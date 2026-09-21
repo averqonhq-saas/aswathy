@@ -5,35 +5,39 @@ export interface FaqItem {
 
 export const DEFAULT_FAQS: FaqItem[] = [
   {
-    q: "What is counselling?",
-    a: "Counselling is an empathetic, collaborative space between you and a trained psychologist to explore personal challenges, understand thoughts and emotions, navigate life transitions, and develop healthier coping strategies. It is not about advice-giving or clinical judgment; rather, it is a supportive journey to help you reconnect with your inner strengths at your own pace.",
+    q: "How to find a counselling psychologist in Chennai?",
+    a: "When seeking a counselling psychologist in Chennai, look for certified qualifications (such as an M.Sc. in Counselling Psychology), professional clinical supervision, a client-centred ethos, and clear boundaries regarding confidentiality. Aswathy Jeyarajasekar offers consultations both in Anna Nagar, Chennai and 100% online across Tamil Nadu and India.",
   },
   {
-    q: "What can I expect during my first counselling session?",
-    a: "The first session is gentle, pressure-free, and unhurried. We take time to get to know each other, explore what brings you to counselling, discuss what you hope to experience, and answer any questions you have about the process. You are never rushed to dive into painful memories before you feel completely safe.",
+    q: "Where can I get online counselling in India?",
+    a: "You can attend online psychological counselling from anywhere in India through secure, confidential Google Meet telehealth sessions with Aswathy. Online consultations eliminate travel stress and allow you to explore your emotions from the safety and privacy of your own personal space.",
   },
   {
-    q: "Who can seek counselling with Aswathy?",
-    a: "I work with adolescents, young adults, adults, students, and working professionals navigating stress, emotional fatigue, self-worth dilemmas, academic or career burnout, relational frictions, or significant life transitions.",
+    q: "How does counselling work?",
+    a: "Counselling is an empathetic, collaborative journey between you and a trained psychologist. It is not about advice-giving or judgment. Through gentle dialogue, we explore your thoughts, emotions, patterns, and needs to help you understand yourself better, develop coping strategies, and make changes at your own comfortable pace.",
   },
   {
-    q: "Do you offer online counselling?",
-    a: "Yes. Consultations are conducted online via secure, confidential Google Meet telehealth links. This allows you to connect from the comfort and privacy of your own space anywhere across Chennai, Tamil Nadu, nationwide in India, or internationally.",
+    q: "What happens during a counselling session?",
+    a: "A typical 50-minute session provides an unhurried, dedicated holding space. We begin by checking in with how you are feeling, explore current emotional weights or relational concerns, identify recurring patterns without blame, and practice somatic grounding tools when helpful.",
+  },
+  {
+    q: "Can students and young adults attend counselling?",
+    a: "Yes. Aswathy frequently works with high school adolescents, college students, and young working professionals. Sessions address academic burnout, competitive exam stress, family expectations, career anxiety, relationship shifts, and the transition into adult independence.",
+  },
+  {
+    q: "How do I book an online counselling session?",
+    a: "You can easily schedule a consultation by clicking the 'Book a Session' button on this website. Choose an available date and time slot from the live calendar, submit your contact details, and you will receive instant confirmation and secure telehealth instructions via email and WhatsApp.",
   },
   {
     q: "How long is a counselling session?",
-    a: "Each standard individual consultation is 50 minutes long, dedicated wholly to your emotional exploration, somatic grounding, and therapeutic dialogue.",
+    a: "Each standard consultation is 50 minutes long, dedicated entirely to your reflections, emotional exploration, and therapeutic dialogue.",
   },
   {
     q: "How strictly confidential are our conversations?",
-    a: "Your privacy is paramount. Everything discussed within sessions is held in strict professional confidence adhering to psychological ethics and legal standards. The only standard ethical exceptions involve imminent risk of severe harm to yourself or others, which is always addressed transparently.",
+    a: "Your privacy is sacred. Everything discussed within our sessions is held in strict professional confidence under standard psychological ethics and legal standards. The only ethical exceptions involve imminent risk of severe harm to yourself or others, which is always handled with transparent care.",
   },
   {
     q: "What if I feel nervous or don't know where to start?",
-    a: "Feeling nervous or unsure is completely normal. You do not need to prepare notes or have everything figured out beforehand. My role as your psychologist is to facilitate an unhurried, gentle conversation through compassionate listening and thoughtful questions.",
-  },
-  {
-    q: "How can I book a session and make payment?",
-    a: "You can select an available date and time slot using the 'Book a Session' button on this website. After submitting your appointment request, you will receive clear confirmation and payment details via email and WhatsApp.",
+    a: "Feeling nervous or unsure is completely normal. You do not need an agenda or polished explanations. It is my role as your psychologist to facilitate an open, gentle dialogue through thoughtful questions and patient pauses.",
   },
 ];

@@ -22,11 +22,11 @@ import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: {
-    default: "Aswathy Jeyarajasekar | Counselling Psychologist in Chennai & Online",
-    template: "%s | Aswathy Jeyarajasekar - Counselling Psychologist",
+    default: "Counselling Psychologist in Chennai | Aswathy Jeyarajasekar",
+    template: "%s | Aswathy Jeyarajasekar",
   },
   description:
-    "Empathetic, client-centred psychological counselling for adolescents, young adults, students, and working professionals. In-person sessions in Anna Nagar, Chennai and secure online counselling across India.",
+    "Connect with Aswathy Jeyarajasekar, a Counselling Psychologist offering client-centred and individualised counselling support for adolescents, young adults, adults, students and working professionals.",
   keywords: [
     "Counselling Psychologist",
     "Counselling Psychologist Chennai",
