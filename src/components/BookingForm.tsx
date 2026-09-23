@@ -901,7 +901,7 @@ END:VCALENDAR`;
   const handleWhatsAppChat = () => {
     if (!confirmedBooking) return;
     const msg = encodeURIComponent(
-      `Hello Aswathy J, I have paid and scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}, Payment ID: ${confirmedBooking.razorpayPaymentId || "Verified"}). Looking forward to connecting.`
+      `Hello Aswathy J, I have scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}). Looking forward to connecting.`
     );
     let rawPhone = config.whatsappNumber || "917550002973";
     if (rawPhone.includes("98765") || !rawPhone.replace(/[^0-9]/g, "")) {
