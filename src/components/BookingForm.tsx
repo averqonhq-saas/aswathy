@@ -346,6 +346,10 @@ export default function BookingForm({
         setErrorMessage("Please provide a valid email address.");
         return;
       }
+      if (!phone.trim()) {
+        setErrorMessage("Please provide your phone or WhatsApp number.");
+        return;
+      }
       goToStep(4);
     } else if (currentStep === 4) {
       if (!guidelinesAccepted) {
@@ -626,6 +630,10 @@ export default function BookingForm({
     }
     if (!email.trim() || !email.includes("@")) {
       setErrorMessage("Please provide a valid email address.");
+      return;
+    }
+    if (!phone.trim()) {
+      setErrorMessage("Please provide your phone or WhatsApp number.");
       return;
     }
     if (!selectedTime || isSlotBookedOrBlocked(selectedDateStr, selectedTime)) {
@@ -1988,12 +1996,16 @@ END:VCALENDAR`;
 
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
-                    Phone / WhatsApp Number
+                    Phone / WhatsApp Number *
                   </label>
                   <input
                     type="tel"
+                    required
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      if (errorMessage) setErrorMessage("");
+                    }}
                     placeholder="+91 755 000 2973"
                     className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
                   />
@@ -2306,7 +2318,7 @@ END:VCALENDAR`;
                     {fullName}
                   </p>
                   <p className="text-[11px] text-[#82746f]">
-                    {email} · {phone || "No phone"} ({contactChannel})
+                    {email} · {phone} ({contactChannel})
                   </p>
                 </div>
               </div>

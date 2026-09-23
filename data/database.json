@@ -354,6 +354,24 @@
   },
   "notifications": [
     {
+      "id": "notif_1790178359451",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-28 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-23T15:45:59.392Z"
+    },
+    {
+      "id": "notif_1790178114407",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-29 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-23T15:41:51.501Z"
+    },
+    {
       "id": "notif_1790177724220",
       "link": "/admin/bookings",
       "type": "booking_new",
