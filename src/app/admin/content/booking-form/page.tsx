@@ -571,75 +571,77 @@ export default function AdminBookingFormControlPage() {
             </div>
           </div>
 
-          {/* Slots Card */}
-          <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-5">
-            <div>
-              <h3 className="font-playfair text-base font-semibold text-[#1A3828]">
-                Daily Appointment Slots
-              </h3>
-              <p className="text-xs text-[#7B7368] mt-0.5">
-                These time slots appear in <strong>Step 2</strong> when clients select an available date.
-              </p>
-            </div>
+          {/* Slots Card (Only visible when Recurring Daily Slots mode is active) */}
+          {config.onlyScheduledSlots === false && (
+            <div className="bg-white rounded-2xl border border-[#1A3828]/10 p-6 shadow-xs space-y-5">
+              <div>
+                <h3 className="font-playfair text-base font-semibold text-[#1A3828]">
+                  Daily Appointment Slots
+                </h3>
+                <p className="text-xs text-[#7B7368] mt-0.5">
+                  These time slots appear in <strong>Step 2</strong> when clients select an available date.
+                </p>
+              </div>
 
-            {/* Existing Slots Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {config.timeSlots.map((slot, sIdx) => (
-                <div
-                  key={sIdx}
-                  className="flex items-center justify-between p-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce]"
-                >
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#705d00]" />
-                    <span className="text-xs font-semibold text-[#412a1e]">{slot.time}</span>
-                    {slot.isEvening && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F4D242] text-[#221b00] font-semibold">
-                        Evening
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteSlot(sIdx)}
-                    className="p-1 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                    title="Remove slot"
+              {/* Existing Slots Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {config.timeSlots.map((slot, sIdx) => (
+                  <div
+                    key={sIdx}
+                    className="flex items-center justify-between p-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce]"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-[#705d00]" />
+                      <span className="text-xs font-semibold text-[#412a1e]">{slot.time}</span>
+                      {slot.isEvening && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F4D242] text-[#221b00] font-semibold">
+                          Evening
+                        </span>
+                      )}
+                    </div>
 
-            {/* Add Slot Form */}
-            <form onSubmit={handleAddSlot} className="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-[#1A3828]/10">
-              <input
-                type="text"
-                value={newSlotTime}
-                onChange={(e) => setNewSlotTime(e.target.value)}
-                placeholder="e.g. 06:00 PM (Evening Slot) or 09:30 AM"
-                className="w-full sm:w-80 text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
-              />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteSlot(sIdx)}
+                      className="p-1 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      title="Remove slot"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
 
-              <label className="flex items-center gap-2 text-xs text-[#1A3828] cursor-pointer">
+              {/* Add Slot Form */}
+              <form onSubmit={handleAddSlot} className="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-[#1A3828]/10">
                 <input
-                  type="checkbox"
-                  checked={newSlotIsEvening}
-                  onChange={(e) => setNewSlotIsEvening(e.target.checked)}
-                  className="rounded border-[#1A3828]/20 text-[#1A3828]"
+                  type="text"
+                  value={newSlotTime}
+                  onChange={(e) => setNewSlotTime(e.target.value)}
+                  placeholder="e.g. 06:00 PM (Evening Slot) or 09:30 AM"
+                  className="w-full sm:w-80 text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
                 />
-                <span>Full-width evening slot?</span>
-              </label>
 
-              <button
-                type="submit"
-                className="px-4 py-2.5 rounded-xl bg-[#1A3828] text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-[#142C1F] cursor-pointer shadow-xs ml-auto"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Slot</span>
-              </button>
-            </form>
-          </div>
+                <label className="flex items-center gap-2 text-xs text-[#1A3828] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newSlotIsEvening}
+                    onChange={(e) => setNewSlotIsEvening(e.target.checked)}
+                    className="rounded border-[#1A3828]/20 text-[#1A3828]"
+                  />
+                  <span>Full-width evening slot?</span>
+                </label>
+
+                <button
+                  type="submit"
+                  className="px-4 py-2.5 rounded-xl bg-[#1A3828] text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-[#142C1F] cursor-pointer shadow-xs ml-auto"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Slot</span>
+                </button>
+              </form>
+            </div>
+          )}
 
           {/* ============================================================ */}
           {/* PARTICULAR DAY SCHEDULE & LEAVE / OFF DAY MANAGEMENT         */}

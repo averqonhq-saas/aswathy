@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 interface FooterProps {
   onOpenBooking?: () => void;
@@ -14,11 +15,27 @@ export default function Footer({ onOpenBooking }: FooterProps) {
           {/* Left Column (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-between space-y-space-xl">
             <div className="space-y-space-md">
-              <div className="flex items-center gap-space-xs">
-                <span className="w-2 h-2 rounded-full bg-secondary-fixed"></span>
-                <span className="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-widest text-xs font-semibold">
-                  A Private Practice for Wholeness
-                </span>
+              <div className="flex items-center gap-3.5">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-secondary-fixed/40 bg-surface shadow-xs">
+                  <Image
+                    src="/icon.png"
+                    alt="Aswathy Jeyarajasekar Logo"
+                    fill
+                    sizes="48px"
+                    className="object-contain p-1"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-space-xs">
+                    <span className="w-2 h-2 rounded-full bg-secondary-fixed"></span>
+                    <span className="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-widest text-xs font-semibold">
+                      A Private Practice for Wholeness
+                    </span>
+                  </div>
+                  <span className="font-label-caps text-surface-bright/70 uppercase tracking-wider text-[10px] pt-0.5">
+                    Counselling Psychologist
+                  </span>
+                </div>
               </div>
               <h2 className="font-headline-lg text-headline-lg text-surface tracking-tight max-w-xl font-serif text-3xl sm:text-4xl">
                 Aswathy Counselling Psychology
