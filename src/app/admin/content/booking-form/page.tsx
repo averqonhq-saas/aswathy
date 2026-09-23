@@ -1671,14 +1671,42 @@ export default function AdminBookingFormControlPage() {
                             <Megaphone className="w-4 h-4" />
                           )}
                         </div>
-                        <div className="space-y-1">
+                        <div className="space-y-1.5 w-full">
                           <h4 className="text-sm font-semibold tracking-tight">
                             {config.noticeBox?.title || "Notice Title Here"}
                           </h4>
-                          <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line opacity-95">
-                            {config.noticeBox?.message ||
-                              "Your notice message will appear here for clients visiting the booking form."}
-                          </p>
+                          {(() => {
+                            const rawMsg = config.noticeBox?.message || "";
+                            const lines = rawMsg.split("\n").map((l) => l.trim()).filter(Boolean);
+                            const hasNumbered = lines.some((l) => /^\d+[\.\)]/.test(l));
+                            if (hasNumbered && lines.length > 1) {
+                              return (
+                                <div className="space-y-1.5 pt-1">
+                                  {lines.map((l, i) => {
+                                    const match = l.match(/^(\d+)[\.\)]\s*(.*)$/);
+                                    const num = match ? match[1] : String(i + 1);
+                                    const text = match ? match[2] : l;
+                                    return (
+                                      <div
+                                        key={i}
+                                        className="flex items-start gap-2 p-2 rounded-lg bg-white/80 border border-black/5 text-xs"
+                                      >
+                                        <span className="w-5 h-5 rounded-full bg-black/5 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                                          {num}
+                                        </span>
+                                        <span className="leading-relaxed">{text}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              );
+                            }
+                            return (
+                              <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line opacity-95">
+                                {rawMsg || "Your notice message will appear here for clients visiting the booking form."}
+                              </p>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>

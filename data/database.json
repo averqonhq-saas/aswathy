@@ -111,7 +111,7 @@
       "currency": "INR (₹)",
       "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
       "timezone": "Asia/Kolkata (IST)",
-      "whatsapp": "https://wa.me/917550002973",
+      "whatsapp": "https://wa.me/919876543210",
       "instagram": "https://instagram.com/aswathy.psychology",
       "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
       "contactEmail": "roottherapyonline@gmail.com",
@@ -170,7 +170,7 @@
     "ethicsNotice": "All communications are bound by strict psychological ethics and confidential data protocols.",
     "instantConfirmationText": "Instant booking confirmation & Google Meet invitation",
     "submitButtonText": "Confirm & Book Session (Pay Later)",
-    "whatsappNumber": "+91 755 000 2973",
+    "whatsappNumber": "+91 98765 43210",
     "confirmationTitle": "Your Sanctuary Awaits",
     "confirmationSubtitle": "Appointment Secured",
     "enablePayment": false,
@@ -352,24 +352,41 @@
     },
     "updatedAt": "2026-09-23T14:14:41.934Z"
   },
-  "websiteAbout": {
-    "name": "Aswathy Jeyarajasekar",
-    "title": "Counselling Psychologist",
-    "fullBio": "I hold a B.Sc. in Psychology and an M.Sc. in Counselling Psychology, along with intensive training in Learning Disabilities.\n\nAs a Counselling Psychologist, I take a Client-Centred approach, focusing on creating a safe, compassionate, and non-judgmental space where you can feel heard and understood.\n\nMy practice is centred around helping individuals explore their emotions, develop deeper self-understanding, navigate life’s challenges, and work towards meaningful personal growth. I believe therapy is a collaborative process, where your experiences, needs, and pace remain at the heart of the work.\n",
-    "updatedAt": "2026-09-10T07:05:53.126Z",
-    "shortIntro": "Hi, I’m Aswathy, a Counselling Psychologist. I believe therapy is a space where you can feel heard, understood, and accepted without judgment. My goal is to create a safe and comfortable environment where you can openly explore your thoughts, emotions, relationships, and life experiences.",
-    "profileImage": "/aswathy-photo2.jpg",
-    "qualifications": [],
-    "experienceYears": "1+ Year in Supervised Private Practice"
-  },
   "notifications": [
     {
-      "id": "notif_1790175672019",
+      "id": "notif_1790177724220",
+      "link": "/admin/bookings",
       "type": "booking_new",
       "title": "New Booking Request",
-      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-29 at 08:30 PM (Evening Slot).",
-      "link": "/admin/bookings",
       "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-28 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-23T15:35:24.146Z"
+    },
+    {
+      "id": "notif_1790177569524",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-28 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-23T15:32:48.917Z"
+    },
+    {
+      "id": "notif_1790177075841",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-28 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-23T15:24:35.775Z"
+    },
+    {
+      "id": "notif_1790175672019",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-29 at 08:30 PM (Evening Slot).",
       "createdAt": "2026-09-23T15:01:11.966Z"
     },
     {
@@ -382,6 +399,16 @@
       "createdAt": "2026-09-23T14:49:45.861Z"
     }
   ],
+  "websiteAbout": {
+    "name": "Aswathy Jeyarajasekar",
+    "title": "Counselling Psychologist",
+    "fullBio": "I hold a B.Sc. in Psychology and an M.Sc. in Counselling Psychology, along with intensive training in Learning Disabilities.\n\nAs a Counselling Psychologist, I take a Client-Centred approach, focusing on creating a safe, compassionate, and non-judgmental space where you can feel heard and understood.\n\nMy practice is centred around helping individuals explore their emotions, develop deeper self-understanding, navigate life’s challenges, and work towards meaningful personal growth. I believe therapy is a collaborative process, where your experiences, needs, and pace remain at the heart of the work.\n",
+    "updatedAt": "2026-09-10T07:05:53.126Z",
+    "shortIntro": "Hi, I’m Aswathy, a Counselling Psychologist. I believe therapy is a space where you can feel heard, understood, and accepted without judgment. My goal is to create a safe and comfortable environment where you can openly explore your thoughts, emotions, relationships, and life experiences.",
+    "profileImage": "/aswathy-photo2.jpg",
+    "qualifications": [],
+    "experienceYears": "1+ Year in Supervised Private Practice"
+  },
   "services": [
     {
       "id": "svc_emotional_wellbeing",
@@ -543,31 +570,6 @@
     }
   ],
   "bookings": [
-    {
-      "id": "ASW-300318",
-      "clientName": "Muneeswaran P",
-      "clientEmail": "muneeswaranmd2004@gmail.com",
-      "clientPhone": "+918300864083",
-      "serviceId": "svc_emotional_wellbeing",
-      "serviceName": "Individual Session ",
-      "appointmentDate": "2026-09-29",
-      "appointmentTime": "08:30 PM (Evening Slot)",
-      "durationMinutes": 60,
-      "format": "online",
-      "bookingStatus": "confirmed",
-      "paymentStatus": "pending",
-      "price": 800,
-      "clientMessage": "test",
-      "history": [
-        {
-          "timestamp": "2026-09-23T15:01:11.966Z",
-          "action": "Booking request submitted via website"
-        }
-      ],
-      "provider": "internal",
-      "createdAt": "2026-09-23T15:01:11.966Z",
-      "updatedAt": "2026-09-23T15:01:11.966Z"
-    },
     {
       "id": "ASW-253578",
       "price": 500,

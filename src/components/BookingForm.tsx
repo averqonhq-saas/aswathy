@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
+  ArrowLeft,
   Check,
   CalendarPlus,
   MessageSquare,
@@ -287,6 +288,81 @@ export default function BookingForm({
   const [isPaying, setIsPaying] = useState(false);
   const [paymentError, setPaymentError] = useState("");
 
+  // Multi-step wizard state (5 steps)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [guidelinesAccepted, setGuidelinesAccepted] = useState(true);
+  const formTopRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToFormTop = () => {
+    if (formTopRef.current) {
+      formTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      const el = document.getElementById("booking-form");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const goToStep = (step: 1 | 2 | 3 | 4 | 5) => {
+    setCurrentStep(step);
+    setTimeout(scrollToFormTop, 40);
+  };
+
+  const handleSelectService = (service: Service) => {
+    setSelectedService(service);
+    setErrorMessage("");
+    setTimeout(() => {
+      goToStep(2);
+    }, 220);
+  };
+
+  const handleNextStep = () => {
+    setErrorMessage("");
+    if (currentStep === 1) {
+      if (!selectedService) {
+        setErrorMessage("Please select a clinical service before continuing.");
+        return;
+      }
+      goToStep(2);
+    } else if (currentStep === 2) {
+      if (isDateOnLeave) {
+        setErrorMessage("The therapist is on leave for this date. Please pick another date.");
+        return;
+      }
+      if (activeTimeSlots.length === 0) {
+        setErrorMessage("There are no slots available for this date. Please choose another date.");
+        return;
+      }
+      if (!selectedTime || isSlotBookedOrBlocked(selectedDateStr, selectedTime)) {
+        setErrorMessage("Please select an available time slot before continuing.");
+        return;
+      }
+      goToStep(3);
+    } else if (currentStep === 3) {
+      if (!fullName.trim()) {
+        setErrorMessage("Please enter your full name.");
+        return;
+      }
+      if (!email.trim() || !email.includes("@")) {
+        setErrorMessage("Please provide a valid email address.");
+        return;
+      }
+      goToStep(4);
+    } else if (currentStep === 4) {
+      if (!guidelinesAccepted) {
+        setErrorMessage("Please review and acknowledge the session guidelines to proceed.");
+        return;
+      }
+      goToStep(5);
+    }
+  };
+
+  const handlePrevStep = () => {
+    setErrorMessage("");
+    if (currentStep > 1) {
+      goToStep((currentStep - 1) as 1 | 2 | 3 | 4 | 5);
+    }
+  };
+
   // Generate calendar days for current view month
   const calendarDays = useMemo(() => {
     const year = viewDate.getFullYear();
@@ -376,6 +452,23 @@ export default function BookingForm({
         (b.type === "full_day" || b.type === "all_day" || b.type === "holiday")
     );
   }, [config.blockedSlots, selectedDateStr]);
+
+  // Parse notice box message into individual points if formatted as numbered or multiline text
+  const parsedNoticePoints = useMemo(() => {
+    if (!config.noticeBox?.message) return [];
+    const lines = config.noticeBox.message
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    return lines.map((line, idx) => {
+      const match = line.match(/^(\d+)[\.\)]\s*(.*)$/);
+      if (match) {
+        return { num: match[1], text: match[2] };
+      }
+      return { num: String(idx + 1), text: line };
+    });
+  }, [config.noticeBox?.message]);
 
   // Determine if the selected date is on leave or marked as an off-day
   const isDateOnLeave = useMemo(() => {
@@ -808,14 +901,19 @@ END:VCALENDAR`;
   const handleWhatsAppChat = () => {
     if (!confirmedBooking) return;
     const msg = encodeURIComponent(
-      `Hello Aswathy, I have paid and scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}, Payment ID: ${confirmedBooking.razorpayPaymentId || "Verified"}). Looking forward to connecting.`
+      `Hello Aswathy J, I have paid and scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}, Payment ID: ${confirmedBooking.razorpayPaymentId || "Verified"}). Looking forward to connecting.`
     );
-    const cleanPhone = (config.whatsappNumber || "+917550002973").replace(/[^0-9]/g, "");
-    window.open(`https://wa.me/${cleanPhone}?text=${msg}`, "_blank");
+    let rawPhone = config.whatsappNumber || "917550002973";
+    if (rawPhone.includes("98765") || !rawPhone.replace(/[^0-9]/g, "")) {
+      rawPhone = "917550002973";
+    }
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
+    window.open(`https://api.whatsapp.com/send/?phone=${cleanPhone}&text=${msg}`, "_blank");
   };
 
   const resetForm = () => {
     setConfirmedBooking(null);
+    setCurrentStep(1);
     setFullName("");
     setEmail("");
     setPhone("");
@@ -1170,10 +1268,11 @@ END:VCALENDAR`;
   // ----------------------------------------------------
   return (
     <div
+      ref={formTopRef}
       className={`w-full max-w-5xl mx-auto rounded-3xl bg-[#fcf9f2] border border-[#e2d9ce] p-6 sm:p-10 lg:p-12 shadow-[0_8px_40px_rgba(65,42,30,0.06)] text-[#1c1c18] ${className}`}
     >
       {/* TOP HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-[#e2d9ce]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#e2d9ce]">
         <div>
           <span className="text-[11px] font-semibold uppercase tracking-widest text-[#705d00] block mb-1">
             {config.headerBadge || "Live Scheduling Sanctuary"}
@@ -1189,145 +1288,260 @@ END:VCALENDAR`;
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-12 pt-8">
+      {/* STEPPER PROGRESS BAR */}
+      <div className="py-6 border-b border-[#e2d9ce]/80">
+        {/* Mobile View: Progress Bar & Current Step Title */}
+        <div className="block sm:hidden">
+          <div className="flex items-center justify-between text-xs mb-2">
+            <span className="font-semibold text-[#705d00] uppercase tracking-wider text-[11px]">
+              Step {currentStep} of 5
+            </span>
+            <span className="font-medium text-[#412a1e]">
+              {currentStep === 1 && "Session Format"}
+              {currentStep === 2 && "Date & Time"}
+              {currentStep === 3 && "Your Details"}
+              {currentStep === 4 && "Before Session"}
+              {currentStep === 5 && "Confirm & Pay"}
+            </span>
+          </div>
+          <div className="w-full bg-[#e8e2d7] h-2 rounded-full overflow-hidden">
+            <div
+              className="bg-[#705d00] h-full rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${(currentStep / 5) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Desktop / Tablet View: 5 Steps with connecting indicators */}
+        <div className="hidden sm:flex items-center justify-between">
+          {[
+            { num: 1 as const, label: "Session Format" },
+            { num: 2 as const, label: "Date & Time" },
+            { num: 3 as const, label: "Your Details" },
+            { num: 4 as const, label: "Before Session" },
+            { num: 5 as const, label: "Confirm & Pay" },
+          ].map((step, idx) => {
+            const isCompleted = currentStep > step.num;
+            const isCurrent = currentStep === step.num;
+            const isClickable = step.num <= currentStep;
+
+            return (
+              <div
+                key={step.num}
+                className="flex items-center flex-1 last:flex-none"
+              >
+                <button
+                  type="button"
+                  disabled={!isClickable}
+                  onClick={() => isClickable && goToStep(step.num)}
+                  className={`flex items-center gap-2.5 text-left transition-all ${
+                    isClickable ? "cursor-pointer" : "cursor-not-allowed opacity-60"
+                  }`}
+                >
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
+                      isCompleted
+                        ? "bg-[#705d00] text-white"
+                        : isCurrent
+                        ? "bg-[#412a1e] text-[#fcf9f2] ring-4 ring-[#705d00]/20 shadow-sm"
+                        : "bg-[#e8e2d7] text-[#82746f]"
+                    }`}
+                  >
+                    {isCompleted ? <Check className="w-4 h-4" /> : step.num}
+                  </div>
+                  <div>
+                    <div
+                      className={`text-xs font-semibold transition-colors ${
+                        isCurrent
+                          ? "text-[#412a1e]"
+                          : isCompleted
+                          ? "text-[#705d00]"
+                          : "text-[#82746f]"
+                      }`}
+                    >
+                      {step.label}
+                    </div>
+                    <div className="text-[10px] text-[#82746f]">
+                      {isCompleted ? "Completed" : isCurrent ? "Active step" : "Upcoming"}
+                    </div>
+                  </div>
+                </button>
+
+                {idx < 4 && (
+                  <div className="flex-1 mx-3 h-[2px] bg-[#e2d9ce] rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${
+                        isCompleted ? "bg-[#705d00] w-full" : "w-0"
+                      }`}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-10 pt-6">
         {/* ============================================================ */}
         {/* STEP 1: CHOOSE CLINICAL SERVICE & FORMAT                     */}
         {/* ============================================================ */}
-        <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
-                1
-              </span>
-              <div>
-                <h3 className="font-serif text-xl sm:text-2xl text-[#412a1e] font-normal">
-                  {config.step1Title || "Choose Clinical Service"}
-                </h3>
-                <p className="text-xs text-[#82746f] mt-0.5">
-                  Select your area of therapeutic focus and preferred consultation modality.
-                </p>
+        {currentStep === 1 && (
+          <section className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
+                  1
+                </span>
+                <div>
+                  <h3 className="font-serif text-xl sm:text-2xl text-[#412a1e] font-normal">
+                    {config.step1Title || "Choose Clinical Service"}
+                  </h3>
+                  <p className="text-xs text-[#82746f] mt-0.5">
+                    Select your area of therapeutic focus and preferred consultation modality.
+                  </p>
+                </div>
+              </div>
+
+              {/* 100% Online Telehealth Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#fbf7ee] border border-[#705d00]/30 text-[#705d00] text-xs font-semibold self-start sm:self-auto shrink-0 shadow-2xs">
+                <Video className="w-3.5 h-3.5 text-[#705d00]" />
+                <span>100% Online Telehealth (Google Meet)</span>
               </div>
             </div>
 
-            {/* 100% Online Telehealth Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#fbf7ee] border border-[#705d00]/30 text-[#705d00] text-xs font-semibold self-start sm:self-auto shrink-0 shadow-2xs">
-              <Video className="w-3.5 h-3.5 text-[#705d00]" />
-              <span>100% Online Telehealth (Google Meet)</span>
-            </div>
-          </div>
+            {/* Category Filter Pills */}
+            {categories.length > 0 && (
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("all")}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer ${
+                    selectedCategory === "all"
+                      ? "bg-[#705d00] text-white shadow-xs font-semibold"
+                      : "bg-[#f6f3ec] text-[#5a4033] hover:bg-[#ece8df] border border-[#e2d9ce]"
+                  }`}
+                >
+                  All Services ({services.length})
+                </button>
+                {categories.map((cat) => {
+                  const count = services.filter((s) => s.categoryId === cat.id).length;
+                  const isSelected = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer ${
+                        isSelected
+                          ? "bg-[#705d00] text-white shadow-xs font-semibold"
+                          : "bg-[#f6f3ec] text-[#5a4033] hover:bg-[#ece8df] border border-[#e2d9ce]"
+                      }`}
+                    >
+                      <span>{cat.name}</span>
+                      {count > 0 && (
+                        <span
+                          className={`ml-1.5 text-[10px] px-1.5 py-0.2 rounded-full ${
+                            isSelected ? "bg-white/20 text-white" : "bg-[#e2d9ce] text-[#5a4033]"
+                          }`}
+                        >
+                          {count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
-          {/* Category Filter Pills */}
-          {categories.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-              <button
-                type="button"
-                onClick={() => setSelectedCategory("all")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                  selectedCategory === "all"
-                    ? "bg-[#705d00] text-white shadow-xs font-semibold"
-                    : "bg-[#f6f3ec] text-[#5a4033] hover:bg-[#ece8df] border border-[#e2d9ce]"
-                }`}
-              >
-                All Services ({services.length})
-              </button>
-              {categories.map((cat) => {
-                const count = services.filter((s) => s.categoryId === cat.id).length;
-                const isSelected = selectedCategory === cat.id;
+            {/* Clinical Services Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              {filteredServices.map((svc) => {
+                const isSelected = selectedService?.id === svc.id;
                 return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer ${
+                  <div
+                    key={svc.id}
+                    onClick={() => handleSelectService(svc)}
+                    className={`relative cursor-pointer rounded-2xl p-5 sm:p-6 transition-all duration-300 flex flex-col justify-between border ${
                       isSelected
-                        ? "bg-[#705d00] text-white shadow-xs font-semibold"
-                        : "bg-[#f6f3ec] text-[#5a4033] hover:bg-[#ece8df] border border-[#e2d9ce]"
+                        ? "bg-[#fbf7ee] border-[#705d00] shadow-[0_4px_20px_rgba(112,93,0,0.12)] ring-1 ring-[#705d00]"
+                        : "bg-[#f6f3ec]/70 hover:bg-[#f6f3ec] border-[#e2d9ce] hover:border-[#cfc4b7]"
                     }`}
                   >
-                    <span>{cat.name}</span>
-                    {count > 0 && (
-                      <span
-                        className={`ml-1.5 text-[10px] px-1.5 py-0.2 rounded-full ${
-                          isSelected ? "bg-white/20 text-white" : "bg-[#e2d9ce] text-[#5a4033]"
+                    <div>
+                      {/* Top Row: Category Badge + Price */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#e5e2db] text-[#4f443f]">
+                          {svc.categoryName || "Specialization"}
+                        </span>
+                        <span className="text-xs font-bold text-[#705d00]">
+                          ₹{svc.price?.toLocaleString("en-IN") || "1,800"}
+                        </span>
+                      </div>
+
+                      {/* Service Name */}
+                      <h4 className="font-serif text-base sm:text-lg text-[#412a1e] font-semibold leading-snug">
+                        {svc.name}
+                      </h4>
+
+                      {/* Duration */}
+                      <p className="text-xs text-[#82746f] mt-1 font-medium flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#705d00]" />
+                        <span>{svc.durationMinutes || 50} Minutes Session</span>
+                      </p>
+
+                      {/* Description */}
+                      <p className="text-xs text-[#4f443f] mt-3 leading-relaxed line-clamp-3">
+                        {svc.shortDescription}
+                      </p>
+                    </div>
+
+                    {/* Card Bottom: Modality tag + Radio Circle */}
+                    <div className="pt-4 mt-4 border-t border-[#e2d9ce]/60 flex items-center justify-between">
+                      <span className="text-[11px] font-medium text-[#5a4033] flex items-center gap-1.5">
+                        <Video className="w-3.5 h-3.5 text-[#705d00]" />
+                        <span>Online Telehealth</span>
+                      </span>
+                      <div
+                        className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
+                          isSelected
+                            ? "bg-[#705d00] text-white"
+                            : "border border-[#82746f]/50 bg-white/60"
                         }`}
                       >
-                        {count}
-                      </span>
-                    )}
-                  </button>
+                        {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
-          )}
 
-          {/* Clinical Services Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {filteredServices.map((svc) => {
-              const isSelected = selectedService?.id === svc.id;
-              return (
-                <div
-                  key={svc.id}
-                  onClick={() => setSelectedService(svc)}
-                  className={`relative cursor-pointer rounded-2xl p-5 sm:p-6 transition-all duration-300 flex flex-col justify-between border ${
-                    isSelected
-                      ? "bg-[#fbf7ee] border-[#705d00] shadow-[0_4px_20px_rgba(112,93,0,0.12)] ring-1 ring-[#705d00]"
-                      : "bg-[#f6f3ec]/70 hover:bg-[#f6f3ec] border-[#e2d9ce] hover:border-[#cfc4b7]"
-                  }`}
-                >
-                  <div>
-                    {/* Top Row: Category Badge + Price */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#e5e2db] text-[#4f443f]">
-                        {svc.categoryName || "Specialization"}
-                      </span>
-                      <span className="text-xs font-bold text-[#705d00]">
-                        ₹{svc.price?.toLocaleString("en-IN") || "1,800"}
-                      </span>
-                    </div>
-
-                    {/* Service Name */}
-                    <h4 className="font-serif text-base sm:text-lg text-[#412a1e] font-semibold leading-snug">
-                      {svc.name}
-                    </h4>
-
-                    {/* Duration */}
-                    <p className="text-xs text-[#82746f] mt-1 font-medium flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#705d00]" />
-                      <span>{svc.durationMinutes || 50} Minutes Session</span>
-                    </p>
-
-                    {/* Description */}
-                    <p className="text-xs text-[#4f443f] mt-3 leading-relaxed line-clamp-3">
-                      {svc.shortDescription}
-                    </p>
-                  </div>
-
-                  {/* Card Bottom: Modality tag + Radio Circle */}
-                  <div className="pt-4 mt-4 border-t border-[#e2d9ce]/60 flex items-center justify-between">
-                    <span className="text-[11px] font-medium text-[#5a4033] flex items-center gap-1.5">
-                      <Video className="w-3.5 h-3.5 text-[#705d00]" />
-                      <span>Online Telehealth</span>
-                    </span>
-                    <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
-                        isSelected
-                          ? "bg-[#705d00] text-white"
-                          : "border border-[#82746f]/50 bg-white/60"
-                      }`}
-                    >
-                      {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+            {/* Step 1 Actions */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#e2d9ce]/60">
+              <span className="text-xs text-[#82746f]">
+                {selectedService
+                  ? `Selected: ${selectedService.name} (₹${selectedService.price?.toLocaleString("en-IN")})`
+                  : "Tap a consultation area above to select and continue."}
+              </span>
+              <button
+                type="button"
+                disabled={!selectedService}
+                onClick={handleNextStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>Continue to Date &amp; Time</span>
+                <ArrowRight className="w-4 h-4 text-[#F4D242]" />
+              </button>
+            </div>
+          </section>
+        )}
 
         {/* ============================================================ */}
         {/* STEP 2: CHOOSE PREFERRED DATE & TIME                         */}
         {/* ============================================================ */}
-        <section className="space-y-5">
+        {currentStep === 2 && (
+          <section className="space-y-5">
           <div className="flex items-center gap-3">
             <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
               2
@@ -1638,157 +1852,486 @@ END:VCALENDAR`;
               </div>
             </div>
           </div>
+
+          {/* Step 2 Actions */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#e2d9ce]/60">
+            <button
+              type="button"
+              onClick={handlePrevStep}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#f6f3ec] text-[#412a1e] border border-[#e2d9ce] text-sm font-semibold hover:bg-[#ece8df] transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Session Format</span>
+            </button>
+
+            <button
+              type="button"
+              disabled={isDateOnLeave || activeTimeSlots.length === 0 || !selectedTime}
+              onClick={handleNextStep}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span>Continue to Your Details</span>
+              <ArrowRight className="w-4 h-4 text-[#F4D242]" />
+            </button>
+          </div>
         </section>
+      )}
 
         {/* ============================================================ */}
         {/* STEP 3: YOUR CONFIDENTIAL INFORMATION                        */}
         {/* ============================================================ */}
-        <section className="space-y-5">
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
-              3
-            </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#412a1e] font-normal">
-              {config.step3Title || "Your Confidential Information"}
-            </h3>
-          </div>
+        {currentStep === 3 && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
+                3
+              </span>
+              <div>
+                <h3 className="font-serif text-xl sm:text-2xl text-[#412a1e] font-normal">
+                  {config.step3Title || "Your Confidential Information"}
+                </h3>
+                <p className="text-xs text-[#82746f] mt-0.5">
+                  Your privacy is fully protected under clinical confidentiality standards.
+                </p>
+              </div>
+            </div>
 
-          <div className="space-y-4">
-            {/* Selected Service Summary Pill */}
-            {selectedService && (
-              <div className="bg-[#f6f3ec] rounded-2xl p-4 sm:p-5 border border-[#e2d9ce] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs">
-                <div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#705d00] block mb-1">
-                    Booking Summary
-                  </span>
-                  <div className="font-serif font-semibold text-base text-[#412a1e]">
-                    {selectedService.name}
+            <div className="space-y-5">
+              {/* Selected Service Summary Pill */}
+              {selectedService && (
+                <div className="bg-[#f6f3ec] rounded-2xl p-4 sm:p-5 border border-[#e2d9ce] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-[#705d00] block mb-1">
+                      Selected Appointment
+                    </span>
+                    <div className="font-serif font-semibold text-base text-[#412a1e]">
+                      {selectedService.name}
+                    </div>
+                    <div className="text-[11px] text-[#82746f] mt-0.5 flex flex-wrap items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-[#e5e2db] text-[#412a1e] font-medium">
+                        {selectedService.categoryName}
+                      </span>
+                      <span>·</span>
+                      <span>{selectedService.durationMinutes} mins</span>
+                      <span>·</span>
+                      <span className="font-medium text-[#412a1e]">
+                        Online Telehealth (Google Meet)
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-[11px] text-[#82746f] mt-0.5 flex flex-wrap items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md bg-[#e5e2db] text-[#412a1e] font-medium">
-                      {selectedService.categoryName}
-                    </span>
-                    <span>·</span>
-                    <span>{selectedService.durationMinutes} mins</span>
-                    <span>·</span>
-                    <span className="font-medium text-[#412a1e]">
-                      Online Telehealth (Google Meet)
-                    </span>
+                  <div className="text-left sm:text-right shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#e2d9ce]/60">
+                    <div className="text-base font-bold text-[#705d00]">
+                      ₹{selectedService.price?.toLocaleString("en-IN")}
+                    </div>
+                    <div className="text-[11px] text-[#412a1e] font-medium mt-0.5">
+                      {selectedDateStr} at {selectedTime}
+                    </div>
                   </div>
                 </div>
-                <div className="text-left sm:text-right shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#e2d9ce]/60">
-                  <div className="text-base font-bold text-[#705d00]">
-                    ₹{selectedService.price?.toLocaleString("en-IN")}
+              )}
+
+              {/* Row 1: Full Name & Email */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => {
+                      setFullName(e.target.value);
+                      if (errorMessage) setErrorMessage("");
+                    }}
+                    placeholder="e.g. Maya Chen"
+                    className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errorMessage) setErrorMessage("");
+                    }}
+                    placeholder="name@sanctuary.com"
+                    className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Contact Channel & Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
+                    Preferred Contact Channel
+                  </label>
+                  <select
+                    value={contactChannel}
+                    onChange={(e) => setContactChannel(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors cursor-pointer"
+                  >
+                    {(config.contactChannels || CONTACT_CHANNELS).map((ch) => (
+                      <option key={ch} value={ch}>
+                        {ch}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
+                    Phone / WhatsApp Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+91 755 000 2973"
+                    className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Row 3: Notes Textarea */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
+                  Is there anything you would like me to know beforehand? (Completely Optional)
+                </label>
+                <textarea
+                  rows={3}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Share what is present for you right now, or leave this entirely blank. We can begin exactly wherever you are."
+                  className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors resize-none leading-relaxed"
+                />
+              </div>
+
+              {/* Ethics & Privacy Notice */}
+              <div className="flex items-center gap-2 pt-2 text-xs text-[#82746f]">
+                <Lock className="w-3.5 h-3.5 text-[#705d00] shrink-0" />
+                <span>
+                  {config.ethicsNotice || "All communications are bound by strict psychological ethics and confidential data protocols."}
+                </span>
+              </div>
+            </div>
+
+            {/* Validation error if any */}
+            {errorMessage && (
+              <div className="p-4 rounded-xl bg-[#ffdad6] border border-[#ba1a1a]/30 text-[#93000a] text-xs">
+                {errorMessage}
+              </div>
+            )}
+
+            {/* Step 3 Actions */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#e2d9ce]/60">
+              <button
+                type="button"
+                onClick={handlePrevStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#f6f3ec] text-[#412a1e] border border-[#e2d9ce] text-sm font-semibold hover:bg-[#ece8df] transition-all cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Date &amp; Time</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] transition-all cursor-pointer shadow-md"
+              >
+                <span>Continue to Session Guidelines</span>
+                <ArrowRight className="w-4 h-4 text-[#F4D242]" />
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* ============================================================ */}
+        {/* STEP 4: IMPORTANT INFORMATION BEFORE SESSION                 */}
+        {/* ============================================================ */}
+        {currentStep === 4 && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
+                4
+              </span>
+              <div>
+                <h3 className="font-serif text-xl sm:text-2xl text-[#412a1e] font-normal">
+                  Important Information Before Session
+                </h3>
+                <p className="text-xs text-[#82746f] mt-0.5">
+                  Please review the telehealth consultation guidelines and clinical protocols.
+                </p>
+              </div>
+            </div>
+
+            {/* IMPORTANT PRACTICE NOTICE / CLINICAL GUIDELINES */}
+            {config.noticeBox?.enabled && config.noticeBox?.message && (
+              <div className="space-y-4">
+                {/* Header Card */}
+                <div
+                  role="region"
+                  aria-label="Practice Notice"
+                  className={`rounded-2xl p-4 sm:p-5 border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    config.noticeBox.type === "warning"
+                      ? "bg-[#fff7ed] border-[#fed7aa] text-[#7c2d12]"
+                      : config.noticeBox.type === "info"
+                      ? "bg-[#eff6ff] border-[#bfdbfe] text-[#1e3a8a]"
+                      : config.noticeBox.type === "success"
+                      ? "bg-[#f0fdf4] border-[#bbf7d0] text-[#14532d]"
+                      : "bg-[#fbf7ee] border-[#e2d9ce] text-[#412a1e]"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`p-2.5 rounded-xl shrink-0 ${
+                        config.noticeBox.type === "warning"
+                          ? "bg-[#ffedd5] text-[#c2410c]"
+                          : config.noticeBox.type === "info"
+                          ? "bg-[#dbeafe] text-[#2563eb]"
+                          : config.noticeBox.type === "success"
+                          ? "bg-[#dcfce7] text-[#16a34a]"
+                          : "bg-[#faecd6] text-[#705d00]"
+                      }`}
+                    >
+                      <Megaphone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-serif text-base sm:text-lg font-semibold tracking-tight text-[#412a1e]">
+                        {config.noticeBox.title || "Important Information Before Booking"}
+                      </h4>
+                      <p className="text-xs text-[#82746f] mt-0.5">
+                        Please review these {parsedNoticePoints.length} guidelines before confirming your session.
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-[11px] text-[#412a1e] font-medium mt-0.5">
-                    {selectedDateStr}{" "}
-                    {isDateOnLeave
-                      ? "· (Therapist on Leave — No Slots Available)"
-                      : activeTimeSlots.length === 0
-                      ? "· (There is no slot available for this date)"
-                      : selectedTime
-                      ? `at ${selectedTime}`
-                      : "· (Select an available slot)"}
+
+                  {parsedNoticePoints.length > 0 && (
+                    <span className="self-start sm:self-auto px-3 py-1 rounded-full bg-white/80 border border-[#e2d9ce] text-[#705d00] text-[11px] font-semibold tracking-wide">
+                      {parsedNoticePoints.length} Points to Note
+                    </span>
+                  )}
+                </div>
+
+                {/* Individual Responsive Numbered Rule Cards */}
+                {parsedNoticePoints.length > 1 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-3">
+                    {parsedNoticePoints.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3.5 sm:p-4 rounded-2xl bg-white border border-[#e5decb] hover:border-[#705d00]/40 transition-all shadow-[0_2px_8px_rgba(65,42,30,0.03)] flex items-start gap-3 group"
+                      >
+                        <span className="w-6 h-6 rounded-full bg-[#f4ece0] text-[#705d00] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-[#e2d9ce] group-hover:bg-[#705d00] group-hover:text-white transition-colors">
+                          {item.num}
+                        </span>
+                        <p className="text-xs sm:text-[13px] text-[#3a281e] leading-relaxed">
+                          {item.text}
+                        </p>
+                      </div>
+                    ))}
                   </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-white border border-[#e2d9ce] text-xs sm:text-sm text-[#412a1e] leading-relaxed whitespace-pre-line">
+                    {config.noticeBox.message}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* If noticeBox is NOT enabled, fallback to the 4 default guidelines cards */}
+            {(!config.noticeBox?.enabled || !config.noticeBox?.message) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-2xl bg-[#f6f3ec] border border-[#e2d9ce] space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#412a1e]">
+                    <Video className="w-4 h-4 text-[#705d00]" />
+                    <span>100% Online via Google Meet</span>
+                  </div>
+                  <p className="text-[11px] text-[#5a4033] leading-relaxed">
+                    Your private video consultation link will be dispatched via email and WhatsApp upon confirmation.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#f6f3ec] border border-[#e2d9ce] space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#412a1e]">
+                    <Lock className="w-4 h-4 text-[#705d00]" />
+                    <span>Confidential &amp; Private Space</span>
+                  </div>
+                  <p className="text-[11px] text-[#5a4033] leading-relaxed">
+                    Please attend your session from a quiet, private location where you feel comfortable speaking freely without interruptions.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#f6f3ec] border border-[#e2d9ce] space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#412a1e]">
+                    <Clock className="w-4 h-4 text-[#705d00]" />
+                    <span>Punctuality &amp; Cadence</span>
+                  </div>
+                  <p className="text-[11px] text-[#5a4033] leading-relaxed">
+                    Please join 2-3 minutes ahead of your slot. Each session spans 50 minutes with an unhurried integration closing.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#f6f3ec] border border-[#e2d9ce] space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#412a1e]">
+                    <ShieldCheck className="w-4 h-4 text-[#705d00]" />
+                    <span>Rescheduling Policy</span>
+                  </div>
+                  <p className="text-[11px] text-[#5a4033] leading-relaxed">
+                    To reschedule or cancel your session, please notify at least 24 hours prior to your scheduled time via WhatsApp or email.
+                  </p>
                 </div>
               </div>
             )}
 
-            {/* Row 1: Full Name & Email */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
-                  Full Name *
-                </label>
+            {/* Interactive acknowledgement checkbox */}
+            <div className="pt-2">
+              <label className="flex items-start gap-3 p-4 rounded-2xl bg-[#f6f3ec] border border-[#e2d9ce] cursor-pointer hover:border-[#705d00]/50 transition-colors">
                 <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Maya Chen"
-                  className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
+                  type="checkbox"
+                  checked={guidelinesAccepted}
+                  onChange={(e) => {
+                    setGuidelinesAccepted(e.target.checked);
+                    if (e.target.checked) setErrorMessage("");
+                  }}
+                  className="mt-1 w-4 h-4 rounded border-[#e2d9ce] text-[#705d00] focus:ring-[#705d00] cursor-pointer"
                 />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@sanctuary.com"
-                  className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
-                />
-              </div>
-            </div>
-
-            {/* Row 2: Contact Channel & Phone */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
-                  Preferred Contact Channel
-                </label>
-                <select
-                  value={contactChannel}
-                  onChange={(e) => setContactChannel(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors cursor-pointer"
-                >
-                  {(config.contactChannels || CONTACT_CHANNELS).map((ch) => (
-                    <option key={ch} value={ch}>
-                      {ch}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
-                  Phone / WhatsApp Number
-                </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 755 000 2973"
-                  className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
-                />
-              </div>
-            </div>
-
-            {/* Row 3: Notes Textarea */}
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-[#82746f] block">
-                Is there anything you would like me to know beforehand? (Completely Optional)
+                <span className="text-xs text-[#412a1e] leading-relaxed">
+                  I have read and acknowledged the session guidelines, telehealth protocol, and agree to the consultation policies.
+                </span>
               </label>
-              <textarea
-                rows={3}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Share what is present for you right now, or leave this entirely blank. We can begin exactly wherever you are."
-                className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors resize-none leading-relaxed"
-              />
             </div>
 
-            {/* Ethics & Privacy Notice */}
-            <div className="flex items-center gap-2 pt-2 text-xs text-[#82746f]">
-              <Lock className="w-3.5 h-3.5 text-[#705d00] shrink-0" />
-              <span>
-                {config.ethicsNotice || "All communications are bound by strict psychological ethics and confidential data protocols."}
+            {/* Validation error if any */}
+            {errorMessage && (
+              <div className="p-4 rounded-xl bg-[#ffdad6] border border-[#ba1a1a]/30 text-[#93000a] text-xs">
+                {errorMessage}
+              </div>
+            )}
+
+            {/* Step 4 Actions */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#e2d9ce]/60">
+              <button
+                type="button"
+                onClick={handlePrevStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#f6f3ec] text-[#412a1e] border border-[#e2d9ce] text-sm font-semibold hover:bg-[#ece8df] transition-all cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Your Details</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={!guidelinesAccepted}
+                onClick={handleNextStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>Proceed to Confirm &amp; Pay</span>
+                <ArrowRight className="w-4 h-4 text-[#F4D242]" />
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* ============================================================ */}
+        {/* STEP 5: CONFIRM & PAY                                        */}
+        {/* ============================================================ */}
+        {currentStep === 5 && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-6 rounded-full bg-[#412a1e] text-[#fcf9f2] text-xs font-semibold flex items-center justify-center shrink-0">
+                5
               </span>
+              <div>
+                <h3 className="font-serif text-xl sm:text-2xl text-[#412a1e] font-normal">
+                  Confirm &amp; Pay
+                </h3>
+                <p className="text-xs text-[#82746f] mt-0.5">
+                  Review your consultation details and complete your reservation.
+                </p>
+              </div>
+            </div>
+
+            {/* Booking Details Review Card */}
+            <div className="rounded-2xl border border-[#e2d9ce] bg-[#f6f3ec]/80 p-5 sm:p-6 space-y-5">
+              <div className="flex items-center justify-between pb-4 border-b border-[#e2d9ce]/70">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#705d00]">
+                  Consultation Summary
+                </span>
+                <button
+                  type="button"
+                  onClick={() => goToStep(1)}
+                  className="text-xs text-[#705d00] hover:text-[#412a1e] font-medium underline cursor-pointer"
+                >
+                  Change Service
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#82746f] block mb-0.5">
+                    Service
+                  </span>
+                  <p className="font-semibold text-sm text-[#412a1e]">
+                    {selectedService?.name}
+                  </p>
+                  <p className="text-[11px] text-[#82746f]">
+                    {selectedService?.categoryName} · {selectedService?.durationMinutes} mins
+                  </p>
+                </div>
+
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#82746f] block mb-0.5">
+                    Appointment Date &amp; Time
+                  </span>
+                  <p className="font-semibold text-sm text-[#412a1e]">
+                    {selectedDateStr} at {selectedTime}
+                  </p>
+                  <p className="text-[11px] text-[#82746f]">
+                    Online Telehealth (Google Meet)
+                  </p>
+                </div>
+
+                <div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#82746f] block mb-0.5">
+                    Client Information
+                  </span>
+                  <p className="font-semibold text-sm text-[#412a1e]">
+                    {fullName}
+                  </p>
+                  <p className="text-[11px] text-[#82746f]">
+                    {email} · {phone || "No phone"} ({contactChannel})
+                  </p>
+                </div>
+              </div>
+
+              {notes && (
+                <div className="pt-3 border-t border-[#e2d9ce]/60 text-xs">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#82746f] block mb-0.5">
+                    Pre-session Notes
+                  </span>
+                  <p className="text-[#5a4033] italic leading-relaxed">
+                    &ldquo;{notes}&rdquo;
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Payment Mode Notice */}
             {config.enablePayment !== false ? (
-              <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-[#1A3828] text-xs flex items-start gap-3 mt-3">
+              <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-[#1A3828] text-xs flex items-start gap-3">
                 <CreditCard className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                 <div className="space-y-1 w-full">
                   <div className="flex flex-wrap items-center justify-between gap-1">
                     <p className="font-semibold text-emerald-950">Secure Razorpay Online Checkout</p>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                      ₹{(selectedService?.price || 1800).toLocaleString("en-IN")} · Instant Confirmation
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                      Total: ₹{(selectedService?.price || 1800).toLocaleString("en-IN")} · Instant Confirmation
                     </span>
                   </div>
                   <p className="text-[11px] leading-relaxed text-[#5a4033]">
@@ -1797,12 +2340,12 @@ END:VCALENDAR`;
                 </div>
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-[#5a4033] text-xs flex items-start gap-3 mt-3">
+              <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-[#5a4033] text-xs flex items-start gap-3">
                 <CreditCard className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                 <div className="space-y-1 w-full">
                   <div className="flex flex-wrap items-center justify-between gap-1">
                     <p className="font-semibold text-[#1A3828]">Manual Payment Settlement</p>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-900 border border-amber-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
                       Status: {config.defaultPaymentStatus === "paid" ? "Marked as Paid" : "Pay Later / At Session"}
                     </span>
                   </div>
@@ -1814,133 +2357,91 @@ END:VCALENDAR`;
                 </div>
               </div>
             )}
-          </div>
-        </section>
 
-        {/* Error message */}
-        {errorMessage && (
-          <div className="p-4 rounded-xl bg-[#ffdad6] border border-[#ba1a1a]/30 text-[#93000a] text-xs">
-            {errorMessage}
-          </div>
-        )}
-
-        {/* OPTIONAL PRACTICE NOTICE BOX (BOTTOM PLACEMENT) */}
-        {config.noticeBox?.enabled && config.noticeBox?.message && (
-          <div
-            role="region"
-            aria-label="Practice Notice"
-            className={`rounded-2xl p-4 sm:p-5 border transition-all ${
-              config.noticeBox.type === "warning"
-                ? "bg-[#fff7ed] border-[#fed7aa] text-[#7c2d12]"
-                : config.noticeBox.type === "info"
-                ? "bg-[#eff6ff] border-[#bfdbfe] text-[#1e3a8a]"
-                : config.noticeBox.type === "success"
-                ? "bg-[#f0fdf4] border-[#bbf7d0] text-[#14532d]"
-                : "bg-[#fdf9e8] border-[#fde68a] text-[#78350f]"
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              <div
-                className={`p-2 rounded-xl shrink-0 mt-0.5 ${
-                  config.noticeBox.type === "warning"
-                    ? "bg-[#ffedd5] text-[#c2410c]"
-                    : config.noticeBox.type === "info"
-                    ? "bg-[#dbeafe] text-[#2563eb]"
-                    : config.noticeBox.type === "success"
-                    ? "bg-[#dcfce7] text-[#16a34a]"
-                    : "bg-[#fef3c7] text-[#b45309]"
-                }`}
-              >
-                {config.noticeBox.type === "warning" ? (
-                  <AlertCircle className="w-4 h-4" />
-                ) : config.noticeBox.type === "info" ? (
-                  <Info className="w-4 h-4" />
-                ) : config.noticeBox.type === "success" ? (
-                  <CheckCircle2 className="w-4 h-4" />
-                ) : (
-                  <Megaphone className="w-4 h-4" />
-                )}
+            {/* Error message */}
+            {errorMessage && (
+              <div className="p-4 rounded-xl bg-[#ffdad6] border border-[#ba1a1a]/30 text-[#93000a] text-xs">
+                {errorMessage}
               </div>
-              <div className="space-y-1">
-                {config.noticeBox.title && (
-                  <h4 className="text-sm font-semibold tracking-tight">
-                    {config.noticeBox.title}
-                  </h4>
-                )}
-                <div className="text-xs sm:text-sm leading-relaxed whitespace-pre-line opacity-95">
-                  {config.noticeBox.message}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ============================================================ */}
-        {/* BOTTOM ACTION BAR                                            */}
-        {/* ============================================================ */}
-        <div className="pt-6 border-t border-[#e2d9ce] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-col gap-1 text-xs text-[#5a4033]">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#F4D242] inline-block animate-pulse"></span>
-              <span>{config.instantConfirmationText || "Meeting details will be shared after payment confirmation"}</span>
-            </div>
-            <p className="text-[11px] text-[#82746f] pl-4">
-              By continuing, you agree to our{" "}
-              <Link href="/terms-and-conditions" target="_blank" className="underline hover:text-[#412a1e]">
-                Terms &amp; Policy
-              </Link>{" "}
-              and{" "}
-              <Link href="/privacy-policy" target="_blank" className="underline hover:text-[#412a1e]">
-                Privacy Policy
-              </Link>.
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            disabled={
-              isSubmitting ||
-              isDateOnLeave ||
-              activeTimeSlots.length === 0 ||
-              !selectedTime
-            }
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? (
-              <span>
-                {config.enablePayment === false
-                  ? "Securing Appointment..."
-                  : "Connecting to Razorpay..."}
-              </span>
-            ) : isDateOnLeave || activeTimeSlots.length === 0 ? (
-              <span className="flex items-center gap-2 text-rose-200">
-                <CalendarOff className="w-4 h-4 text-rose-300" />
-                <span>
-                  {isDateOnLeave
-                    ? "No Slots Available (On Leave) — Choose Another Date"
-                    : isAllSlotsBooked
-                    ? "All Slots Booked — Choose Another Date"
-                    : "There Is No Slot — Choose Another Date"}
-                </span>
-              </span>
-            ) : (
-              <>
-                <span>
-                  {config.enablePayment === false
-                    ? (config.submitButtonText && !config.submitButtonText.toLowerCase().includes("razorpay")
-                        ? config.submitButtonText
-                        : "Confirm & Book Session (Pay Later)")
-                    : (config.submitButtonText &&
-                       !config.submitButtonText.toLowerCase().includes("pay later") &&
-                       config.submitButtonText !== "Confirm & Request Session"
-                        ? config.submitButtonText
-                        : `Pay via Razorpay & Book Session (₹${(selectedService?.price || 1800).toLocaleString("en-IN")})`)}
-                </span>
-                <ArrowRight className="w-4 h-4 text-[#F4D242]" />
-              </>
             )}
-          </button>
-        </div>
+
+            {/* Step 5 Bottom Action Bar */}
+            <div className="pt-6 border-t border-[#e2d9ce] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <button
+                type="button"
+                onClick={handlePrevStep}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#f6f3ec] text-[#412a1e] border border-[#e2d9ce] text-sm font-semibold hover:bg-[#ece8df] transition-all cursor-pointer order-2 sm:order-1"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Guidelines</span>
+              </button>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto order-1 sm:order-2">
+                <div className="flex flex-col gap-0.5 text-xs text-[#5a4033] text-center sm:text-right">
+                  <div className="flex items-center justify-center sm:justify-end gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#F4D242] inline-block animate-pulse"></span>
+                    <span>{config.instantConfirmationText || "Meeting details will be shared after payment confirmation"}</span>
+                  </div>
+                  <p className="text-[10px] text-[#82746f]">
+                    By booking, you agree to our{" "}
+                    <Link href="/terms-and-conditions" target="_blank" className="underline hover:text-[#412a1e]">
+                      Terms
+                    </Link>{" "}
+                    &amp;{" "}
+                    <Link href="/privacy-policy" target="_blank" className="underline hover:text-[#412a1e]">
+                      Privacy Policy
+                    </Link>.
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={
+                    isSubmitting ||
+                    isDateOnLeave ||
+                    activeTimeSlots.length === 0 ||
+                    !selectedTime
+                  }
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#412a1e] text-[#fcf9f2] text-sm font-semibold hover:bg-[#5a4033] active:scale-[0.98] transition-all duration-300 shadow-md cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <span>
+                      {config.enablePayment === false
+                        ? "Securing Appointment..."
+                        : "Connecting to Razorpay..."}
+                    </span>
+                  ) : isDateOnLeave || activeTimeSlots.length === 0 ? (
+                    <span className="flex items-center gap-2 text-rose-200">
+                      <CalendarOff className="w-4 h-4 text-rose-300" />
+                      <span>
+                        {isDateOnLeave
+                          ? "No Slots Available (On Leave)"
+                          : isAllSlotsBooked
+                          ? "All Slots Booked"
+                          : "There Is No Slot"}
+                      </span>
+                    </span>
+                  ) : (
+                    <>
+                      <span>
+                        {config.enablePayment === false
+                          ? (config.submitButtonText && !config.submitButtonText.toLowerCase().includes("razorpay")
+                              ? config.submitButtonText
+                              : "Confirm & Book Session (Pay Later)")
+                          : (config.submitButtonText &&
+                             !config.submitButtonText.toLowerCase().includes("pay later") &&
+                             config.submitButtonText !== "Confirm & Request Session"
+                              ? config.submitButtonText
+                              : `Pay via Razorpay & Book Session (₹${(selectedService?.price || 1800).toLocaleString("en-IN")})`)}
+                      </span>
+                      <ArrowRight className="w-4 h-4 text-[#F4D242]" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
       </form>
     </div>
   );
