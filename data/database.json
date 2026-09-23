@@ -52,35 +52,35 @@
   "sessionFormats": [
     {
       "id": "individual-online",
+      "tag": "Video Consultation",
+      "icon": "video",
+      "badge": "Popular",
+      "order": 1,
+      "price": 1800,
       "title": "Individual Online Counselling",
       "format": "online",
       "duration": "50 Minutes · Secure Video",
-      "tag": "Video Consultation",
-      "badge": "Popular",
-      "badgeType": "popular",
-      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle.",
-      "icon": "video",
-      "price": 1800,
       "isActive": true,
-      "order": 1,
+      "badgeType": "popular",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-23T13:55:06.393Z"
+      "updatedAt": "2026-09-23T14:14:41.934Z",
+      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
     },
     {
       "id": "initial-discovery",
+      "tag": "Exploratory",
+      "icon": "discovery",
+      "badge": "Introductory",
+      "order": 2,
+      "price": 0,
       "title": "Initial Discovery Call",
       "format": "online",
       "duration": "20 Minutes · Introductory",
-      "tag": "Exploratory",
-      "badge": "Introductory",
-      "badgeType": "introductory",
-      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit.",
-      "icon": "discovery",
-      "price": 0,
       "isActive": true,
-      "order": 2,
+      "badgeType": "introductory",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-23T13:55:06.393Z"
+      "updatedAt": "2026-09-23T14:14:41.934Z",
+      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
     }
   ],
   "settings": {
@@ -111,7 +111,7 @@
       "currency": "INR (₹)",
       "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
       "timezone": "Asia/Kolkata (IST)",
-      "whatsapp": "https://wa.me/919876543210",
+      "whatsapp": "https://wa.me/917550002973",
       "instagram": "https://instagram.com/aswathy.psychology",
       "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
       "contactEmail": "roottherapyonline@gmail.com",
@@ -170,7 +170,7 @@
     "ethicsNotice": "All communications are bound by strict psychological ethics and confidential data protocols.",
     "instantConfirmationText": "Instant booking confirmation & Google Meet invitation",
     "submitButtonText": "Confirm & Book Session (Pay Later)",
-    "whatsappNumber": "+91 98765 43210",
+    "whatsappNumber": "+91 755 000 2973",
     "confirmationTitle": "Your Sanctuary Awaits",
     "confirmationSubtitle": "Appointment Secured",
     "enablePayment": false,
@@ -350,7 +350,7 @@
       "enabled": true,
       "message": "1. Video must remain ON throughout the session. Audio-only or chat-based sessions are not offered.\n2. You may briefly share your concern with the psychologist before booking your session.\n3. Payment must be completed in advance to confirm your appointment. The payment QR code/scanner will be shared with you via WhatsApp or email.\n4. Your session will be confirmed only after the payment has been received.\n5. The Google Meet link will be shared with you via WhatsApp or email after payment confirmation.\n6. The informed consent form will be shared with you via email after payment confirmation. Please read and complete the form before your scheduled session.\n7. A sliding-scale fee option may be available depending on individual circumstances. This can be discussed with the psychologist before payment and booking confirmation.\n8. Rescheduling is permitted only when requested at least 24 hours in advance.\n9.Cancellations made within 24 hours of the scheduled session are non-refundable.\n10. If you arrive late, the session will still end at the originally scheduled time.\n11. Please ensure that you have a stable internet connection, a private and comfortable space, and a device with a working camera and microphone for your session."
     },
-    "updatedAt": "2026-09-23T13:55:06.393Z"
+    "updatedAt": "2026-09-23T14:14:41.934Z"
   },
   "websiteAbout": {
     "name": "Aswathy Jeyarajasekar",
@@ -362,6 +362,26 @@
     "qualifications": [],
     "experienceYears": "1+ Year in Supervised Private Practice"
   },
+  "notifications": [
+    {
+      "id": "notif_1790175672019",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-29 at 08:30 PM (Evening Slot).",
+      "link": "/admin/bookings",
+      "isRead": false,
+      "createdAt": "2026-09-23T15:01:11.966Z"
+    },
+    {
+      "id": "notif_1790174988883",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Aswathy J booked \"Student Session\" for 2026-09-29 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-09-23T14:49:45.861Z"
+    }
+  ],
   "services": [
     {
       "id": "svc_emotional_wellbeing",
@@ -522,61 +542,56 @@
       "clientDisplayName": "Client M"
     }
   ],
-  "bookings": [],
-  "notifications": [
+  "bookings": [
     {
-      "id": "notif_1790162263474",
-      "link": "/admin/bookings",
-      "type": "booking_cancel",
-      "title": "Booking CANCELLED",
-      "isRead": false,
-      "message": "Booking ASW-192587 (Aswathy J) marked as cancelled.",
-      "createdAt": "2026-09-23T11:17:42.162Z"
+      "id": "ASW-300318",
+      "clientName": "Muneeswaran P",
+      "clientEmail": "muneeswaranmd2004@gmail.com",
+      "clientPhone": "+918300864083",
+      "serviceId": "svc_emotional_wellbeing",
+      "serviceName": "Individual Session ",
+      "appointmentDate": "2026-09-29",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "durationMinutes": 60,
+      "format": "online",
+      "bookingStatus": "confirmed",
+      "paymentStatus": "pending",
+      "price": 800,
+      "clientMessage": "test",
+      "history": [
+        {
+          "timestamp": "2026-09-23T15:01:11.966Z",
+          "action": "Booking request submitted via website"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-23T15:01:11.966Z",
+      "updatedAt": "2026-09-23T15:01:11.966Z"
     },
     {
-      "id": "notif_1790161774272",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Aswathy J booked \"Individual Session \" for 2026-09-29 at 06:30 PM (Evening Slot).",
-      "createdAt": "2026-09-23T11:09:31.394Z"
-    },
-    {
-      "id": "notif_1790161685635",
-      "link": "/admin/bookings",
-      "type": "booking_cancel",
-      "title": "Booking CANCELLED",
-      "isRead": false,
-      "message": "Booking ASW-548803 (Aswathy J) marked as cancelled.",
-      "createdAt": "2026-09-23T11:08:04.091Z"
-    },
-    {
-      "id": "notif_1790161630900",
-      "link": "/admin/bookings",
-      "type": "booking_rescheduled",
-      "title": "Booking Rescheduled",
-      "isRead": false,
-      "message": "Aswathy J's appointment rescheduled to 2026-10-02 at 10:00 PM.",
-      "createdAt": "2026-09-23T11:07:09.497Z"
-    },
-    {
-      "id": "notif_1790161506877",
-      "link": "/admin/bookings",
-      "type": "status_change",
-      "title": "Payment PAID",
-      "isRead": false,
-      "message": "Payment status for Aswathy J (#ASW-548803) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
-      "createdAt": "2026-09-23T11:05:05.573Z"
-    },
-    {
-      "id": "notif_1790161412732",
-      "link": "/admin/bookings",
-      "type": "booking_new",
-      "title": "New Booking Request",
-      "isRead": false,
-      "message": "Aswathy J booked \"Individual Session \" for 2026-09-28 at 06:30 PM (Evening Slot).",
-      "createdAt": "2026-09-23T11:03:29.937Z"
+      "id": "ASW-253578",
+      "price": 500,
+      "format": "online",
+      "history": [
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-23T14:49:45.861Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-23T14:49:45.861Z",
+      "serviceId": "svc_1789105147924",
+      "updatedAt": "2026-09-23T14:49:45.861Z",
+      "clientName": "Aswathy J",
+      "clientEmail": "aswathyjeyarajasekar21@gmail.com",
+      "clientPhone": "+91 (Not Provided)",
+      "serviceName": "Student Session",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "pending",
+      "appointmentDate": "2026-09-29",
+      "appointmentTime": "06:30 PM (Evening Slot)",
+      "durationMinutes": 60
     }
   ],
   "serviceCategories": [

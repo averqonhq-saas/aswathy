@@ -31,6 +31,13 @@ export async function PUT(request: Request) {
 
     if (general) {
       db.settings.general = { ...db.settings.general, ...general };
+      const rawPhone = general.contactPhone || general.phone;
+      if (rawPhone) {
+        const clean = rawPhone.replace(/[^0-9]/g, "");
+        if (clean) {
+          db.settings.general.whatsapp = `https://wa.me/${clean}`;
+        }
+      }
     }
 
     if (booking) {
