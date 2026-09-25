@@ -139,8 +139,8 @@
 .font-display-hero-mobile,
 .text-display-hero-mobile {
   font-family: var(--font-playfair), "Playfair Display", serif;
-  font-size: 2.5rem;
-  line-height: 3rem;
+  font-size: 1.875rem;
+  line-height: 2.35rem;
   letter-spacing: -0.01em;
   font-weight: 400;
 }
