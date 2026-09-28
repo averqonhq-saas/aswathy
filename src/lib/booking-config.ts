@@ -149,7 +149,7 @@ export const DEFAULT_BOOKING_FORM_CONFIG: BookingFormConfig = {
   instantConfirmationText:
     "Meeting details will be shared after payment confirmation",
   submitButtonText: "Confirm & Request Session",
-  whatsappNumber: "+91 755 000 2973",
+  whatsappNumber: "+91 755 000 3603",
   confirmationTitle: "Your Sanctuary Awaits",
   confirmationSubtitle: "Appointment Secured",
   enablePayment: true,

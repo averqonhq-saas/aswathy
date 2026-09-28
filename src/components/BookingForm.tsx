@@ -911,9 +911,9 @@ END:VCALENDAR`;
     const msg = encodeURIComponent(
       `Hello Aswathy J, I have scheduled an appointment for ${confirmedBooking.serviceName} on ${confirmedBooking.date} at ${confirmedBooking.time} (Booking ID: ${confirmedBooking.id}). Looking forward to connecting.`
     );
-    let rawPhone = config.whatsappNumber || "917550002973";
+    let rawPhone = config.whatsappNumber || "917550003603";
     if (rawPhone.includes("98765") || !rawPhone.replace(/[^0-9]/g, "")) {
-      rawPhone = "917550002973";
+      rawPhone = "917550003603";
     }
     const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
     window.open(`https://api.whatsapp.com/send/?phone=${cleanPhone}&text=${msg}`, "_blank");
@@ -2006,7 +2006,7 @@ END:VCALENDAR`;
                       setPhone(e.target.value);
                       if (errorMessage) setErrorMessage("");
                     }}
-                    placeholder="+91 755 000 2973"
+                    placeholder="+91 755 000 3603"
                     className="w-full px-4 py-3 rounded-xl bg-[#f6f3ec] border border-[#e2d9ce] text-sm text-[#1c1c18] placeholder-[#82746f]/60 focus:outline-none focus:border-[#705d00] focus:ring-1 focus:ring-[#705d00] transition-colors"
                   />
                 </div>

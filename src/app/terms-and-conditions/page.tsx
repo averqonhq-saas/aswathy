@@ -308,11 +308,11 @@ export default function TermsAndConditionsPage() {
                   <span>roottherapyonline@gmail.com</span>
                 </a>
                 <a
-                  href="tel:+917550002973"
+                  href="tel:+917550003603"
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-primary font-medium transition-colors"
                 >
                   <Phone className="w-4 h-4 text-secondary" />
-                  <span>+91 755 000 2973</span>
+                  <span>+91 755 000 3603</span>
                 </a>
               </div>
             </section>

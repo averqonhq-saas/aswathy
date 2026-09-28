@@ -168,10 +168,10 @@ export default function EnquirySection() {
                 </a>
                 <span>•</span>
                 <a
-                  href="tel:+917550002973"
+                  href="tel:+917550003603"
                   className="font-medium text-primary hover:text-secondary underline underline-offset-4 decoration-secondary transition-colors"
                 >
-                  +91 755 000 2973
+                  +91 755 000 3603
                 </a>
               </div>
             </div>
@@ -287,7 +287,7 @@ export default function EnquirySection() {
                         type="tel"
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="e.g., +91 755 000 2973"
+                        placeholder="e.g., +91 755 000 3603"
                         className="w-full px-4 py-2.5 rounded-xl bg-surface border border-parchment-border text-xs text-primary placeholder:text-on-surface-variant/50 focus:outline-none focus:border-forest-green focus:ring-1 focus:ring-forest-green transition-all"
                       />
                     </div>

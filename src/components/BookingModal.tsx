@@ -288,7 +288,7 @@ END:VCALENDAR`;
     const msg = encodeURIComponent(
       `Hello Aswathy J, I have booked a ${confirmedBooking.sessionType} on ${confirmedBooking.date} at ${confirmedBooking.timeSlot} (Booking ID: ${confirmedBooking.id}). Looking forward to our conversation.`
     );
-    window.open(`https://api.whatsapp.com/send/?phone=917550002973&text=${msg}`, "_blank");
+    window.open(`https://api.whatsapp.com/send/?phone=917550003603&text=${msg}`, "_blank");
   };
 
   if (!isOpen) return null;
@@ -758,7 +758,7 @@ END:VCALENDAR`;
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+91 755 000 2973"
+                        placeholder="+91 755 000 3603"
                         className="w-full px-space-md py-space-sm rounded-xl border border-surface-container-high bg-surface text-on-surface font-body-md focus:outline-none focus:border-primary"
                       />
                     </div>

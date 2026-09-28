@@ -181,7 +181,7 @@ export default function RootLayout({
       url: "https://www.aswathypsychologist.com",
       logo: "https://www.aswathypsychologist.com/icon.png",
       image: "https://www.aswathypsychologist.com/aswathy-photo.jpg",
-      telephone: "+917550002973",
+      telephone: "+917550003603",
       email: "roottherapyonline@gmail.com",
       priceRange: "₹₹",
       address: {

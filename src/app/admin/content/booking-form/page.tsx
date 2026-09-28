@@ -2125,7 +2125,7 @@ export default function AdminBookingFormControlPage() {
                   type="text"
                   value={config.whatsappNumber}
                   onChange={(e) => setConfig({ ...config, whatsappNumber: e.target.value })}
-                  placeholder="+91 755 000 2973"
+                  placeholder="+91 755 000 3603"
                   className="w-full text-xs p-2.5 rounded-xl border border-[#1A3828]/20 focus:border-[#1A3828] focus:outline-none font-sans text-[#1A3828]"
                 />
               </div>
