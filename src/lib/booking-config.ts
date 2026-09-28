@@ -266,3 +266,32 @@ export function areSlotsMatching(time1: string, time2: string): boolean {
   return min1 === min2;
 }
 
+/**
+ * Formats a date string (e.g. "2026-10-03") to "DD MMM YYYY (Day)", e.g. "03 Oct 2026 (Sat)".
+ */
+export function formatBookingDate(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  try {
+    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    let d: Date;
+    if (match) {
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10) - 1;
+      const day = parseInt(match[3], 10);
+      d = new Date(year, month, day);
+    } else {
+      d = new Date(dateStr);
+    }
+    if (isNaN(d.getTime())) return dateStr;
+
+    const dayNum = String(d.getDate()).padStart(2, "0");
+    const month = d.toLocaleDateString("en-US", { month: "short" });
+    const year = d.getFullYear();
+    const weekday = d.toLocaleDateString("en-US", { weekday: "short" });
+
+    return `${dayNum} ${month} ${year} (${weekday})`;
+  } catch {
+    return dateStr;
+  }
+}
+

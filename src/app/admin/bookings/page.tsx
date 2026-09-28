@@ -69,6 +69,32 @@ function convertAmPmTo24h(timeStr: string): string {
   return `${String(hours).padStart(2, "0")}:${minutes}`;
 }
 
+export function formatBookingDate(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  try {
+    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    let d: Date;
+    if (match) {
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10) - 1;
+      const day = parseInt(match[3], 10);
+      d = new Date(year, month, day);
+    } else {
+      d = new Date(dateStr);
+    }
+    if (isNaN(d.getTime())) return dateStr;
+
+    const dayNum = String(d.getDate()).padStart(2, "0");
+    const month = d.toLocaleDateString("en-US", { month: "short" });
+    const year = d.getFullYear();
+    const weekday = d.toLocaleDateString("en-US", { weekday: "short" });
+
+    return `${dayNum} ${month} ${year} (${weekday})`;
+  } catch {
+    return dateStr;
+  }
+}
+
 export default function BookingsManagementPage() {
   const { success, error, info } = useToast();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -456,10 +482,12 @@ export default function BookingsManagementPage() {
     },
     {
       header: "Date & Time",
-      className: "whitespace-nowrap min-w-[130px]",
+      className: "whitespace-nowrap min-w-[150px]",
       accessor: (b) => (
         <div className="space-y-0.5 whitespace-nowrap">
-          <div className="font-medium text-primary text-xs whitespace-nowrap">{b.appointmentDate}</div>
+          <div className="font-medium text-primary text-xs whitespace-nowrap">
+            {formatBookingDate(b.appointmentDate)}
+          </div>
           <div className="text-xs text-forest-green font-semibold whitespace-nowrap flex items-center gap-1">
             <Clock className="w-3 h-3 text-forest-green/70" />
             <span>{b.appointmentTime}</span>
@@ -948,7 +976,7 @@ export default function BookingsManagementPage() {
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">Date &amp; Time:</span>
                   <span className="font-semibold text-primary">
-                    {selectedBooking.appointmentDate} at {selectedBooking.appointmentTime}
+                    {formatBookingDate(selectedBooking.appointmentDate)} at {selectedBooking.appointmentTime}
                   </span>
                 </div>
                 <div className="flex justify-between">

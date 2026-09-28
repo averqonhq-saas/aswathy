@@ -23,6 +23,7 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import Drawer from "@/components/admin/Drawer";
 import { useToast } from "@/components/admin/Toast";
 import type { Booking, Enquiry } from "@/lib/types";
+import { formatBookingDate } from "@/lib/booking-config";
 
 export default function AdminDashboardPage() {
   const { success, error } = useToast();
@@ -623,7 +624,7 @@ export default function AdminDashboardPage() {
                 <div className="flex justify-between">
                   <span className="text-on-surface-variant">Date &amp; Time:</span>
                   <span className="font-semibold text-primary">
-                    {selectedBooking.appointmentDate} at {selectedBooking.appointmentTime}
+                    {formatBookingDate(selectedBooking.appointmentDate)} at {selectedBooking.appointmentTime}
                   </span>
                 </div>
                 <div className="flex justify-between">
