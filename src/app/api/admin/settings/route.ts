@@ -33,7 +33,10 @@ export async function PUT(request: Request) {
       db.settings.general = { ...db.settings.general, ...general };
       const rawPhone = general.contactPhone || general.phone;
       if (rawPhone) {
-        const clean = rawPhone.replace(/[^0-9]/g, "");
+        let clean = rawPhone.replace(/[^0-9]/g, "");
+        if (clean.length === 10) {
+          clean = `91${clean}`;
+        }
         if (clean) {
           db.settings.general.whatsapp = `https://wa.me/${clean}`;
         }

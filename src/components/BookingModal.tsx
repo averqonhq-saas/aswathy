@@ -288,7 +288,7 @@ END:VCALENDAR`;
     const msg = encodeURIComponent(
       `Hello Aswathy J, I have booked a ${confirmedBooking.sessionType} on ${confirmedBooking.date} at ${confirmedBooking.timeSlot} (Booking ID: ${confirmedBooking.id}). Looking forward to our conversation.`
     );
-    window.open(`https://api.whatsapp.com/send/?phone=917550003603&text=${msg}`, "_blank");
+    window.open(`https://wa.me/917550003603?text=${msg}`, "_blank");
   };
 
   if (!isOpen) return null;

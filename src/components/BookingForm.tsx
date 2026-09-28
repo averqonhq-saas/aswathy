@@ -915,8 +915,11 @@ END:VCALENDAR`;
     if (rawPhone.includes("98765") || !rawPhone.replace(/[^0-9]/g, "")) {
       rawPhone = "917550003603";
     }
-    const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
-    window.open(`https://api.whatsapp.com/send/?phone=${cleanPhone}&text=${msg}`, "_blank");
+    let cleanPhone = rawPhone.replace(/[^0-9]/g, "");
+    if (cleanPhone.length === 10) {
+      cleanPhone = `91${cleanPhone}`;
+    }
+    window.open(`https://wa.me/${cleanPhone}?text=${msg}`, "_blank");
   };
 
   const resetForm = () => {
