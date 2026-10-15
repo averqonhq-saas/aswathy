@@ -6,6 +6,8 @@ import JsonLd from "@/components/JsonLd";
 import EventDetailClient from "@/components/gallery/EventDetailClient";
 import { getGalleryEventBySlug, getGalleryEvents } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

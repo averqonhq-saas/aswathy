@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import GalleryClient from "@/components/gallery/GalleryClient";
 import { getGalleryEvents } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title:
@@ -108,7 +111,15 @@ export default async function GalleryPage() {
       <JsonLd data={collectionSchema} />
       <Navbar />
       <main className="min-h-screen bg-[#FCF9F2]">
-        <GalleryClient initialEvents={publishedEvents} />
+        <Suspense
+          fallback={
+            <div className="py-32 text-center text-on-surface-variant/60 font-body-md text-sm">
+              Loading moments & events...
+            </div>
+          }
+        >
+          <GalleryClient initialEvents={publishedEvents} />
+        </Suspense>
       </main>
       <Footer />
     </>
