@@ -1,53 +1,1058 @@
 {
+  "galleryEvents": [
+    {
+      "title": "Workshop Facilitator – Women’s Christian College, Chennai",
+      "slug": "womens-christian-college-chennai",
+      "category": "Workshops",
+      "role": "Workshop Facilitator",
+      "institution": "Women’s Christian College, Chennai",
+      "shortDescription": "Conducted a workshop on “School-Based Intervention for Students with Neurodevelopmental Disorders” for first- and second-year postgraduate students. The session focused on practical school-based interventions, early identification, and strategies to support students with neurodevelopmental needs.",
+      "description": "Conducted a workshop on “School-Based Intervention for Students with Neurodevelopmental Disorders” for first- and second-year postgraduate students. The session focused on practical school-based interventions, early identification, and strategies to support students with neurodevelopmental needs.",
+      "eventDate": "2026-10-15",
+      "location": "Chennai, Tamil Nadu",
+      "topics": [
+        "Mental Health",
+        "Resilience"
+      ],
+      "coverImage": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065167/aswathy-psychology/gallery/img-4885-jpg-1792065165471.jpg",
+      "galleryImages": [
+        {
+          "id": "gimg_1792065178848_0",
+          "url": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065178/aswathy-psychology/gallery/img-4882-jpg-1792065176643.jpg",
+          "caption": "",
+          "credit": ""
+        },
+        {
+          "id": "gimg_1792065184051_0",
+          "url": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065183/aswathy-psychology/gallery/img-4889-1792065182631.png",
+          "caption": "",
+          "credit": ""
+        },
+        {
+          "id": "gimg_1792065193225_0",
+          "url": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065192/aswathy-psychology/gallery/img-4892-jpg-1792065191177.jpg",
+          "caption": "",
+          "credit": ""
+        }
+      ],
+      "isFeatured": false,
+      "status": "published",
+      "id": "gev_1792065197346_sm5b3",
+      "createdAt": "2026-10-15T11:53:17.345Z",
+      "updatedAt": "2026-10-15T11:53:17.345Z"
+    },
+    {
+      "id": "gev_1792065026693_6kgji",
+      "role": "Guest Speaker",
+      "slug": "shri-shankarlal-sundarbai-shasun-jain-college-for-women",
+      "title": "Guest Speaker – Shri Shankarlal Sundarbai Shasun Jain College for Women",
+      "status": "published",
+      "topics": [
+        "Mental Health",
+        "Resilience"
+      ],
+      "category": "Guest Lectures",
+      "location": "Chennai, Tamil Nadu",
+      "createdAt": "2026-10-15T11:50:26.692Z",
+      "eventDate": "2026-10-15",
+      "updatedAt": "2026-10-15T11:50:26.692Z",
+      "coverImage": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065001/aswathy-psychology/gallery/img-4965-jpg-1792064999404.jpg",
+      "isFeatured": false,
+      "description": "Conducted a session on Learning Disabilities, focusing on awareness, early identification, and inclusive support for children with diverse learning needs.",
+      "institution": "Shri Shankarlal Sundarbai Shasun Jain College for Women",
+      "galleryImages": [
+        {
+          "id": "gimg_1792065010556_0",
+          "url": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065010/aswathy-psychology/gallery/img-4964-jpg-1792065008655.jpg",
+          "credit": "",
+          "caption": ""
+        },
+        {
+          "id": "gimg_1792065023120_0",
+          "url": "https://res.cloudinary.com/qt8svx7a/image/upload/v1792065022/aswathy-psychology/gallery/img-4964-jpg-1792065021316.jpg",
+          "credit": "",
+          "caption": ""
+        }
+      ],
+      "shortDescription": "Conducted a session on Learning Disabilities, focusing on awareness, early identification, and inclusive support for children with diverse learning needs."
+    }
+  ],
   "bookings": [
     {
-      "id": "ASW-956533",
+      "id": "ASW-543463",
       "price": 800,
       "format": "online",
       "history": [
         {
           "action": "Booking request submitted via website",
-          "timestamp": "2026-09-28T08:25:23.652Z"
+          "timestamp": "2026-10-15T10:09:12.609Z"
         }
       ],
       "provider": "internal",
-      "createdAt": "2026-09-28T08:25:23.652Z",
+      "createdAt": "2026-10-15T10:09:12.609Z",
       "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-28T08:25:23.652Z",
-      "clientName": "Ummer jishan",
-      "clientEmail": "ummerjishan7@gmail.com",
-      "clientPhone": "8137063506",
+      "updatedAt": "2026-10-15T10:09:12.609Z",
+      "clientName": "Naveena",
+      "clientEmail": "shrinavee192@gmail.com",
+      "clientPhone": "9042612220",
       "serviceName": "Individual Session ",
       "bookingStatus": "confirmed",
       "clientMessage": "",
       "paymentStatus": "pending",
-      "appointmentDate": "2026-09-29",
-      "appointmentTime": "08:30 PM (Evening Slot)",
+      "appointmentDate": "2026-10-15",
+      "appointmentTime": "09:30 PM (Evening Slot)",
       "durationMinutes": 60
     },
     {
-      "id": "ASW-550320",
+      "id": "ASW-417991",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-13T07:03:06.502Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/iix-jfsm-mtw)",
+          "timestamp": "2026-10-13T07:02:52.769Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-12T15:03:46.218Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-12T15:03:46.218Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-13T07:03:06.502Z",
+      "clientName": "Rithanya Sivakumar",
+      "clientEmail": "rithanyasiva12306@gmail.com",
+      "clientPhone": "9597476444",
+      "meetingLink": "https://meet.google.com/iix-jfsm-mtw",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-14",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "o1e9vnj0tg1hi63i0lvgnm47q8",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-655775",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-13T09:22:28.081Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/vqo-pjws-kvp)",
+          "timestamp": "2026-10-13T09:22:13.395Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-11T16:34:50.044Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-11T16:34:50.044Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-13T09:22:28.081Z",
+      "clientName": "Arun Raj",
+      "clientEmail": "racingwest2999@gmail.com",
+      "clientPhone": "8790588075",
+      "meetingLink": "https://meet.google.com/vqo-pjws-kvp",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-13",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "litjctar2mtd95ah3gfj8hbvj8",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-890757",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-15T08:39:39.831Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/edq-hhbu-vey)",
+          "timestamp": "2026-10-15T08:39:26.092Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-11T14:41:22.820Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-11T14:41:22.820Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-15T08:39:39.831Z",
+      "clientName": "Sivakumar",
+      "clientEmail": "sivakumar.s.v04@gmail.com",
+      "clientPhone": "8754258062",
+      "meetingLink": "https://meet.google.com/edq-hhbu-vey",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-15",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "3lggpurn89s53p9iceamaq9828",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-351329",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-15T04:36:32.875Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/ouq-mveu-nyi)",
+          "timestamp": "2026-10-15T04:36:17.711Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-10T12:05:42.486Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-10T12:05:42.486Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-15T04:36:32.875Z",
+      "clientName": "Srija",
+      "clientEmail": "srijarevathi97@gmail.com",
+      "clientPhone": "7092264630",
+      "meetingLink": "https://meet.google.com/ouq-mveu-nyi",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-16",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "088gsvkav74ef0utbc14jstg44",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-340560",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-13T09:24:40.953Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-10T16:19:27.318Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/hwt-ztxg-nga)",
+          "timestamp": "2026-10-10T16:19:12.697Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-09T14:21:46.967Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-09T14:21:46.967Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-13T09:24:40.953Z",
+      "clientName": "Sivakumar",
+      "clientEmail": "sivakumar.s.v04@gmail.com",
+      "clientPhone": "8754258062",
+      "meetingLink": "https://meet.google.com/hwt-ztxg-nga",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-11",
+      "appointmentTime": "12:00 PM",
+      "calendarEventId": "78ejsqc0fbfvj6fpehniccagqc",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-197693",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-10T12:10:28.144Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/uth-beia-ngv)",
+          "timestamp": "2026-10-10T12:10:14.945Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-08T15:12:36.854Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-08T15:12:36.854Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-10T12:10:28.144Z",
+      "clientName": "Dharani Murugesan",
+      "clientEmail": "dharani4dharu@gmail.com",
+      "clientPhone": "+91 8270703043",
+      "meetingLink": "https://meet.google.com/uth-beia-ngv",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "Concern: Recovering from a Narcissistic/Emotionally Abusive relationship. Broke up with him last Saturday, I didn’t tell him that yet because he never accepted that we are in a relationship. And for him to accept that I had to keep proving my love for him and drained from it. I dont want to get back to him. But withdrawing completely from him is feeling difficult. But I am maintaining no contact. For context: I am in France now. The only person I know here is him. Me and him live in the same house with 4 other roommates. Me and him used to live together cook together and do every single thing together. But I cut of all that. I am not speaking with him, I dont want to speak him too. But I miss him, I miss us, sometimes I feel pity like very much cheated on and enake ena patha pavam ah iruku. I want to get back to myself.",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-14",
+      "appointmentTime": "09:30 PM (Evening Slot)",
+      "calendarEventId": "g17u6tbsgqrnfv8es4ai8nh22k",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-113913",
+      "price": 600,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-13T04:41:59.911Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-13T03:46:33.545Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/bdd-gbng-yhv)",
+          "timestamp": "2026-10-13T03:46:19.885Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-08T13:38:18.610Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-08T13:38:18.610Z",
+      "serviceId": "svc_relationships",
+      "updatedAt": "2026-10-13T04:41:59.911Z",
+      "clientName": "Jersha",
+      "clientEmail": "jenyfred.a@northeastern.edu",
+      "clientPhone": "7339564198",
+      "meetingLink": "https://meet.google.com/bdd-gbng-yhv",
+      "serviceName": "Students Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-13",
+      "appointmentTime": "09:30 PM (Evening Slot)",
+      "calendarEventId": "7c8blsikicef929vqv903b7v08",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-323189",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-13T09:25:08.051Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-08T18:07:16.147Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/buv-qeuq-vgh)",
+          "timestamp": "2026-10-08T18:07:02.310Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-08T13:08:48.794Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-08T13:08:48.794Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-13T09:25:08.051Z",
+      "clientName": "Sri Sudharsan",
+      "clientEmail": "sudharshalt66@gmail.com",
+      "clientPhone": "9790899349",
+      "meetingLink": "https://meet.google.com/buv-qeuq-vgh",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-12",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "4s4gjpj9uia4hc8jdicn1qtk8g",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-625712",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-13T09:25:34.888Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-10T07:51:18.820Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/zje-cybs-izk)",
+          "timestamp": "2026-10-10T07:51:04.603Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-08T08:55:31.957Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-08T08:55:31.957Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-13T09:25:34.888Z",
+      "clientName": "Ishvarya Simhan",
+      "clientEmail": "ishvaryas2004@gmail.com",
+      "clientPhone": "+971558388021",
+      "meetingLink": "https://meet.google.com/zje-cybs-izk",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-12",
+      "appointmentTime": "09:30 PM (Evening Slot)",
+      "calendarEventId": "mn3ekr3t7139lqg1fstdnrb3as",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-472122",
       "price": 800,
       "format": "online",
       "history": [
         {
           "action": "Booking request submitted via website",
-          "timestamp": "2026-09-28T03:46:05.805Z"
+          "timestamp": "2026-10-08T08:25:36.691Z"
         }
       ],
       "provider": "internal",
-      "createdAt": "2026-09-28T03:46:05.805Z",
+      "createdAt": "2026-10-08T08:25:36.691Z",
       "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-28T03:46:05.805Z",
+      "updatedAt": "2026-10-08T08:25:36.691Z",
+      "clientName": "Samitha",
+      "clientEmail": "samitha2003.s@gmail.com",
+      "clientPhone": "9597500439",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "pending",
+      "appointmentDate": "2026-10-16",
+      "appointmentTime": "09:30 PM (Evening Slot)",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-666832",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-08T04:44:43.664Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/nwu-fbbg-gun)",
+          "timestamp": "2026-10-08T04:44:31.635Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-06T15:15:09.941Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-06T15:15:09.941Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-08T04:44:43.664Z",
+      "clientName": "Pradhip A K",
+      "clientEmail": "akpradhip518@gmail.com",
+      "clientPhone": "8610918500",
+      "meetingLink": "https://meet.google.com/nwu-fbbg-gun",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "07:00 PM (Evening Slot)",
+      "calendarEventId": "opuvmarcoj3tfmsvlrt1jhe38s",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-265039",
+      "price": 600,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-06T04:22:15.040Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-05T11:23:23.742Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/vss-jtqt-urt)",
+          "timestamp": "2026-10-05T11:23:12.100Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-05T10:25:40.108Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-05T10:25:40.108Z",
+      "serviceId": "svc_relationships",
+      "updatedAt": "2026-10-06T04:22:15.040Z",
+      "clientName": "Lukesh Barath",
+      "clientEmail": "stlukeshbarath@gmail.com",
+      "clientPhone": "6369860174",
+      "meetingLink": "https://meet.google.com/vss-jtqt-urt",
+      "serviceName": "Students Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-05",
+      "appointmentTime": "06:30 PM (Evening Slot)",
+      "calendarEventId": "5uik9ocheagln029u82vc5d3tk",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-880349",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-04T15:04:36.177Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/riv-nuig-xkk)",
+          "timestamp": "2026-10-04T15:04:24.822Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-04T15:01:50.876Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-04T15:01:50.876Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-04T15:04:36.177Z",
+      "clientName": "Shwetaa Karthikeyan",
+      "clientEmail": "contactshwetaakarthi@gmail.com",
+      "clientPhone": "+919962100328",
+      "meetingLink": "https://meet.google.com/riv-nuig-xkk",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "Second session",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-10",
+      "appointmentTime": "08:00 PM (Evening Slot)",
+      "calendarEventId": "iolg47g4btfs9phmou6tjh0q9g",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-108763",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Marked as paid manually (Cash / UPI / Reception)",
+          "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
+          "timestamp": "2026-10-08T04:37:17.524Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/sgi-kohh-oxc)",
+          "timestamp": "2026-10-06T04:21:57.008Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-04T07:51:07.669Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-04T07:51:07.669Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-08T04:37:17.524Z",
+      "clientName": "Priyadarshni S",
+      "clientEmail": "priyasbs18@gmail.com",
+      "clientPhone": "9159071978",
+      "meetingLink": "https://meet.google.com/sgi-kohh-oxc",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-09",
+      "appointmentTime": "06:30 PM (Evening Slot)",
+      "calendarEventId": "b84qodcqgqedoigjthch9678vc",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-459696",
+      "price": 500,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-04T14:44:06.094Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/zdj-ojov-bts)",
+          "timestamp": "2026-10-04T14:43:54.121Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-04T06:33:17.256Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-04T06:33:17.256Z",
+      "serviceId": "svc_1789105147924",
+      "updatedAt": "2026-10-04T14:44:06.094Z",
+      "clientName": "Kanishkaa",
+      "clientEmail": "kani06753@gmail.com",
+      "clientPhone": "+919445092391",
+      "meetingLink": "https://meet.google.com/zdj-ojov-bts",
+      "serviceName": "Student Session",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-08",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "fpeaj1v8vgofs7cd952p7h9cck",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-436317",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PAID to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-03T16:01:55.793Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-03T16:01:40.588Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/waw-njxc-nov)",
+          "timestamp": "2026-10-03T16:01:28.656Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-03T10:06:55.559Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-03T10:06:55.559Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-03T16:01:55.793Z",
+      "clientName": "Srija",
+      "clientEmail": "srijarevathi97@gmail.com",
+      "clientPhone": "+917092264630",
+      "meetingLink": "https://meet.google.com/waw-njxc-nov",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-09",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "2nev3gvjnrvk3ppvfu3qv3ehd4",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-993355",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-03T08:50:32.740Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/tkn-chgq-wiw)",
+          "timestamp": "2026-10-03T08:50:21.898Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-03T08:36:48.379Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-03T08:36:48.379Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-03T08:50:32.740Z",
+      "clientName": "Thanusha Srinivasan",
+      "clientEmail": "thanushasunkaranaidu@gmail.com",
+      "clientPhone": "9840048908",
+      "meetingLink": "https://meet.google.com/tkn-chgq-wiw",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-08",
+      "appointmentTime": "06:30 PM (Evening Slot)",
+      "calendarEventId": "rhjimafqtnmhid5n0g5r1fja58",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-305027",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-02T04:47:55.077Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-01T09:27:14.286Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/jvw-jjie-vvb)",
+          "timestamp": "2026-10-01T09:27:03.130Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-01T06:24:43.191Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-01T06:24:43.191Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-02T04:47:55.077Z",
+      "clientName": "Niveditha",
+      "clientEmail": "sniveditha0028@gmail.com",
+      "clientPhone": "9030659062",
+      "meetingLink": "https://meet.google.com/jvw-jjie-vvb",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "I have been feeling very overwhelmed and emotionally stressed for the past few weeks. I am dealing with relationship difficulties and some painful personal experiences. I have been struggling with anxiety and I feel like I need a safe space to talk openly without being judged.",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-01",
+      "appointmentTime": "06:30 PM (Evening Slot)",
+      "calendarEventId": "qgt0jtdkk8nh8eic4onbd06s2s",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-817841",
+      "price": 600,
+      "format": "online",
+      "history": [
+        {
+          "note": "Marked as paid manually (Cash / UPI / Reception)",
+          "action": "Payment status manually updated from PAID to PAID (Marked as paid manually (Cash / UPI / Reception))",
+          "timestamp": "2026-10-02T05:07:45.532Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-02T05:07:11.577Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/unv-yeda-jup)",
+          "timestamp": "2026-10-02T05:07:01.129Z"
+        },
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-02T05:06:35.944Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-10-01T05:34:21.865Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-10-01T05:34:21.865Z",
+      "serviceId": "svc_relationships",
+      "updatedAt": "2026-10-02T05:07:45.532Z",
+      "clientName": "Aaronie Jersha Jenyfred",
+      "clientEmail": "jenyfred.a@northeastern.edu",
+      "clientPhone": "7339564198",
+      "meetingLink": "https://meet.google.com/unv-yeda-jup",
+      "serviceName": "Students Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-05",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "hd1q12jep039s8nkgtjaisbiu8",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-640490",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-01T08:34:40.518Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/wbe-rbgm-ibd)",
+          "timestamp": "2026-10-01T08:34:29.363Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-30T15:01:20.748Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-30T15:01:20.748Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-01T08:34:40.518Z",
+      "clientName": "Ishvarya Simhan",
+      "clientEmail": "ishvaryas2004@gmail.com",
+      "clientPhone": "+971558388021",
+      "meetingLink": "https://meet.google.com/wbe-rbgm-ibd",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-02",
+      "appointmentTime": "11:00 AM",
+      "calendarEventId": "avhqu13oj4lhv1b1ce3t8svtso",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-273749",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-10-02T04:49:59.164Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/cmx-qfcx-uaj)",
+          "timestamp": "2026-10-02T04:49:48.730Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-30T10:42:07.526Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-30T10:42:07.526Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-02T04:49:59.164Z",
+      "clientName": "Mohamed Ashik Johnbasha",
+      "clientEmail": "mohamedashikjohnbasha@gmail.com",
+      "clientPhone": "+971545364383",
+      "meetingLink": "https://meet.google.com/cmx-qfcx-uaj",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "confirmed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-02",
+      "appointmentTime": "12:00 PM",
+      "calendarEventId": "tou4sfledhga5ttrtsle4s4esk",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-525272",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-09-30T17:26:08.514Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-09-30T08:37:21.317Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/auv-eakq-umm)",
+          "timestamp": "2026-09-30T08:37:10.276Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-30T05:25:24.053Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-30T05:25:24.053Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-09-30T17:26:08.514Z",
+      "clientName": "Abirami Ramanathan",
+      "clientEmail": "abiramirm0711@gmail.com",
+      "clientPhone": "9444387738",
+      "meetingLink": "https://meet.google.com/auv-eakq-umm",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-09-30",
+      "appointmentTime": "09:30 PM (Evening Slot)",
+      "calendarEventId": "fd365dma8shk192do3n6c1ocd0",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-663413",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-02T04:48:34.303Z"
+        },
+        {
+          "action": "Rescheduled & Synchronized: Old calendar invitation cancelled. New invitation dispatched with Google Meet (https://meet.google.com/sgf-wzsb-eps)",
+          "timestamp": "2026-09-30T17:22:30.102Z"
+        },
+        {
+          "note": "Rescheduled by practitioner",
+          "action": "Rescheduled from 2026-09-30 08:30 PM (Evening Slot) to 2026-10-01 08:30 PM (Evening Slot)",
+          "timestamp": "2026-09-30T17:22:19.084Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-09-29T08:44:05.284Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/dhx-zqix-yha)",
+          "timestamp": "2026-09-29T08:43:54.876Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-29T07:22:48.971Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-29T07:22:48.971Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-02T04:48:34.303Z",
+      "clientName": "Shwetaa Karthikeyan",
+      "clientEmail": "contactshwetaakarthi@gmail.com",
+      "clientPhone": "9962100328",
+      "meetingLink": "https://meet.google.com/sgf-wzsb-eps",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "I sort of know what is bothering me, I just want to get out of the spiral.",
+      "googleEventId": "7a5unlf9p215hduhqelte2p8q0",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-01",
+      "appointmentTime": "08:30 PM (Evening Slot)",
+      "calendarEventId": "7a5unlf9p215hduhqelte2p8q0",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-216888",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-02T04:50:33.099Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-09-30T08:38:18.593Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/dsd-zvox-ezp)",
+          "timestamp": "2026-09-30T08:38:08.390Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-28T17:03:24.356Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-28T17:03:24.356Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-02T04:50:33.099Z",
+      "clientName": "Samitha",
+      "clientEmail": "samitha2003.s@gmail.com",
+      "clientPhone": "9597500439",
+      "meetingLink": "https://meet.google.com/dsd-zvox-ezp",
+      "serviceName": "Individual Session ",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-01",
+      "appointmentTime": "09:30 PM (Evening Slot)",
+      "calendarEventId": "bn7vmmcdha0n8lvqb5258ko3mk",
+      "durationMinutes": 60
+    },
+    {
+      "id": "ASW-608569",
+      "price": 800,
+      "format": "online",
+      "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-08T08:24:59.024Z"
+        },
+        {
+          "action": "Payment status manually updated from PENDING to PAID",
+          "timestamp": "2026-09-28T17:45:24.065Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/xwz-bhrv-zik)",
+          "timestamp": "2026-09-28T17:45:14.640Z"
+        },
+        {
+          "action": "Booking request submitted via website",
+          "timestamp": "2026-09-28T16:16:01.187Z"
+        }
+      ],
+      "provider": "internal",
+      "createdAt": "2026-09-28T16:16:01.187Z",
+      "serviceId": "svc_emotional_wellbeing",
+      "updatedAt": "2026-10-08T08:24:59.024Z",
       "clientName": "Bhuvaneswari Selvaraj",
       "clientEmail": "bhuvana270496@gmail.com",
       "clientPhone": "9003233971",
+      "meetingLink": "https://meet.google.com/xwz-bhrv-zik",
       "serviceName": "Individual Session ",
-      "bookingStatus": "confirmed",
-      "clientMessage": "My husband cheated me in our school days now it's had been many years but found just now so couldn't tolerate that and couldn't ask openly since am angry i may uze words that will hurt him for sure. I need vent out everything to someone if if I get solution will be happy",
-      "paymentStatus": "pending",
-      "appointmentDate": "2026-09-30",
-      "appointmentTime": "08:30 PM (Evening Slot)",
+      "bookingStatus": "completed",
+      "clientMessage": "",
+      "paymentStatus": "paid",
+      "appointmentDate": "2026-10-02",
+      "appointmentTime": "02:00 PM",
+      "calendarEventId": "8g9up7m5n704b30kjlshlfo9ak",
       "durationMinutes": 60
     },
     {
@@ -55,6 +1060,10 @@
       "price": 600,
       "format": "online",
       "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-09-30T08:39:32.382Z"
+        },
         {
           "note": "Marked as paid manually (Cash / UPI / Reception)",
           "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
@@ -72,13 +1081,13 @@
       "provider": "internal",
       "createdAt": "2026-09-28T01:29:41.151Z",
       "serviceId": "svc_relationships",
-      "updatedAt": "2026-09-28T09:38:36.018Z",
+      "updatedAt": "2026-09-30T08:39:32.382Z",
       "clientName": "Vishali B",
       "clientEmail": "vishalibheeman@gmail.com",
       "clientPhone": "9500390510",
       "meetingLink": "https://meet.google.com/vhs-hkrt-njm",
       "serviceName": "Students Session ",
-      "bookingStatus": "confirmed",
+      "bookingStatus": "completed",
       "clientMessage": "",
       "paymentStatus": "paid",
       "appointmentDate": "2026-09-29",
@@ -92,6 +1101,19 @@
       "format": "online",
       "history": [
         {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-09-29T08:53:48.010Z"
+        },
+        {
+          "note": "Quick manual settlement",
+          "action": "Payment status manually updated from PENDING to PAID (Quick manual settlement)",
+          "timestamp": "2026-09-28T10:25:23.255Z"
+        },
+        {
+          "action": "Google Meet link generated via Google Calendar (https://meet.google.com/rkr-juew-ucw)",
+          "timestamp": "2026-09-28T10:25:14.123Z"
+        },
+        {
           "action": "Booking request submitted via website",
           "timestamp": "2026-09-27T16:12:56.535Z"
         }
@@ -99,16 +1121,18 @@
       "provider": "internal",
       "createdAt": "2026-09-27T16:12:56.535Z",
       "serviceId": "svc_relationships",
-      "updatedAt": "2026-09-27T16:12:56.535Z",
+      "updatedAt": "2026-09-29T08:53:48.010Z",
       "clientName": "Lukesh Barath",
       "clientEmail": "stlukeshbarath@gmail.cmo",
       "clientPhone": "6369860174",
+      "meetingLink": "https://meet.google.com/rkr-juew-ucw",
       "serviceName": "Students Session ",
-      "bookingStatus": "confirmed",
+      "bookingStatus": "completed",
       "clientMessage": "",
-      "paymentStatus": "pending",
+      "paymentStatus": "paid",
       "appointmentDate": "2026-09-28",
       "appointmentTime": "09:30 PM (Evening Slot)",
+      "calendarEventId": "vmpak7dphfk707m906e61jd4gc",
       "durationMinutes": 60
     },
     {
@@ -116,6 +1140,10 @@
       "price": 600,
       "format": "online",
       "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-09-30T08:41:13.007Z"
+        },
         {
           "action": "Payment status manually updated from PENDING to PAID",
           "timestamp": "2026-09-27T14:25:31.946Z"
@@ -132,13 +1160,13 @@
       "provider": "internal",
       "createdAt": "2026-09-27T04:40:03.741Z",
       "serviceId": "svc_relationships",
-      "updatedAt": "2026-09-27T14:25:31.946Z",
+      "updatedAt": "2026-09-30T08:41:13.007Z",
       "clientName": "Prateethi K",
       "clientEmail": "prateethi2006.pkm@gmail.com",
       "clientPhone": "+918867565640",
       "meetingLink": "https://meet.google.com/tno-mvpg-fsb",
       "serviceName": "Students Session ",
-      "bookingStatus": "confirmed",
+      "bookingStatus": "completed",
       "clientMessage": "",
       "paymentStatus": "paid",
       "appointmentDate": "2026-09-29",
@@ -151,6 +1179,10 @@
       "price": 500,
       "format": "online",
       "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-09-29T08:54:13.015Z"
+        },
         {
           "action": "Payment status manually updated from PENDING to PAID",
           "timestamp": "2026-09-26T16:50:58.000Z"
@@ -177,13 +1209,13 @@
       "provider": "internal",
       "createdAt": "2026-09-26T13:44:37.413Z",
       "serviceId": "svc_1789105147924",
-      "updatedAt": "2026-09-26T16:50:58.000Z",
+      "updatedAt": "2026-09-29T08:54:13.015Z",
       "clientName": "Priya Parvathy",
       "clientEmail": "priyaparvathy10@gmail.com",
       "clientPhone": "9092661346",
       "meetingLink": "https://meet.google.com/mfm-kejs-vvt",
       "serviceName": "Student Session",
-      "bookingStatus": "confirmed",
+      "bookingStatus": "completed",
       "clientMessage": "",
       "paymentStatus": "paid",
       "appointmentDate": "2026-09-28",
@@ -196,6 +1228,10 @@
       "price": 800,
       "format": "online",
       "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-10-08T08:26:05.194Z"
+        },
         {
           "action": "Payment status manually updated from PENDING to PAID",
           "timestamp": "2026-09-26T16:51:47.348Z"
@@ -222,13 +1258,13 @@
       "provider": "internal",
       "createdAt": "2026-09-26T11:30:36.213Z",
       "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-26T16:51:47.348Z",
+      "updatedAt": "2026-10-08T08:26:05.194Z",
       "clientName": "Naveena",
       "clientEmail": "shrinavee192@gmail.com",
       "clientPhone": "9042612220",
       "meetingLink": "https://meet.google.com/cbx-ayys-gmw",
       "serviceName": "Individual Session ",
-      "bookingStatus": "confirmed",
+      "bookingStatus": "completed",
       "clientMessage": "",
       "paymentStatus": "paid",
       "appointmentDate": "2026-10-03",
@@ -241,6 +1277,10 @@
       "price": 800,
       "format": "online",
       "history": [
+        {
+          "action": "Status updated to COMPLETED",
+          "timestamp": "2026-09-29T08:53:17.617Z"
+        },
         {
           "note": "Marked as paid manually (Cash / UPI / Reception)",
           "action": "Payment status manually updated from PENDING to PAID (Marked as paid manually (Cash / UPI / Reception))",
@@ -258,13 +1298,13 @@
       "provider": "internal",
       "createdAt": "2026-09-24T18:15:43.365Z",
       "serviceId": "svc_emotional_wellbeing",
-      "updatedAt": "2026-09-24T18:21:00.450Z",
+      "updatedAt": "2026-09-29T08:53:17.617Z",
       "clientName": "Pradhip A K",
       "clientEmail": "akpradhip518@gmail.com",
       "clientPhone": "+918610918500",
       "meetingLink": "https://meet.google.com/mqq-hffe-kiy",
       "serviceName": "Individual Session ",
-      "bookingStatus": "confirmed",
+      "bookingStatus": "completed",
       "clientMessage": "",
       "paymentStatus": "paid",
       "appointmentDate": "2026-09-28",
@@ -273,37 +1313,947 @@
       "durationMinutes": 60
     }
   ],
-  "media": [
+  "clientTypes": [
     {
-      "id": "med_1",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-      "title": "Aswathy Jeyarajasekar Portrait",
-      "category": "profile",
-      "filename": "aswathy-portrait.jpg",
-      "mimeType": "image/jpeg",
+      "id": "ct_1",
+      "order": 1,
+      "title": "Adolescents",
+      "isActive": true,
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 145000,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Supporting teens through emotional turbulence, self-identity questions, and social pressures."
     },
     {
-      "id": "med_2",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
-      "title": "Quiet Consulting Sanctuary Studio",
-      "category": "website",
-      "filename": "sanctuary-room.jpg",
-      "mimeType": "image/jpeg",
+      "id": "ct_2",
+      "order": 2,
+      "title": "Young Adults",
+      "isActive": true,
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "sizeBytes": 210000,
-      "updatedAt": "2026-09-06T13:18:50.470Z"
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Navigating early career transitions, independence from family, and relationship shifts."
+    },
+    {
+      "id": "ct_3",
+      "order": 3,
+      "title": "Adults",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Unpacking mid-life transitions, chronic worry, personal values, and boundary setting."
+    },
+    {
+      "id": "ct_4",
+      "order": 4,
+      "title": "Students",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Addressing exam pressure, imposter feelings, academic burnout, and future dread."
+    },
+    {
+      "id": "ct_5",
+      "order": 5,
+      "title": "Working Professionals",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-06T13:18:50.470Z",
+      "description": "Managing corporate stress, work-life balance erosion, and interpersonal conflicts."
+    }
+  ],
+  "sessionFormats": [
+    {
+      "id": "individual-online",
+      "tag": "Video Consultation",
+      "icon": "video",
+      "badge": "Popular",
+      "order": 1,
+      "price": 1800,
+      "title": "Individual Online Counselling",
+      "format": "online",
+      "duration": "50 Minutes · Secure Video",
+      "isActive": true,
+      "badgeType": "popular",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-10-08T18:16:02.269Z",
+      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
+    },
+    {
+      "id": "initial-discovery",
+      "tag": "Exploratory",
+      "icon": "discovery",
+      "badge": "Introductory",
+      "order": 2,
+      "price": 0,
+      "title": "Initial Discovery Call",
+      "format": "online",
+      "duration": "20 Minutes · Introductory",
+      "isActive": true,
+      "badgeType": "introductory",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-10-08T18:16:02.269Z",
+      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
+    }
+  ],
+  "sessionSteps": [
+    {
+      "id": "step_1",
+      "order": 1,
+      "title": "Connecting & Understanding",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "01",
+      "description": "The first phase is about creating a safe, comfortable space and understanding what brings you to therapy. We explore your concerns, experiences, emotions, relationships, and what you hope to work towards."
+    },
+    {
+      "id": "step_2",
+      "order": 2,
+      "title": "Exploring & Becoming Aware",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "02",
+      "description": "Together, we gently explore patterns, emotions, beliefs, relationships, and coping responses. This phase is about developing a deeper understanding of yourself and what may be influencing your present experiences."
+    },
+    {
+      "id": "step_3",
+      "order": 3,
+      "title": "Working Through & Building Skills",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "03",
+      "description": "As we understand your experiences better, therapy focuses on working through what feels difficult and developing healthier ways of coping, emotional regulation, self-awareness, communication, and decision-making."
+    },
+    {
+      "id": "step_4",
+      "order": 4,
+      "title": "Growth & Integration",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "04",
+      "description": "The focus gradually shifts towards applying what you have explored in therapy to everyday life. You may begin to notice changes in how you respond to yourself, others, and challenging situations."
+    },
+    {
+      "id": "step_5",
+      "order": 5,
+      "title": "Reviewing & Moving Forward",
+      "isActive": true,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-10T07:31:30.909Z",
+      "stepNumber": "05",
+      "description": "We reflect on your progress, the changes you have made, and the areas you may still want to work on. Depending on your needs, therapy may gradually reduce in frequency, come to an end, or continue with new goals."
     }
   ],
   "notifications": [
+    {
+      "id": "notif_1792058955853",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Naveena booked \"Individual Session \" for 2026-10-15 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-10-15T10:09:12.609Z"
+    },
+    {
+      "id": "notif_1792053581238",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Sivakumar (#ASW-890757) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-15T08:39:39.831Z"
+    },
+    {
+      "id": "notif_1792038994186",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": false,
+      "message": "Payment status for Srija (#ASW-351329) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-15T04:36:32.875Z"
+    },
+    {
+      "id": "notif_1792001157926",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": false,
+      "message": "Mrittika Babu booked \"Student Session\" for 2026-10-15 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-10-14T18:05:54.905Z"
+    },
+    {
+      "id": "notif_1791883536282",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-625712 (Ishvarya Simhan) marked as completed.",
+      "createdAt": "2026-10-13T09:25:34.888Z"
+    },
+    {
+      "id": "notif_1791883509449",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-323189 (Sri Sudharsan) marked as completed.",
+      "createdAt": "2026-10-13T09:25:08.051Z"
+    },
+    {
+      "id": "notif_1791883482264",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-340560 (Sivakumar) marked as completed.",
+      "createdAt": "2026-10-13T09:24:40.953Z"
+    },
+    {
+      "id": "notif_1791883349478",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Arun Raj (#ASW-655775) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-13T09:22:28.081Z"
+    },
+    {
+      "id": "notif_1791874987918",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Rithanya Sivakumar (#ASW-417991) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-13T07:03:06.502Z"
+    },
+    {
+      "id": "notif_1791866521225",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-113913 (Jersha) marked as completed.",
+      "createdAt": "2026-10-13T04:41:59.911Z"
+    },
+    {
+      "id": "notif_1791863194851",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Jersha (#ASW-113913) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-13T03:46:33.545Z"
+    },
+    {
+      "id": "notif_1791817429331",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Rithanya Sivakumar booked \"Individual Session \" for 2026-10-14 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-12T15:03:46.218Z"
+    },
+    {
+      "id": "notif_1791736493135",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Arun Raj booked \"Individual Session \" for 2026-10-13 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-11T16:34:50.044Z"
+    },
+    {
+      "id": "notif_1791729685811",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Sivakumar booked \"Individual Session \" for 2026-10-15 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-11T14:41:22.820Z"
+    },
+    {
+      "id": "notif_1791649168622",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Sivakumar (#ASW-340560) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-10T16:19:27.318Z"
+    },
+    {
+      "id": "notif_1791634229536",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Dharani Murugesan (#ASW-197693) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-10T12:10:28.144Z"
+    },
+    {
+      "id": "notif_1791633945468",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Srija booked \"Individual Session \" for 2026-10-16 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-10T12:05:42.486Z"
+    },
+    {
+      "id": "notif_1791618680141",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Ishvarya Simhan (#ASW-625712) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-10T07:51:18.820Z"
+    },
+    {
+      "id": "notif_1791555710248",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Sivakumar booked \"Individual Session \" for 2026-10-11 at 12:00 PM.",
+      "createdAt": "2026-10-09T14:21:46.967Z"
+    },
+    {
+      "id": "notif_1791549321432",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Maya booked \"Student Session\" for 2026-10-11 at 10:00 AM.",
+      "createdAt": "2026-10-09T12:35:18.211Z"
+    },
+    {
+      "id": "notif_1791482837455",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Sri Sudharsan (#ASW-323189) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-08T18:07:16.147Z"
+    },
+    {
+      "id": "notif_1791472359929",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Dharani Murugesan booked \"Individual Session \" for 2026-10-14 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-10-08T15:12:36.854Z"
+    },
+    {
+      "id": "notif_1791466701596",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Jersha booked \"Students Session \" for 2026-10-13 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-10-08T13:38:18.610Z"
+    },
+    {
+      "id": "notif_1791464932026",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Sri Sudharsan booked \"Individual Session \" for 2026-10-12 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-08T13:08:48.794Z"
+    },
+    {
+      "id": "notif_1791449735145",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Ishvarya Simhan booked \"Individual Session \" for 2026-10-12 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-10-08T08:55:31.957Z"
+    },
+    {
+      "id": "notif_1791447966596",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-264986 (Naveena) marked as completed.",
+      "createdAt": "2026-10-08T08:26:05.194Z"
+    },
+    {
+      "id": "notif_1791447939857",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Samitha booked \"Individual Session \" for 2026-10-16 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-10-08T08:25:36.691Z"
+    },
+    {
+      "id": "notif_1791447900525",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-608569 (Bhuvaneswari Selvaraj) marked as completed.",
+      "createdAt": "2026-10-08T08:24:59.024Z"
+    },
+    {
+      "id": "notif_1791434684984",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Pradhip A K (#ASW-666832) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-08T04:44:43.664Z"
+    },
+    {
+      "id": "notif_1791434238843",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Priyadarshni S (#ASW-108763) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-10-08T04:37:17.524Z"
+    },
+    {
+      "id": "notif_1791299713163",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Pradhip A K booked \"Individual Session \" for 2026-10-10 at 07:00 PM (Evening Slot).",
+      "createdAt": "2026-10-06T15:15:09.941Z"
+    },
+    {
+      "id": "notif_1791260536347",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-265039 (Lukesh Barath) marked as completed.",
+      "createdAt": "2026-10-06T04:22:15.040Z"
+    },
+    {
+      "id": "notif_1791199405045",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Lukesh Barath (#ASW-265039) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-05T11:23:23.742Z"
+    },
+    {
+      "id": "notif_1791195943090",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Lukesh Barath booked \"Students Session \" for 2026-10-05 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-10-05T10:25:40.108Z"
+    },
+    {
+      "id": "notif_1791126277480",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Shwetaa Karthikeyan (#ASW-880349) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-04T15:04:36.177Z"
+    },
+    {
+      "id": "notif_1791126113870",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Shwetaa Karthikeyan booked \"Individual Session \" for 2026-10-10 at 08:00 PM (Evening Slot).",
+      "createdAt": "2026-10-04T15:01:50.876Z"
+    },
+    {
+      "id": "notif_1791125047494",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Kanishkaa (#ASW-459696) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-04T14:44:06.094Z"
+    },
+    {
+      "id": "notif_1791100270643",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Priyadarshni S booked \"Individual Session \" for 2026-10-09 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-10-04T07:51:07.669Z"
+    },
+    {
+      "id": "notif_1791095600383",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Kanishkaa booked \"Student Session\" for 2026-10-08 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-04T06:33:17.256Z"
+    },
+    {
+      "id": "notif_1791043317210",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Srija (#ASW-436317) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-03T16:01:55.793Z"
+    },
+    {
+      "id": "notif_1791043301899",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Srija (#ASW-436317) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-03T16:01:40.588Z"
+    },
+    {
+      "id": "notif_1791022018682",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Srija booked \"Individual Session \" for 2026-10-09 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-03T10:06:55.559Z"
+    },
+    {
+      "id": "notif_1791017434043",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Thanusha Srinivasan (#ASW-993355) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-03T08:50:32.740Z"
+    },
+    {
+      "id": "notif_1791016611474",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Thanusha Srinivasan booked \"Individual Session \" for 2026-10-08 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-10-03T08:36:48.379Z"
+    },
+    {
+      "id": "notif_1791007981460",
+      "link": "/admin/enquiries",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "isRead": true,
+      "message": "Dhruvin: General Consultation Inquiry",
+      "createdAt": "2026-10-03T06:13:01.460Z"
+    },
+    {
+      "id": "notif_1790968851152",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Dhiren booked \"Individual Session \" for 2026-10-05 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-10-02T19:20:48.164Z"
+    },
+    {
+      "id": "notif_1790917666928",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Aaronie Jersha Jenyfred (#ASW-817841) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-10-02T05:07:45.532Z"
+    },
+    {
+      "id": "notif_1790917632974",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Aaronie Jersha Jenyfred (#ASW-817841) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-02T05:07:11.577Z"
+    },
+    {
+      "id": "notif_1790917597258",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-817841 (Aaronie Jersha Jenyfred) marked as completed.",
+      "createdAt": "2026-10-02T05:06:35.944Z"
+    },
+    {
+      "id": "notif_1790916634403",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-216888 (Samitha) marked as completed.",
+      "createdAt": "2026-10-02T04:50:33.099Z"
+    },
+    {
+      "id": "notif_1790916600472",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Mohamed Ashik Johnbasha (#ASW-273749) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-02T04:49:59.164Z"
+    },
+    {
+      "id": "notif_1790916515610",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-663413 (Shwetaa Karthikeyan) marked as completed.",
+      "createdAt": "2026-10-02T04:48:34.303Z"
+    },
+    {
+      "id": "notif_1790916476469",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-305027 (Niveditha) marked as completed.",
+      "createdAt": "2026-10-02T04:47:55.077Z"
+    },
+    {
+      "id": "notif_1790846835722",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Niveditha (#ASW-305027) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-01T09:27:14.286Z"
+    },
+    {
+      "id": "notif_1790843681955",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Ishvarya Simhan (#ASW-640490) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-10-01T08:34:40.518Z"
+    },
+    {
+      "id": "notif_1790835886178",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Niveditha booked \"Individual Session \" for 2026-10-01 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-10-01T06:24:43.191Z"
+    },
+    {
+      "id": "notif_1790832864847",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Aaronie Jersha Jenyfred booked \"Students Session \" for 2026-10-05 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-10-01T05:34:21.865Z"
+    },
+    {
+      "id": "notif_1790789169933",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-525272 (Abirami Ramanathan) marked as completed.",
+      "createdAt": "2026-09-30T17:26:08.514Z"
+    },
+    {
+      "id": "notif_1790788940487",
+      "link": "/admin/bookings",
+      "type": "booking_rescheduled",
+      "title": "Booking Rescheduled",
+      "isRead": true,
+      "message": "Shwetaa Karthikeyan's appointment rescheduled to 2026-10-01 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-30T17:22:19.084Z"
+    },
+    {
+      "id": "notif_1790788775968",
+      "link": "/admin/bookings",
+      "type": "booking_cancel",
+      "title": "Booking CANCELLED",
+      "isRead": true,
+      "message": "Booking ASW-802313 (Priya Darshni) marked as cancelled.",
+      "createdAt": "2026-09-30T17:19:34.651Z"
+    },
+    {
+      "id": "notif_1790780583205",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Priya Darshni booked \"Individual Session \" for 2026-10-01 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-30T15:03:00.234Z"
+    },
+    {
+      "id": "notif_1790780483866",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Ishvarya Simhan booked \"Individual Session \" for 2026-10-02 at 11:00 AM.",
+      "createdAt": "2026-09-30T15:01:20.748Z"
+    },
+    {
+      "id": "notif_1790764930764",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Mohamed Ashik Johnbasha booked \"Individual Session \" for 2026-10-02 at 12:00 PM.",
+      "createdAt": "2026-09-30T10:42:07.526Z"
+    },
+    {
+      "id": "notif_1790757674445",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-569825 (Prateethi K) marked as completed.",
+      "createdAt": "2026-09-30T08:41:13.007Z"
+    },
+    {
+      "id": "notif_1790757573784",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-260201 (Vishali B) marked as completed.",
+      "createdAt": "2026-09-30T08:39:32.382Z"
+    },
+    {
+      "id": "notif_1790757499899",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Samitha (#ASW-216888) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-09-30T08:38:18.593Z"
+    },
+    {
+      "id": "notif_1790757442618",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Abirami Ramanathan (#ASW-525272) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-09-30T08:37:21.317Z"
+    },
+    {
+      "id": "notif_1790757404623",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Aswathy J (#ASW-910685) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-09-30T08:36:43.223Z"
+    },
+    {
+      "id": "notif_1790757340613",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Aswathy J booked \"Individual Session \" for 2026-10-01 at 06:30 PM (Evening Slot).",
+      "createdAt": "2026-09-30T08:35:37.437Z"
+    },
+    {
+      "id": "notif_1790745927169",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Abirami Ramanathan booked \"Individual Session \" for 2026-09-30 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-30T05:25:24.053Z"
+    },
+    {
+      "id": "notif_1790679905944",
+      "link": "/admin/enquiries",
+      "type": "enquiry_new",
+      "title": "New Client Enquiry",
+      "isRead": true,
+      "message": "Kathir: Booking & Scheduling Support",
+      "createdAt": "2026-09-29T11:05:05.944Z"
+    },
+    {
+      "id": "notif_1790672054403",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-279471 (Priya Parvathy) marked as completed.",
+      "createdAt": "2026-09-29T08:54:13.015Z"
+    },
+    {
+      "id": "notif_1790672029415",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-625560 (Lukesh Barath) marked as completed.",
+      "createdAt": "2026-09-29T08:53:48.010Z"
+    },
+    {
+      "id": "notif_1790671999035",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Booking COMPLETED",
+      "isRead": true,
+      "message": "Booking ASW-165651 (Pradhip A K) marked as completed.",
+      "createdAt": "2026-09-29T08:53:17.617Z"
+    },
+    {
+      "id": "notif_1790671446680",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Shwetaa Karthikeyan (#ASW-663413) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-09-29T08:44:05.284Z"
+    },
+    {
+      "id": "notif_1790671356711",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Aswathy (#ASW-443857) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-09-29T08:42:35.278Z"
+    },
+    {
+      "id": "notif_1790671280159",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Aswathy booked \"Individual Session \" for 2026-10-03 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-29T08:41:17.082Z"
+    },
+    {
+      "id": "notif_1790666572094",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Shwetaa Karthikeyan booked \"Individual Session \" for 2026-09-30 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-29T07:22:48.971Z"
+    },
+    {
+      "id": "notif_1790643453957",
+      "link": "/admin/bookings",
+      "type": "booking_cancel",
+      "title": "Booking CANCELLED",
+      "isRead": true,
+      "message": "Booking ASW-322986 (Muneeswaran P) marked as cancelled.",
+      "createdAt": "2026-09-29T00:57:33.917Z"
+    },
+    {
+      "id": "notif_1790643357861",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Muneeswaran P (#ASW-322986) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-29T00:55:57.822Z"
+    },
+    {
+      "id": "notif_1790643305039",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-30 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-29T00:55:04.953Z"
+    },
+    {
+      "id": "notif_1790620127463",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-30 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-28T18:28:44.376Z"
+    },
+    {
+      "id": "notif_1790617525367",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Bhuvaneswari Selvaraj (#ASW-608569) manually marked as PAID.",
+      "createdAt": "2026-09-28T17:45:24.065Z"
+    },
+    {
+      "id": "notif_1790617242474",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Aswathy (#ASW-136917) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
+      "createdAt": "2026-09-28T17:40:41.166Z"
+    },
+    {
+      "id": "notif_1790617126146",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Aswathy booked \"Individual Session \" for 2026-10-03 at 08:30 PM (Evening Slot).",
+      "createdAt": "2026-09-28T17:38:43.165Z"
+    },
+    {
+      "id": "notif_1790615007452",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Samitha booked \"Individual Session \" for 2026-10-01 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-28T17:03:24.356Z"
+    },
+    {
+      "id": "notif_1790612164282",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Bhuvaneswari Selvaraj booked \"Individual Session \" for 2026-10-02 at 02:00 PM.",
+      "createdAt": "2026-09-28T16:16:01.187Z"
+    },
+    {
+      "id": "notif_1790591124563",
+      "link": "/admin/bookings",
+      "type": "status_change",
+      "title": "Payment PAID",
+      "isRead": true,
+      "message": "Payment status for Lukesh Barath (#ASW-625560) manually marked as PAID (Quick manual settlement).",
+      "createdAt": "2026-09-28T10:25:23.255Z"
+    },
+    {
+      "id": "notif_1790589509371",
+      "link": "/admin/bookings",
+      "type": "booking_new",
+      "title": "New Booking Request",
+      "isRead": true,
+      "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-30 at 09:30 PM (Evening Slot).",
+      "createdAt": "2026-09-28T09:58:26.388Z"
+    },
     {
       "id": "notif_1790589264084",
       "link": "/admin/bookings",
       "type": "booking_new",
       "title": "New Booking Request",
-      "isRead": false,
+      "isRead": true,
       "message": "Muneeswaran P booked \"Individual Session \" for 2026-09-30 at 09:30 PM (Evening Slot).",
       "createdAt": "2026-09-28T09:54:24.001Z"
     },
@@ -312,7 +2262,7 @@
       "link": "/admin/bookings",
       "type": "status_change",
       "title": "Payment PAID",
-      "isRead": false,
+      "isRead": true,
       "message": "Payment status for Vishali B (#ASW-260201) manually marked as PAID (Marked as paid manually (Cash / UPI / Reception)).",
       "createdAt": "2026-09-28T09:38:36.018Z"
     },
@@ -524,147 +2474,6 @@
       "createdAt": "2026-09-24T18:15:43.365Z"
     }
   ],
-  "clientTypes": [
-    {
-      "id": "ct_1",
-      "order": 1,
-      "title": "Adolescents",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Supporting teens through emotional turbulence, self-identity questions, and social pressures."
-    },
-    {
-      "id": "ct_2",
-      "order": 2,
-      "title": "Young Adults",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Navigating early career transitions, independence from family, and relationship shifts."
-    },
-    {
-      "id": "ct_3",
-      "order": 3,
-      "title": "Adults",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Unpacking mid-life transitions, chronic worry, personal values, and boundary setting."
-    },
-    {
-      "id": "ct_4",
-      "order": 4,
-      "title": "Students",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Addressing exam pressure, imposter feelings, academic burnout, and future dread."
-    },
-    {
-      "id": "ct_5",
-      "order": 5,
-      "title": "Working Professionals",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-06T13:18:50.470Z",
-      "description": "Managing corporate stress, work-life balance erosion, and interpersonal conflicts."
-    }
-  ],
-  "availability": [
-    {
-      "id": "avail_mon",
-      "endTime": "21:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "monday",
-      "isWorking": true,
-      "startTime": "18:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_tue",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "tuesday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_wed",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "wednesday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_thu",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "thursday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_fri",
-      "endTime": "18:00",
-      "breakEnd": "14:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "friday",
-      "isWorking": true,
-      "startTime": "09:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "13:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_sat",
-      "endTime": "15:00",
-      "breakEnd": "13:00",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "saturday",
-      "isWorking": true,
-      "startTime": "10:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "12:30",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    },
-    {
-      "id": "avail_sun",
-      "endTime": "14:00",
-      "breakEnd": "13:00",
-      "isActive": false,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "dayOfWeek": "sunday",
-      "isWorking": false,
-      "startTime": "10:00",
-      "updatedAt": "2026-09-08T12:56:38.588Z",
-      "breakStart": "12:00",
-      "bufferTime": 15,
-      "sessionDuration": 50
-    }
-  ],
   "settings": {
     "account": {
       "email": "roottherapyonline@gmail.com",
@@ -688,16 +2497,16 @@
     },
     "general": {
       "email": "roottherapyonline@gmail.com",
-      "phone": "+91 755 000 3603",
+      "phone": "+91 755 0002973",
       "tagline": "Gentle, non-judgmental space for emotional healing",
       "currency": "INR (₹)",
       "linkedin": "https://linkedin.com/in/aswathy-jeyarajasekar",
       "timezone": "Asia/Kolkata (IST)",
-      "whatsapp": "https://wa.me/917550003603",
+      "whatsapp": "https://wa.me/919876543210",
       "instagram": "https://instagram.com/aswathy.psychology",
       "websiteName": "Aswathy Jeyarajasekar | Counselling Psychologist",
       "contactEmail": "roottherapyonline@gmail.com",
-      "contactPhone": "+91 755 000 3603",
+      "contactPhone": "+91 755 0002973",
       "practiceName": "The Safe Sanctuary | Aswathy Counselling",
       "clinicAddress": "Quiet Mind Sanctuary, Anna Nagar, Chennai, Tamil Nadu"
     },
@@ -711,6 +2520,44 @@
       "emailNotifications": true
     }
   },
+  "journeyEntries": [
+    {
+      "id": "jrn_2",
+      "year": "High School | Where It Began",
+      "order": 1,
+      "heading": "My first experience with professional psychological support.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-23T11:43:14.051Z",
+      "description": "My first experience with professional psychological support introduced me to the importance of having a safe space to understand emotions, thoughts, and experiences. It sparked my curiosity about psychology and gradually shaped my desire to understand and support others."
+    },
+    {
+      "id": "jrn_1",
+      "year": "Undergraduate Years | Discovering Psychology",
+      "order": 2,
+      "heading": "Beginning my academic journey in Psychology.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-23T11:43:14.051Z",
+      "description": "Beginning my undergraduate journey in Psychology gave me the opportunity to explore human behaviour, emotions, and mental health more deeply. What began as an interest gradually grew into a meaningful academic and professional direction."
+    },
+    {
+      "id": "jrn_3",
+      "year": "Postgraduate Years | Finding My Path",
+      "order": 3,
+      "heading": "Pursuing Counselling Psychology.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-23T11:43:14.051Z",
+      "description": "Pursuing my M.Sc. in Counselling Psychology helped me move beyond theoretical learning into understanding the therapeutic process, client experiences, and the importance of creating a safe, non-judgmental space."
+    },
+    {
+      "id": "jrn_4",
+      "year": "Today | Becoming, Not Arriving",
+      "order": 4,
+      "heading": "Growing as a Counselling Psychologist and building my practice.",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "updatedAt": "2026-09-23T11:43:14.051Z",
+      "description": "Today, I continue to grow as a Counselling Psychologist through clinical practice, supervision, learning, and working with diverse client experiences. I am also building my own practice with the intention of making psychological support more accessible, meaningful, and client-centered.\n"
+    }
+  ],
   "services": [
     {
       "id": "svc_emotional_wellbeing",
@@ -821,93 +2668,149 @@
       "shortDescription": "₹700 sliding-scale fee may be available upon prior approval by the psychologist. Please confirm the approved fee before payment."
     }
   ],
-  "sessionSteps": [
+  "media": [
     {
-      "id": "step_1",
-      "order": 1,
-      "title": "Connecting & Understanding",
-      "isActive": true,
+      "id": "med_1",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      "title": "Aswathy Jeyarajasekar Portrait",
+      "category": "profile",
+      "filename": "aswathy-portrait.jpg",
+      "mimeType": "image/jpeg",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "01",
-      "description": "The first phase is about creating a safe, comfortable space and understanding what brings you to therapy. We explore your concerns, experiences, emotions, relationships, and what you hope to work towards."
+      "sizeBytes": 145000,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
     },
     {
-      "id": "step_2",
-      "order": 2,
-      "title": "Exploring & Becoming Aware",
-      "isActive": true,
+      "id": "med_2",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD8ua6mDuxmSMyI_u_Z98j_VQSlLAUuZYfhesSiTZ0CziUw9MQwjom-Ogzv2Ls7nHAhgfNAWV2ykB5fNDbwCaXvmUuLtRs0RK9aTJgyDbPqmBHqCxvn7Yl40r1IdxStuWypxfagU0D8IbSAl2Mo7T2hoVgs9cKh0P6ynL0YyOR39OwWi5n2HJyOG6bdOjSNz_5UCef67A5mRWJhTdfcBBN45igdjXsrLWnUCJh2qcmbIFi9sgaMsl-FBg",
+      "title": "Quiet Consulting Sanctuary Studio",
+      "category": "website",
+      "filename": "sanctuary-room.jpg",
+      "mimeType": "image/jpeg",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "02",
-      "description": "Together, we gently explore patterns, emotions, beliefs, relationships, and coping responses. This phase is about developing a deeper understanding of yourself and what may be influencing your present experiences."
-    },
-    {
-      "id": "step_3",
-      "order": 3,
-      "title": "Working Through & Building Skills",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "03",
-      "description": "As we understand your experiences better, therapy focuses on working through what feels difficult and developing healthier ways of coping, emotional regulation, self-awareness, communication, and decision-making."
-    },
-    {
-      "id": "step_4",
-      "order": 4,
-      "title": "Growth & Integration",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "04",
-      "description": "The focus gradually shifts towards applying what you have explored in therapy to everyday life. You may begin to notice changes in how you respond to yourself, others, and challenging situations."
-    },
-    {
-      "id": "step_5",
-      "order": 5,
-      "title": "Reviewing & Moving Forward",
-      "isActive": true,
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-10T07:31:30.909Z",
-      "stepNumber": "05",
-      "description": "We reflect on your progress, the changes you have made, and the areas you may still want to work on. Depending on your needs, therapy may gradually reduce in frequency, come to an end, or continue with new goals."
+      "sizeBytes": 210000,
+      "updatedAt": "2026-09-06T13:18:50.470Z"
     }
   ],
-  "sessionFormats": [
+  "availability": [
     {
-      "id": "individual-online",
-      "tag": "Video Consultation",
-      "icon": "video",
-      "badge": "Popular",
-      "order": 1,
-      "price": 1800,
-      "title": "Individual Online Counselling",
-      "format": "online",
-      "duration": "50 Minutes · Secure Video",
-      "isActive": true,
-      "badgeType": "popular",
+      "id": "avail_mon",
+      "endTime": "21:00",
+      "breakEnd": "14:00",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-28T07:08:27.250Z",
-      "description": "Consult from your personal sanctuary via secure private link. Flexible, discreet, and gentle."
+      "dayOfWeek": "monday",
+      "isWorking": true,
+      "startTime": "18:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
     },
     {
-      "id": "initial-discovery",
-      "tag": "Exploratory",
-      "icon": "discovery",
-      "badge": "Introductory",
-      "order": 2,
-      "price": 0,
-      "title": "Initial Discovery Call",
-      "format": "online",
-      "duration": "20 Minutes · Introductory",
-      "isActive": true,
-      "badgeType": "introductory",
+      "id": "avail_tue",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
       "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-28T07:08:27.250Z",
-      "description": "A gentle, low-pressure introduction to share your hopes, ask questions, and see if we are a good fit."
+      "dayOfWeek": "tuesday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_wed",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "wednesday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_thu",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "thursday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_fri",
+      "endTime": "18:00",
+      "breakEnd": "14:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "friday",
+      "isWorking": true,
+      "startTime": "09:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "13:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_sat",
+      "endTime": "15:00",
+      "breakEnd": "13:00",
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "saturday",
+      "isWorking": true,
+      "startTime": "10:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "12:30",
+      "bufferTime": 15,
+      "sessionDuration": 50
+    },
+    {
+      "id": "avail_sun",
+      "endTime": "14:00",
+      "breakEnd": "13:00",
+      "isActive": false,
+      "createdAt": "2026-09-06T13:18:50.470Z",
+      "dayOfWeek": "sunday",
+      "isWorking": false,
+      "startTime": "10:00",
+      "updatedAt": "2026-09-08T12:56:38.588Z",
+      "breakStart": "12:00",
+      "bufferTime": 15,
+      "sessionDuration": 50
     }
   ],
   "enquiries": [
+    {
+      "id": "enq_1791007981460",
+      "name": "Dhruvin",
+      "email": "dhruvingabani123@gmail.com",
+      "phone": "+61401565112",
+      "status": "contacted",
+      "message": "Hi, I'm interested in booking a session with you, but before I do, I'd love to get a sense of your approach to make sure we'd be a good fit.\n\nA bit about me: I'm a 22-year-old Indian student currently living in Australia, and I'm looking to work through some past experiences that have been weighing on me. Outside of study and work, I love literature, philosophy, creative writing, and the performing arts.\n\nI value a scientific temperament, curiosity, and open-mindedness. I'm agnostic. I was religious earlier in my life but no longer am, so I'd like to be upfront that I'm not looking for a therapist who is strongly religious or conservative. I'd feel most comfortable with someone secular and progressive in outlook, as that's what will allow me to open up fully.\n\nI also open up best when therapy feels like a genuine two-way conversation. Rather than being the only one sharing, I'd appreciate a therapist who brings a bit of themselves into the room, whether that's their own perspective, reflections, or experiences where it feels appropriate. That sense of mutual connection really helps me feel safe enough to be honest.\n\nCould you share a little about your therapeutic approach and whether this style is something you're comfortable with? I'd really appreciate it, and I look forward to hearing from you.\n\nThank you!",
+      "subject": "General Consultation Inquiry",
+      "createdAt": "2026-10-03T06:13:01.460Z",
+      "updatedAt": "2026-10-03T09:25:18.714Z",
+      "internalNotes": ""
+    },
+    {
+      "id": "enq_1790679905944",
+      "name": "Kathir",
+      "email": "kathirmpck@gmail.com",
+      "phone": "",
+      "status": "contacted",
+      "message": "Hi,\n     I seen your profile in instagram and checked your website.  i feel its good, so i thought to attend your session in person like F2F. Bca i am not comfortable with online. Is that available?",
+      "subject": "Booking & Scheduling Support",
+      "createdAt": "2026-09-29T11:05:05.944Z",
+      "updatedAt": "2026-09-30T08:48:02.593Z",
+      "internalNotes": ""
+    },
     {
       "id": "enq_1789369840867",
       "name": "Muneeswaran P",
@@ -948,45 +2851,19 @@
       "internalNotes": ""
     }
   ],
-  "journeyEntries": [
-    {
-      "id": "jrn_2",
-      "year": "High School | Where It Began",
-      "order": 1,
-      "heading": "My first experience with professional psychological support.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-23T11:43:14.051Z",
-      "description": "My first experience with professional psychological support introduced me to the importance of having a safe space to understand emotions, thoughts, and experiences. It sparked my curiosity about psychology and gradually shaped my desire to understand and support others."
-    },
-    {
-      "id": "jrn_1",
-      "year": "Undergraduate Years | Discovering Psychology",
-      "order": 2,
-      "heading": "Beginning my academic journey in Psychology.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-23T11:43:14.051Z",
-      "description": "Beginning my undergraduate journey in Psychology gave me the opportunity to explore human behaviour, emotions, and mental health more deeply. What began as an interest gradually grew into a meaningful academic and professional direction."
-    },
-    {
-      "id": "jrn_3",
-      "year": "Postgraduate Years | Finding My Path",
-      "order": 3,
-      "heading": "Pursuing Counselling Psychology.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-23T11:43:14.051Z",
-      "description": "Pursuing my M.Sc. in Counselling Psychology helped me move beyond theoretical learning into understanding the therapeutic process, client experiences, and the importance of creating a safe, non-judgmental space."
-    },
-    {
-      "id": "jrn_4",
-      "year": "Today | Becoming, Not Arriving",
-      "order": 4,
-      "heading": "Growing as a Counselling Psychologist and building my practice.",
-      "createdAt": "2026-09-06T13:18:50.470Z",
-      "updatedAt": "2026-09-23T11:43:14.051Z",
-      "description": "Today, I continue to grow as a Counselling Psychologist through clinical practice, supervision, learning, and working with diverse client experiences. I am also building my own practice with the intention of making psychological support more accessible, meaningful, and client-centered.\n"
-    }
-  ],
   "feedback": [
+    {
+      "id": "fb_1792039146694",
+      "date": "2026-10-15",
+      "rating": 5,
+      "status": "approved",
+      "feedback": "Dear Aswathy,\nThank you so much for your guidance, I was able to see the change in myself immediately after the first session. Your kind words kept echoing every time I went low in my moods and confidence. You gave me the validation that I needed and became an inner voice. I cannot thank you enough for helping me get myself back. You understood the part of me that needed attention and why things were happening. You mapped out everything for me. Thank you so much. You are a godsend. Thank youuuu!",
+      "createdAt": "2026-10-15T04:39:06.694Z",
+      "updatedAt": "2026-10-15T04:39:06.694Z",
+      "isAnonymous": false,
+      "publicVisibility": true,
+      "clientDisplayName": "Client S"
+    },
     {
       "id": "fb_1790220767468",
       "date": "2026-09-24",
@@ -1075,8 +2952,8 @@
     "manualPaymentInstructions": "You can settle your session fee directly via Cash or UPI (Google Pay, PhonePe, Paytm) upon arrival at the clinic or during your consultation.",
     "singleDaySlots": [
       {
-        "id": "sds_1790161083454_2026-09-28",
-        "date": "2026-09-28",
+        "id": "sds_1790789496514_2026-10-09",
+        "date": "2026-10-09",
         "slots": [
           {
             "time": "06:30 PM (Evening Slot)",
@@ -1085,117 +2962,35 @@
           {
             "time": "08:30 PM (Evening Slot)",
             "isEvening": true
-          },
-          {
-            "time": "09:30 PM (Evening Slot)",
-            "isEvening": true
           }
         ],
-        "breaks": [
-          {
-            "id": "brk_1790161124271_etu8",
-            "to": "20:30",
-            "from": "19:30",
-            "label": "Evening Rest"
-          }
-        ],
-        "toTime": "10:30 PM",
+        "toTime": "10:00 PM",
         "fromTime": "06:30 PM",
         "slotDurationMinutes": 50
       },
       {
-        "id": "sds_1790161083454_2026-09-29",
-        "date": "2026-09-29",
+        "id": "sds_1791125489623_2026-10-10",
+        "date": "2026-10-10",
         "slots": [
           {
-            "time": "06:30 PM (Evening Slot)",
+            "time": "07:00 PM (Evening Slot)",
             "isEvening": true
           },
           {
-            "time": "08:30 PM (Evening Slot)",
-            "isEvening": true
-          },
-          {
-            "time": "09:30 PM (Evening Slot)",
+            "time": "08:00 PM (Evening Slot)",
             "isEvening": true
           }
         ],
-        "breaks": [
-          {
-            "id": "brk_1790161124271_etu8",
-            "to": "20:30",
-            "from": "19:30",
-            "label": "Evening Rest"
-          }
-        ],
-        "toTime": "10:30 PM",
-        "fromTime": "06:30 PM",
+        "toTime": "09:00 PM",
+        "fromTime": "05:00 PM",
         "slotDurationMinutes": 50
       },
       {
-        "id": "sds_1790161083454_2026-09-30",
-        "date": "2026-09-30",
+        "id": "sds_1791447318658_2026-10-11",
+        "date": "2026-10-11",
         "slots": [
           {
-            "time": "06:30 PM (Evening Slot)",
-            "isEvening": true
-          },
-          {
-            "time": "08:30 PM (Evening Slot)",
-            "isEvening": true
-          },
-          {
-            "time": "09:30 PM (Evening Slot)",
-            "isEvening": true
-          }
-        ],
-        "breaks": [
-          {
-            "id": "brk_1790161124271_etu8",
-            "to": "20:30",
-            "from": "19:30",
-            "label": "Evening Rest"
-          }
-        ],
-        "toTime": "10:30 PM",
-        "fromTime": "06:30 PM",
-        "slotDurationMinutes": 50
-      },
-      {
-        "id": "sds_1790161083454_2026-10-01",
-        "date": "2026-10-01",
-        "slots": [
-          {
-            "time": "06:30 PM (Evening Slot)",
-            "isEvening": true
-          },
-          {
-            "time": "08:30 PM (Evening Slot)",
-            "isEvening": true
-          },
-          {
-            "time": "09:30 PM (Evening Slot)",
-            "isEvening": true
-          }
-        ],
-        "breaks": [
-          {
-            "id": "brk_1790161124271_etu8",
-            "to": "20:30",
-            "from": "19:30",
-            "label": "Evening Rest"
-          }
-        ],
-        "toTime": "10:30 PM",
-        "fromTime": "06:30 PM",
-        "slotDurationMinutes": 50
-      },
-      {
-        "id": "sds_1790579257295_2026-10-02",
-        "date": "2026-10-02",
-        "slots": [
-          {
-            "time": "11:00 AM",
+            "time": "10:00 AM",
             "isEvening": false
           },
           {
@@ -1207,26 +3002,14 @@
             "isEvening": false
           }
         ],
-        "breaks": [
-          {
-            "id": "break_1",
-            "to": "14:00",
-            "from": "13:00",
-            "label": "Lunch Break"
-          }
-        ],
         "toTime": "03:00 PM",
-        "fromTime": "11:00 AM",
+        "fromTime": "10:00 AM",
         "slotDurationMinutes": 50
       },
       {
-        "id": "sds_1790161184804_2026-10-03",
-        "date": "2026-10-03",
+        "id": "sds_1791447425246_2026-10-12",
+        "date": "2026-10-12",
         "slots": [
-          {
-            "time": "06:30 PM (Evening Slot)",
-            "isEvening": true
-          },
           {
             "time": "08:30 PM (Evening Slot)",
             "isEvening": true
@@ -1236,12 +3019,72 @@
             "isEvening": true
           }
         ],
-        "breaks": [
+        "toTime": "10:30 PM",
+        "fromTime": "06:30 PM",
+        "slotDurationMinutes": 50
+      },
+      {
+        "id": "sds_1791447425246_2026-10-13",
+        "date": "2026-10-13",
+        "slots": [
           {
-            "id": "brk_1790161124271_etu8",
-            "to": "20:30",
-            "from": "19:30",
-            "label": "Evening Rest"
+            "time": "08:30 PM (Evening Slot)",
+            "isEvening": true
+          },
+          {
+            "time": "09:30 PM (Evening Slot)",
+            "isEvening": true
+          }
+        ],
+        "toTime": "10:30 PM",
+        "fromTime": "06:30 PM",
+        "slotDurationMinutes": 50
+      },
+      {
+        "id": "sds_1791447425246_2026-10-14",
+        "date": "2026-10-14",
+        "slots": [
+          {
+            "time": "08:30 PM (Evening Slot)",
+            "isEvening": true
+          },
+          {
+            "time": "09:30 PM (Evening Slot)",
+            "isEvening": true
+          }
+        ],
+        "toTime": "10:30 PM",
+        "fromTime": "06:30 PM",
+        "slotDurationMinutes": 50
+      },
+      {
+        "id": "sds_1791447425246_2026-10-15",
+        "date": "2026-10-15",
+        "slots": [
+          {
+            "time": "08:30 PM (Evening Slot)",
+            "isEvening": true
+          },
+          {
+            "time": "09:30 PM (Evening Slot)",
+            "isEvening": true
+          }
+        ],
+        "toTime": "10:30 PM",
+        "fromTime": "06:30 PM",
+        "slotDurationMinutes": 50
+      },
+      {
+        "id": "sds_1791447425246_2026-10-16",
+        "date": "2026-10-16",
+        "slots": [
+          {
+            "time": "08:30 PM (Evening Slot)",
+            "isEvening": true
+          },
+          {
+            "time": "09:30 PM (Evening Slot)",
+            "isEvening": true
           }
         ],
         "toTime": "10:30 PM",
@@ -1256,7 +3099,7 @@
       "enabled": true,
       "message": "1. Video must remain on  throughout the session. Audio-only or chat-based sessions are not offered.\n2. You may briefly share your concern with the psychologist before booking your session.\n3. Payment must be completed in advance to confirm your appointment. The payment QR code/scanner will be shared with you via WhatsApp or email.\n4. Your session will be confirmed only after the payment has been received.\n5. The Google Meet link will be shared with you via WhatsApp  or email after payment confirmation.\n6. The informed consent form will be shared with you via email after payment confirmation. Please read and complete the form before your scheduled session.\n7. A sliding-scale fee option may be available depending on individual circumstances. This can be discussed with the psychologist before payment and booking confirmation.\n8. Rescheduling is permitted only when requested at least 24 hours in advance.\n9.Cancellations made within 24 hours of the scheduled session are non-refundable.\n10. If you arrive late, the session will still end at the originally scheduled time.\n11. Please ensure that you have a stable internet connection, a private and comfortable space, and a device with a working camera and microphone for your session."
     },
-    "updatedAt": "2026-09-28T07:08:27.250Z"
+    "updatedAt": "2026-10-08T18:16:02.269Z"
   },
   "serviceCategories": [
     {

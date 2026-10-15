@@ -47,6 +47,7 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
   const navLinks = [
     { label: "About", href: "/#about", id: "about" },
     { label: "Services", href: "/services", id: "services" },
+    { label: "Gallery", href: "/gallery", id: "gallery" },
     { label: "My Approach", href: "/#my-approach", id: "my-approach" },
     { label: "Support & Inquiry", href: "/inquiry", id: "inquiry" },
   ];

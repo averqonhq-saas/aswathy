@@ -16,6 +16,7 @@ import {
   ListOrdered,
   Users,
   Image as ImageIcon,
+  Images,
   Bell,
   Settings,
   LogOut,
@@ -100,6 +101,7 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
         { label: "What to Expect", href: "/admin/content/session", icon: ListOrdered },
         { label: "Who I Work With", href: "/admin/content/client-types", icon: Users },
         { label: "Booking Form", href: "/admin/content/booking-form", icon: CalendarCheck },
+        { label: "Gallery & Events", href: "/admin/gallery", icon: Images },
       ],
     },
     {

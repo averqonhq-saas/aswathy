@@ -8,8 +8,9 @@ const DB_FILE = path.join(DATA_DIR, "database.json");
 
 // Export all data models & interfaces from pure client-safe types
 export * from "./types";
-import type { DatabaseSchema } from "./types";
+import type { DatabaseSchema, GalleryEvent } from "./types";
 import { DEFAULT_SESSION_FORMATS, DEFAULT_BOOKING_FORM_CONFIG } from "./booking-config";
+import { generateEventSlug, ensureUniqueSlug } from "./gallery-data";
 
 
 
@@ -573,14 +574,13 @@ export function createInitialSeedData(): DatabaseSchema {
         dailySummaryDigest: false,
       },
     },
+    galleryEvents: [],
   };
 }
 
 // ==========================================
 // DATABASE ENGINE WITH ATOMIC WRITES
 // ==========================================
-
-
 
 let memoryDb: DatabaseSchema | null = null;
 
@@ -612,6 +612,9 @@ export async function getDatabase(): Promise<DatabaseSchema> {
           ...supabaseData.bookingFormConfig,
         };
       }
+      if (!Array.isArray(supabaseData.galleryEvents)) {
+        supabaseData.galleryEvents = [];
+      }
       memoryDb = supabaseData;
       return memoryDb;
     }
@@ -630,6 +633,9 @@ export async function getDatabase(): Promise<DatabaseSchema> {
         ...DEFAULT_BOOKING_FORM_CONFIG,
         ...memoryDb.bookingFormConfig,
       };
+    }
+    if (!Array.isArray(memoryDb.galleryEvents)) {
+      memoryDb.galleryEvents = [];
     }
     return memoryDb;
   }
@@ -651,12 +657,16 @@ export async function getDatabase(): Promise<DatabaseSchema> {
         ...memoryDb!.bookingFormConfig,
       };
     }
+    if (!Array.isArray(memoryDb!.galleryEvents)) {
+      memoryDb!.galleryEvents = [];
+    }
     return memoryDb as DatabaseSchema;
   } catch {
     // If file doesn't exist or is invalid, seed clean data
     const initialSeed = createInitialSeedData();
     initialSeed.sessionFormats = DEFAULT_SESSION_FORMATS;
     initialSeed.bookingFormConfig = DEFAULT_BOOKING_FORM_CONFIG;
+    initialSeed.galleryEvents = [];
     await saveDatabase(initialSeed);
     memoryDb = initialSeed;
     return memoryDb;
@@ -771,4 +781,157 @@ export async function getBookedSlots(
   }
 
   return Array.from(bookedMap.values());
+}
+
+// ==========================================
+// GALLERY & EVENTS CRUD ENGINE
+// ==========================================
+
+export async function saveGalleryEvents(events: GalleryEvent[]): Promise<void> {
+  const db = await getDatabase();
+  db.galleryEvents = events;
+  memoryDb = db;
+
+  // 1. Direct single-collection upsert to Supabase
+  try {
+    const { saveCollectionToSupabase } = await import("./supabase-db");
+    await saveCollectionToSupabase("galleryEvents", events);
+  } catch (err) {
+    console.error("Failed to direct-save galleryEvents to Supabase, falling back to saveDatabase:", err);
+    await saveDatabase(db);
+  }
+
+  // 2. Local file backup
+  try {
+    await ensureDataDirectory();
+    const tempFile = `${DB_FILE}.${Date.now()}.tmp`;
+    const serialized = JSON.stringify(db, null, 2);
+    await fs.writeFile(tempFile, serialized, "utf8");
+    await fs.rename(tempFile, DB_FILE);
+  } catch {
+    // Non-fatal
+  }
+}
+
+export async function getGalleryEvents(options?: {
+  status?: "published" | "draft" | "all";
+  category?: string;
+  search?: string;
+  sortBy?: "newest" | "oldest";
+}): Promise<GalleryEvent[]> {
+  const db = await getDatabase();
+  let events = [...(db.galleryEvents || [])];
+
+  const status = options?.status || "all";
+  if (status !== "all") {
+    events = events.filter((e) => e.status === status);
+  }
+
+  const category = options?.category;
+  if (category && category !== "All" && category !== "all") {
+    events = events.filter(
+      (e) => e.category.toLowerCase() === category.toLowerCase()
+    );
+  }
+
+  const search = options?.search?.trim().toLowerCase();
+  if (search) {
+    events = events.filter(
+      (e) =>
+        e.title.toLowerCase().includes(search) ||
+        e.institution.toLowerCase().includes(search) ||
+        e.role.toLowerCase().includes(search) ||
+        e.shortDescription.toLowerCase().includes(search) ||
+        e.topics.some((t) => t.toLowerCase().includes(search))
+    );
+  }
+
+  const sortBy = options?.sortBy || "newest";
+  events.sort((a, b) => {
+    const dateA = a.eventDate ? new Date(a.eventDate).getTime() : new Date(a.createdAt).getTime();
+    const dateB = b.eventDate ? new Date(b.eventDate).getTime() : new Date(b.createdAt).getTime();
+    return sortBy === "oldest" ? dateA - dateB : dateB - dateA;
+  });
+
+  return events;
+}
+
+export async function getGalleryEventBySlug(slug: string): Promise<GalleryEvent | null> {
+  const db = await getDatabase();
+  const event = (db.galleryEvents || []).find(
+    (e) => e.slug.toLowerCase() === slug.toLowerCase()
+  );
+  return event || null;
+}
+
+export async function getGalleryEventById(id: string): Promise<GalleryEvent | null> {
+  const db = await getDatabase();
+  const event = (db.galleryEvents || []).find((e) => e.id === id);
+  return event || null;
+}
+
+export async function createGalleryEvent(
+  data: Omit<GalleryEvent, "id" | "createdAt" | "updatedAt">
+): Promise<GalleryEvent> {
+  const db = await getDatabase();
+  const now = new Date().toISOString();
+  const existingEvents = db.galleryEvents || [];
+
+  const baseSlug = data.slug ? generateEventSlug(data.slug) : generateEventSlug(data.title);
+  const uniqueSlug = ensureUniqueSlug(baseSlug, existingEvents);
+
+  const newEvent: GalleryEvent = {
+    ...data,
+    id: `gev_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    slug: uniqueSlug,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  const updatedEvents = [newEvent, ...existingEvents];
+  await saveGalleryEvents(updatedEvents);
+  return newEvent;
+}
+
+export async function updateGalleryEvent(
+  id: string,
+  updates: Partial<GalleryEvent>
+): Promise<GalleryEvent | null> {
+  const db = await getDatabase();
+  const existingEvents = db.galleryEvents || [];
+  const index = existingEvents.findIndex((e) => e.id === id);
+  if (index === -1) return null;
+
+  const current = existingEvents[index];
+  let finalSlug = current.slug;
+  if (updates.slug && updates.slug !== current.slug) {
+    const baseSlug = generateEventSlug(updates.slug);
+    finalSlug = ensureUniqueSlug(baseSlug, existingEvents, id);
+  } else if (!updates.slug && updates.title && updates.title !== current.title && !current.slug) {
+    const baseSlug = generateEventSlug(updates.title);
+    finalSlug = ensureUniqueSlug(baseSlug, existingEvents, id);
+  }
+
+  const updatedEvent: GalleryEvent = {
+    ...current,
+    ...updates,
+    id: current.id,
+    slug: finalSlug,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const updatedEvents = [...existingEvents];
+  updatedEvents[index] = updatedEvent;
+  await saveGalleryEvents(updatedEvents);
+  return updatedEvent;
+}
+
+export async function deleteGalleryEvent(id: string): Promise<boolean> {
+  const db = await getDatabase();
+  const existingEvents = db.galleryEvents || [];
+  const filtered = existingEvents.filter((e) => e.id !== id);
+  if (filtered.length === existingEvents.length) return false;
+
+  await saveGalleryEvents(filtered);
+  return true;
 }

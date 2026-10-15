@@ -306,7 +306,7 @@ export default function BookingsManagementPage() {
       if (res.ok) {
         success(
           `Payment marked as ${paymentStatus.toUpperCase()}${
-            sendEmail ? " & receipt emailed to client" : ""
+            sendEmail ? " & informed consent form emailed to client" : ""
           }!`
         );
         setSelectedBooking(data.booking);
@@ -335,11 +335,11 @@ export default function BookingsManagementPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        success("Payment receipt emailed to client successfully! ✉️");
+        success("Informed Consent Form emailed to client successfully! ✉️");
         setSelectedBooking(data.booking);
         fetchBookings();
       } else {
-        error(data.error || "Failed to send payment receipt.");
+        error(data.error || "Failed to send informed consent form.");
       }
     } catch {
       error("Network error sending payment receipt.");
@@ -942,7 +942,7 @@ export default function BookingsManagementPage() {
                     />
                     <span className="flex items-center gap-1.5 text-[11px] text-on-surface-variant font-medium">
                       <Mail className="w-3.5 h-3.5 text-forest-green" />
-                      <span>Send receipt email to client ({selectedBooking.clientEmail})</span>
+                      <span>Send Informed Consent Form email to client ({selectedBooking.clientEmail})</span>
                     </span>
                   </label>
 
@@ -951,10 +951,10 @@ export default function BookingsManagementPage() {
                     onClick={() => handleSendPaymentReceipt(selectedBooking.id)}
                     disabled={isSendingReceipt || isUpdatingPayment}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-forest-green/30 bg-surface hover:bg-forest-green/10 text-forest-green text-xs font-semibold transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto"
-                    title="Send or re-send payment receipt email to client"
+                    title="Send or re-send informed consent form email to client"
                   >
                     <Mail className="w-3.5 h-3.5" />
-                    <span>{isSendingReceipt ? "Sending Receipt..." : "Send Paid Receipt in Mail"}</span>
+                    <span>{isSendingReceipt ? "Sending Form..." : "Send Consent Form in Mail"}</span>
                   </button>
                 </div>
 

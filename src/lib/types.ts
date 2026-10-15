@@ -281,4 +281,41 @@ export interface DatabaseSchema {
   media: MediaItem[];
   notifications: NotificationItem[];
   settings: PracticeSettings;
+  galleryEvents?: GalleryEvent[];
+}
+
+export type GalleryCategory =
+  | "Workshops"
+  | "Guest Lectures"
+  | "Seminars"
+  | "Awareness Programmes"
+  | "Conferences"
+  | "Other Events";
+
+export interface GalleryImageItem {
+  id: string;
+  url: string;
+  caption?: string;
+  credit?: string;
+  order?: number;
+}
+
+export interface GalleryEvent {
+  id: string;
+  title: string;
+  slug: string;
+  category: GalleryCategory | string;
+  role: string;
+  institution: string;
+  shortDescription: string;
+  description: string;
+  eventDate?: string | null;
+  location?: string | null;
+  topics: string[];
+  coverImage: string;
+  galleryImages: (GalleryImageItem | string)[];
+  isFeatured: boolean;
+  status: "draft" | "published";
+  createdAt: string;
+  updatedAt: string;
 }

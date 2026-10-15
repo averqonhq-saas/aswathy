@@ -180,23 +180,7 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
               <span style="color: #047857; font-weight: 700;">✓ Paid${data.price ? ` (₹${data.price})` : ""}</span>
             </td>
           </tr>
-          ${data.meetingLink && data.meetingLink.startsWith("http") ? `
-          <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b;"><strong>Google Meet Link</strong></td>
-            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600;"><a href="${data.meetingLink}" style="color: #059669;">${data.meetingLink}</a></td>
-          </tr>` : ""}
         </table>
-
-        ${data.meetingLink && data.meetingLink.startsWith("http") ? `
-        <!-- Google Meet Video Room Card -->
-        <div style="background-color: #f0fdf4; border: 2px dashed #059669; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
-          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">Your Google Meet Session</p>
-          <p style="margin: 0 0 16px; font-size: 14px; color: #334155;">A Google Calendar invitation has been sent. You can join your confidential consultation directly via the link below:</p>
-          <a href="${data.meetingLink}" target="_blank" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 15px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            📹 Join Google Meet Session
-          </a>
-          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">Direct link: <a href="${data.meetingLink}" style="color: #059669;">${data.meetingLink}</a></p>
-        </div>` : ""}
 
         <!-- Informed Consent Form Card -->
         <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
@@ -215,14 +199,11 @@ export async function sendBookingConfirmationToClient(data: BookingEmailData): P
 
         <div style="background-color: #f1f5f9; padding: 14px 16px; border-radius: 8px; margin-top: 16px; font-size: 13px; color: #475569; line-height: 1.5;">
           ${isOnline
-      ? (data.meetingLink && data.meetingLink.startsWith("http")
-        ? "💡 <strong>Telehealth Note:</strong> Your session will be held securely via Google Meet. Please ensure a quiet, private space and a stable internet connection 5 minutes prior to start."
-        : "💡 <strong>Telehealth Note:</strong> You will receive a private, encrypted Google Meet link before your scheduled session. Please ensure a quiet, private space and a stable internet connection.")
+      ? "💡 <strong>Telehealth Note:</strong> The Google Meet link will be shared with you via WhatsApp or email prior to your scheduled consultation. Please ensure you have completed the Informed Consent Form in advance."
       : "💡 <strong>In-Person Note:</strong> Clinic address and directions will be confirmed with you when we contact you."}
         </div>
 
         <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">
-          Please join the session using the Google Meet link at the scheduled time.<br><br>
           If you need to reschedule or cancel your appointment, please contact us in advance at <a href="mailto:roottherapyonline@gmail.com" style="color: #2f4f4f; font-weight: 600;">roottherapyonline@gmail.com</a>.
         </p>
 
@@ -824,14 +805,15 @@ export async function sendPaymentReceiptEmailToClient(
   const senderEmail = process.env.EMAIL_USER;
   const isPaid = paymentStatus === "paid";
   const isRefunded = paymentStatus === "refunded";
+  const isOnline = (data.format || "online").toLowerCase() !== "in-person";
 
-  let badgeText = "✓ Payment Received & Verified";
-  let badgeColor = "#047857";
-  let badgeBg = "#ecfdf5";
-  let badgeBorder = "#a7f3d0";
-  let subject = `Payment Verified: ${data.serviceName} with Aswathy (Ref #${data.bookingId || "Verified"})`;
-  let headline = "Payment Verified & Received";
-  let messageContent = `Thank you! Your payment of <strong>₹${data.price || 1800}</strong> for <strong>${data.serviceName}</strong> has been successfully verified and recorded in our system.`;
+  let badgeText = "📋 Mandatory Pre-Session Step";
+  let badgeColor = "#166534";
+  let badgeBg = "#f0fdf4";
+  let badgeBorder = "#86efac";
+  let subject = `Action Required: Informed Consent Form - ${data.serviceName} with Aswathy`;
+  let headline = "Informed Consent Form";
+  let messageContent = `Thank you for scheduling your session. Prior to your upcoming appointment, please take a moment to review and complete the <strong>Informed Consent Form</strong> below. This is a mandatory step that ensures confidential, safe, and ethical therapeutic care.`;
 
   if (isRefunded) {
     badgeText = "↩ Payment Refunded";
@@ -857,7 +839,7 @@ export async function sendPaymentReceiptEmailToClient(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Receipt</title>
+  <title>${headline}</title>
 </head>
 <body style="margin: 0; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;">
   <table role="presentation" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; border-spacing: 0;">
@@ -877,7 +859,7 @@ export async function sendPaymentReceiptEmailToClient(
             ${badgeText}
           </span>
           <h2 style="color: #0f172a; margin: 12px 0 6px; font-size: 22px;">${headline}</h2>
-          <p style="margin: 0; color: #64748b; font-size: 14px;">Booking Reference: <strong>#${data.bookingId || "Verified"}</strong></p>
+          <p style="margin: 0; color: #64748b; font-size: 14px;">Booking Reference: <strong>#${data.bookingId || "Confirmed"}</strong></p>
         </div>
 
         <p style="font-size: 15px; line-height: 1.6; color: #334155;">
@@ -885,16 +867,33 @@ export async function sendPaymentReceiptEmailToClient(
           ${messageContent}
         </p>
 
-        <!-- Receipt Table -->
+        ${isPaid ? `
+        <!-- Informed Consent Form Card -->
+        <div style="background-color: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 24px 20px; text-align: center; margin: 24px 0;">
+          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">📋 Mandatory Pre-Session Step</p>
+          <h3 style="margin: 0 0 10px; font-size: 18px; color: #0f172a; font-weight: 700;">Informed Consent Form</h3>
+          <p style="margin: 0 0 18px; font-size: 14px; color: #334155; line-height: 1.5; max-width: 480px; margin-left: auto; margin-right: auto;">
+            Prior to your session, please review and complete the Informed Consent Form. This ensures confidential, safe, and ethical therapeutic care.
+          </p>
+          <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="display: inline-block; background-color: #2f4f4f; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 15px; padding: 13px 32px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            📝 Fill Informed Consent Form
+          </a>
+          <p style="margin: 14px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">
+            Direct link: <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="color: #059669; font-weight: 600;">${INFORMED_CONSENT_FORM_URL}</a>
+          </p>
+        </div>` : ""}
+
+        <!-- Appointment Details Table -->
         <table style="width: 100%; margin: 20px 0; border-collapse: collapse; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
           <tr>
             <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0; width: 35%;">Service</td>
             <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.serviceName}</td>
           </tr>
           <tr>
-            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;">Session Time</td>
-            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; border-bottom: 1px solid #e2e8f0;">${data.appointmentDate} at ${data.appointmentTime}</td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #64748b; ${!isPaid ? "border-bottom: 1px solid #e2e8f0;" : ""}">Session Time</td>
+            <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 600; ${!isPaid ? "border-bottom: 1px solid #e2e8f0;" : ""}">${data.appointmentDate} at ${data.appointmentTime}</td>
           </tr>
+          ${!isPaid ? `
           <tr>
             <td style="padding: 12px 16px; font-size: 14px; color: #64748b; border-bottom: 1px solid #e2e8f0;">Amount</td>
             <td style="padding: 12px 16px; font-size: 14px; color: #0f172a; font-weight: 700; border-bottom: 1px solid #e2e8f0;">₹${data.price || 1800}</td>
@@ -902,49 +901,23 @@ export async function sendPaymentReceiptEmailToClient(
           <tr>
             <td style="padding: 12px 16px; font-size: 14px; color: #64748b;">Payment Status</td>
             <td style="padding: 12px 16px; font-size: 14px; color: ${badgeColor}; font-weight: 700;">
-              ${isPaid ? "PAID (Verified)" : isRefunded ? "REFUNDED" : "PENDING"}
+              ${isRefunded ? "REFUNDED" : "PENDING"}
             </td>
-          </tr>
+          </tr>` : ""}
         </table>
 
-        ${isPaid && data.meetingLink && data.meetingLink.startsWith("http") ? `
-        <!-- Google Meet Video Room Card -->
-        <div style="background-color: #f0fdf4; border: 2px dashed #059669; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
-          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">Your Google Meet Session</p>
-          <p style="margin: 0 0 16px; font-size: 14px; color: #334155;">Your payment has been verified. You can join your confidential consultation directly via the Google Meet link below:</p>
-          <a href="${data.meetingLink}" target="_blank" style="display: inline-block; background-color: #059669; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 15px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            📹 Join Google Meet Session
-          </a>
-          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">Direct link: <a href="${data.meetingLink}" style="color: #059669;">${data.meetingLink}</a></p>
-        </div>` : !isPaid ? `
-        <div style="background-color: #fffbeb; border: 1px dashed #d97706; border-radius: 8px; padding: 14px 16px; margin: 20px 0; text-align: left;">
-          <strong style="color: #92400e; font-size: 13px;">📌 Meeting details will be shared after payment confirmation</strong>
-          <p style="margin: 4px 0 0; font-size: 12px; color: #78350f;">Your private Google Meet link will be generated and emailed to you once your payment is confirmed.</p>
+        ${isPaid && isOnline ? `
+        <div style="background-color: #f1f5f9; padding: 14px 16px; border-radius: 8px; margin: 20px 0; font-size: 13px; color: #475569; line-height: 1.5;">
+          💡 <strong>Session Note:</strong> The Google Meet link will be shared with you via WhatsApp or email prior to your scheduled consultation.
         </div>` : ""}
 
         ${note ? `
         <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #166534; margin: 16px 0;">
-          <strong>Settlement Note:</strong> ${note}
-        </div>` : ""}
-
-        ${isPaid ? `
-        <!-- Informed Consent Form Card -->
-        <div style="background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0;">
-          <p style="margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px;">📋 Mandatory Pre-Session Step</p>
-          <h3 style="margin: 0 0 10px; font-size: 17px; color: #0f172a; font-weight: 700;">Informed Consent Form</h3>
-          <p style="margin: 0 0 16px; font-size: 14px; color: #334155; line-height: 1.5; max-width: 480px; margin-left: auto; margin-right: auto;">
-            Prior to your session, please review and complete the Informed Consent Form. This ensures confidential, safe, and ethical therapeutic care.
-          </p>
-          <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="display: inline-block; background-color: #2f4f4f; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 28px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            📝 Fill Informed Consent Form
-          </a>
-          <p style="margin: 12px 0 0; font-size: 12px; color: #64748b; word-break: break-all;">
-            Direct link: <a href="${INFORMED_CONSENT_FORM_URL}" target="_blank" style="color: #059669; font-weight: 600;">${INFORMED_CONSENT_FORM_URL}</a>
-          </p>
+          <strong>Note:</strong> ${note}
         </div>` : ""}
 
         <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-top: 24px;">
-          Thank you for choosing us. If you have any questions regarding your receipt or session, feel free to reply directly to this email at <a href="mailto:roottherapyonline@gmail.com" style="color: #2f4f4f; font-weight: 600;">roottherapyonline@gmail.com</a>.
+          Thank you for choosing us. If you have any questions regarding your session, feel free to reply directly to this email at <a href="mailto:roottherapyonline@gmail.com" style="color: #2f4f4f; font-weight: 600;">roottherapyonline@gmail.com</a>.
         </p>
 
         <p style="margin-top: 28px; font-size: 14px; color: #334155; line-height: 1.5;">
@@ -958,7 +931,7 @@ export async function sendPaymentReceiptEmailToClient(
     <!-- Footer -->
     <tr>
       <td style="background-color: #f8fafc; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8;">
-        Official Payment Receipt &amp; Communication. Aswathy Counselling Practice.
+        Official Pre-Session Communication. Aswathy Counselling Practice.
       </td>
     </tr>
   </table>
