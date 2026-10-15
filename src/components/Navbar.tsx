@@ -44,6 +44,18 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Lock body scroll when mobile drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks = [
     { label: "About", href: "/#about", id: "about" },
     { label: "Services", href: "/services", id: "services" },
@@ -64,10 +76,10 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
         <div className="h-20 max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop flex items-center justify-between">
           {/* Brand Title with Logo Icon */}
           <Link
-            className="flex items-center gap-3 group text-left"
+            className="flex items-center gap-2.5 sm:gap-3 group text-left min-w-0"
             href="/"
           >
-            <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-parchment-border/60 shadow-xs bg-surface-container-low group-hover:scale-105 transition-transform duration-200">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 border border-parchment-border/60 shadow-xs bg-surface-container-low group-hover:scale-105 transition-transform duration-200">
               <Image
                 src="/icon.png"
                 alt="Aswathy Jeyarajasekar Logo - Counselling Psychologist"
@@ -77,11 +89,11 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
                 priority
               />
             </div>
-            <div className="flex flex-col">
-              <span className="font-headline-sm text-headline-sm text-primary tracking-tight font-medium transition-colors group-hover:text-primary-container">
+            <div className="flex flex-col min-w-0">
+              <span className="font-serif text-[14px] xs:text-[15px] sm:text-base md:text-lg text-primary tracking-tight font-medium transition-colors group-hover:text-primary-container leading-tight whitespace-nowrap">
                 Aswathy Jeyarajasekar
               </span>
-              <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest text-[10px]">
+              <span className="font-label-caps text-on-surface-variant uppercase tracking-wider text-[8.5px] sm:text-[10px] leading-tight whitespace-nowrap mt-0.5">
                 Counselling Psychologist
               </span>
             </div>
@@ -139,38 +151,77 @@ export default function Navbar({ onOpenBooking }: NavbarProps) {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden bg-tertiary/40 backdrop-blur-sm animate-fadeIn">
-          <div className="fixed top-20 right-0 w-4/5 max-w-sm h-[calc(100vh-5rem)] bg-surface shadow-2xl p-space-xl flex flex-col justify-between overflow-y-auto">
-            <div className="space-y-space-lg pt-space-md">
-              <span className="font-label-caps text-label-caps uppercase tracking-widest text-secondary block">
-                Navigation
-              </span>
-              <nav className="flex flex-col space-y-space-md">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.id}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="font-headline-sm text-headline-sm text-primary hover:text-secondary transition-colors py-1 flex items-center justify-between border-b border-surface-container-high pb-2"
-                  >
-                    <span>{link.label}</span>
-                    <ArrowRight className="w-4 h-4 text-secondary-fixed-dim" />
-                  </Link>
-                ))}
-              </nav>
+        <div
+          className="fixed inset-0 z-[90] md:hidden bg-black/50 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            className="fixed top-0 right-0 bottom-0 z-[100] w-[86vw] max-w-[340px] bg-[#FCF9F2] shadow-[-15px_0_50px_rgba(28,28,24,0.3)] flex flex-col justify-between overflow-y-auto border-l border-parchment-border/80 p-6 sm:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="space-y-6">
+              {/* Header inside mobile drawer */}
+              <div className="flex items-center justify-between pb-4 border-b border-surface-container/80">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-parchment-border/60 shadow-xs bg-surface-container-low">
+                    <Image
+                      src="/icon.png"
+                      alt="Aswathy Jeyarajasekar Logo"
+                      fill
+                      sizes="32px"
+                      className="object-contain p-0.5"
+                    />
+                  </div>
+                  <div className="flex flex-col text-left min-w-0">
+                    <span className="font-serif text-[13.5px] sm:text-sm font-semibold text-primary tracking-tight leading-tight whitespace-nowrap">
+                      Aswathy Jeyarajasekar
+                    </span>
+                    <span className="text-[8.5px] sm:text-[9.5px] font-label-caps text-on-surface-variant uppercase tracking-wider leading-none mt-0.5 whitespace-nowrap">
+                      Counselling Psychologist
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container active:scale-95 transition-all cursor-pointer"
+                  aria-label="Close menu"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-label-caps uppercase tracking-widest text-secondary font-bold block mb-3 px-1">
+                  Navigation
+                </span>
+                <nav className="flex flex-col space-y-1.5">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-4 py-3 rounded-2xl font-serif text-lg text-primary hover:text-forest-green hover:bg-surface-container/80 transition-all flex items-center justify-between group active:scale-[0.98]"
+                    >
+                      <span>{link.label}</span>
+                      <ArrowRight className="w-4 h-4 text-secondary opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                    </Link>
+                  ))}
+                </nav>
+              </div>
             </div>
 
-            <div className="space-y-space-md pt-space-xl">
+            <div className="space-y-4 pt-6 border-t border-surface-container/80 shrink-0">
               <Link
                 href="/book-a-session#booking-form"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-space-md rounded-full bg-primary-container text-surface flex items-center justify-center gap-space-xs font-label-md text-label-md font-semibold tracking-wide uppercase hover:bg-primary transition-all shadow-md"
+                className="w-full py-3.5 rounded-full bg-primary-container text-surface flex items-center justify-center gap-2 font-label-md text-xs font-semibold tracking-wider uppercase hover:bg-primary transition-all shadow-md active:scale-98"
               >
                 <span>Book a Session</span>
                 <span className="text-secondary-container">→</span>
               </Link>
 
-              <p className="font-body-sm text-body-sm text-on-surface-variant text-center text-[12px]">
+              <p className="font-body-sm text-on-surface-variant text-center text-[11px] leading-relaxed">
                 Safe, confidential & person-centered therapy
               </p>
             </div>
