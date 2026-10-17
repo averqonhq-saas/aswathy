@@ -10,9 +10,11 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import FaqSection from "@/components/FaqSection";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
-import { getDatabase } from "@/lib/db";
+import { getDatabase, getGalleryEvents } from "@/lib/db";
 import JsonLd from "@/components/JsonLd";
 import { DEFAULT_FAQS } from "@/lib/faq-data";
+import WorkshopsEventsSection from "@/components/WorkshopsEventsSection";
+import type { GalleryEvent } from "@/lib/types";
 
 // Next.js ISR: Revalidate server-rendered page every 60 seconds
 export const revalidate = 60;
@@ -23,6 +25,7 @@ export default async function Home() {
   let initialJourney = undefined;
   let initialGroups = undefined;
   let initialTestimonials = undefined;
+  let initialGalleryEvents: GalleryEvent[] = [];
 
   try {
     const db = await getDatabase();
@@ -74,6 +77,8 @@ export default async function Home() {
             context: t.serviceName || "Individual Counselling",
           }));
       }
+
+      initialGalleryEvents = await getGalleryEvents({ status: "published" });
     }
   } catch (err) {
     console.error("Server component data hydration error:", err);
@@ -115,7 +120,35 @@ export default async function Home() {
     })),
   } : null;
 
-  const pageSchemas = servicesSchema ? [faqSchema, servicesSchema] : [faqSchema];
+  const eventsSchema = initialGalleryEvents && initialGalleryEvents.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Workshops, Events & Moments",
+    itemListElement: initialGalleryEvents.map((e: any, idx: number) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      item: {
+        "@type": "Event",
+        name: e.title,
+        description: e.shortDescription,
+        startDate: e.eventDate || undefined,
+        location: e.location
+          ? {
+              "@type": "Place",
+              name: e.location,
+            }
+          : undefined,
+        image: e.coverImage,
+        url: `https://www.aswathypsychologist.com/gallery/${e.slug}`,
+      },
+    })),
+  } : null;
+
+  const pageSchemas = [
+    faqSchema,
+    ...(servicesSchema ? [servicesSchema] : []),
+    ...(eventsSchema ? [eventsSchema] : []),
+  ];
 
   return (
     <>
@@ -141,6 +174,9 @@ export default async function Home() {
 
           {/* Section 7: Services (Server hydrated + Lazy loaded modal) */}
           <ServicesSection initialServices={initialServices} />
+
+          {/* Section: Workshops, Events & Moments (Carousel) */}
+          <WorkshopsEventsSection initialEvents={initialGalleryEvents} />
 
           {/* Section 8: Words from Clients (Server hydrated) */}
           <TestimonialsSection initialTestimonials={initialTestimonials} />
